@@ -1,0 +1,41 @@
+type Podcast {
+  id: ID!
+  title: String!
+  host_name: String!
+  description: String
+  audio_path: String
+  is_active: Boolean
+  user: User
+  created_at: DateTime
+  updated_at: DateTime
+}
+
+input PodcastInput {
+  title: TranslatableInput!
+  host_name: TranslatableInput!
+  description: TranslatableInput
+  is_active: Boolean
+  user_id: ID!
+}   
+
+extend type Query {
+  podcast_for_admin(first: Int! = 10,page: Int = 1): Podcast!
+      @paginate(type: "PAGINATOR", model: "App\\Models\\Podcast")
+
+  podcast_for_public(first: Int! = 10,page: Int = 1): Podcast!
+    @paginate(type: "PAGINATOR", model: "App\\Models\\Podcast")
+    @where(key: "is_active", operator: "=", value: true)
+
+ podcast(id: ID! @eq): Podcast @find
+}
+
+extend type Mutation {
+  CreatePodcast(input: PodcastInput!, audio: Upload): Podcast
+    @field(resolver: "App\\GraphQL\\Mutations\\PodcastMutator@create")
+
+  UpdatePodcast(id: ID!, input: PodcastInput!, audio: Upload): Podcast
+    @field(resolver: "App\\GraphQL\\Mutations\\PodcastMutator@update")
+
+  DeletePodcast(id: ID!): Boolean
+    @field(resolver: "App\\GraphQL\\Mutations\\PodcastMutator@delete")
+}

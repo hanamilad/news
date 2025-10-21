@@ -1,0 +1,47 @@
+type Article {
+  id: ID!
+  content: String!
+  author_name: String!
+  author_image: String
+  is_active: Boolean
+  user: User
+  created_at: DateTime
+  updated_at: DateTime
+}
+
+
+
+input ArticleInput {
+  content: TranslatableInput!
+  author_name: TranslatableInput!
+  author_image: String
+  is_active: Boolean
+}   
+
+extend type Query {
+  articles_for_admin(
+    first: Int! = 10,
+    page: Int = 1
+  ): Article!
+      @paginate(type: "PAGINATOR", model: "App\\Models\\Article")
+
+  articles_for_public(
+    first: Int! = 10,
+    page: Int = 1
+  ): Article!
+    @paginate(type: "PAGINATOR", model: "App\\Models\\Article")
+    @where(key: "is_active", operator: "=", value: true)
+
+  article(id: ID! @eq): Article @find
+}
+
+extend type Mutation {
+  CreateArticle(input: ArticleInput!, image: Upload): Article
+    @field(resolver: "App\\GraphQL\\Mutations\\ArticleMutator@create")
+
+  UpdateArticle(id: ID!, input: ArticleInput!, image: Upload): Article
+    @field(resolver: "App\\GraphQL\\Mutations\\ArticleMutator@update")
+
+  DeleteArticle(id: ID!): Boolean
+    @field(resolver: "App\\GraphQL\\Mutations\\ArticleMutator@delete")
+}

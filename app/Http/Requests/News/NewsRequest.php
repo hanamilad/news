@@ -1,0 +1,68 @@
+<?php
+
+namespace App\Http\Requests\News;
+
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+
+class NewsRequest extends FormRequest
+{
+    public function authorize(): bool
+    {
+        return true;
+    }
+
+    public function rules(): array
+    {
+        $newsId = $this->route('id') ?? null;
+
+        return [
+            'title' => 'required|array',
+            'title.*' => 'nullable|string|max:255',
+            'styled_description' => 'required|array',
+            'styled_description.*' => 'nullable|string',
+            'is_urgent' => 'nullable|boolean',
+            'is_active' => 'nullable|boolean',
+            'category_id' => 'required|exists:categories,id',
+            'hashtag_ids' => 'nullable|array',
+            'hashtag_ids.*' => 'exists:hashtags,id',
+            'suggested_ids' => 'nullable|array',
+            'suggested_ids.*' => [
+                'integer',
+                'exists:news,id',
+                function ($attribute, $value, $fail) use ($newsId) {
+                    if (!empty($newsId) && $value == $newsId) {
+                        $fail('A news item cannot be suggested to itself.');
+                    }
+                }
+            ],
+            'links' => 'nullable|array',
+            'links.*.video_link' => 'nullable|string',
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'title.required' => 'عنوان الخبر مطلوب.',
+            'title.array' => 'يجب إرسال الاسم كمجموعة من الترجمات (مثلاً ar, en).',
+            'title.*.string' => 'كل ترجمة يجب أن تكون نص.',
+            'title.*.max' => 'كل ترجمة يجب ألا تتجاوز 255 حرف.',
+            'styled_description.required' => 'وصف الخبر مطلوب.',
+            'styled_description.array' => 'يجب إرسال الاسم كمجموعة من الترجمات (مثلاً ar, en).',
+            'styled_description.*.string' => 'كل ترجمة يجب أن تكون نص.',
+            'styled_description.string' => 'The styled description must be a string.',
+            'is_urgent.boolean' => 'The urgent flag must be true or false.',
+            'is_active.boolean' => 'The active flag must be true or false.',
+            'category_id.required' => 'Please select a category.',
+            'category_id.exists'   => 'The selected category does not exist.',
+            'hashtag_ids.array' => 'Hashtags must be provided as an array.',
+            'hashtag_ids.*.exists' => 'One or more selected hashtags are invalid.',
+            'suggested_ids.array' => 'Suggested news must be provided as an array.',
+            'suggested_ids.*.integer' => 'Each suggested news ID must be an integer.',
+            'suggested_ids.*.exists' => 'One or more suggested news items do not exist.',
+            'links.array' => 'Links must be provided as an array.',
+            'links.*.video_link.string' => 'Each video link must be a string.',
+        ];
+    }
+}

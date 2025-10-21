@@ -1,0 +1,4 @@
+type Template {
+  id: ID!
+  name: String!
+}

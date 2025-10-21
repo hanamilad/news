@@ -1,0 +1,26 @@
+type Category @model(class: "App\\Models\\Category") {
+  id: ID!
+  name: String!
+  template : Template
+}
+
+input CategoryInput {
+  name: TranslatableInput!
+  template_id:ID!
+}
+
+extend type Query {
+  categories: [Category!]! @all
+  category(id: ID! @eq): Category @find
+}
+
+extend type Mutation {
+  CreateCategory(input: CategoryInput!): Category 
+    @field(resolver: "App\\GraphQL\\Mutations\\CategoryMutator@create")
+
+  UpdateCategory(id: ID!, input: CategoryInput!): Category 
+    @field(resolver: "App\\GraphQL\\Mutations\\CategoryMutator@update")
+
+  DeleteCategory(id: ID!): Boolean 
+    @field(resolver: "App\\GraphQL\\Mutations\\CategoryMutator@delete")
+}

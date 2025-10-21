@@ -1,0 +1,79 @@
+app/
+├── Http/
+│   ├── Controllers/
+│   │   ├── Admin/        ← كل ما يخص لوحة التحكم (Dashboard)
+│   │   ├── User/         ← للمستخدم العادي
+│   │   ├── Api/          ← لو عندك API منفصلة
+│   │   └── Auth/         ← تسجيل الدخول والتسجيل
+│   ├── Requests/
+│   │   ├── Admin/
+│   │   ├── User/
+│   │   └── Shared/
+│   └── Middleware/
+│
+├── Services/             ← منطق الأعمال (Business logic)
+│   ├── Admin/
+│   ├── User/
+│   └── Shared/
+│
+├── Repositories/         ← تعامل مباشر مع الـ Models
+│   ├── Admin/
+│   ├── User/
+│   └── Shared/
+│
+├── Jobs/                 ← المهام المؤجلة
+├── Models/
+│   ├── Site.php
+│   ├── Podcast.php
+│   ├── News.php
+│   └── ...
+└── Policies/             ← الصلاحيات الدقيقة لو تستخدم Gate/Policy
+
+
+
+
+
+-----------------------
+app/
+├── GraphQL/
+│   ├── Mutations/          ← العمليات اللي بتغيّر البيانات (register, login, createNews, ...)
+│   ├── Queries/            ← العمليات اللي بتعرض البيانات (getUser, listNews, ...)
+│   ├── Validators/         ← لو استخدمت validation classes خاصة بـ GraphQL
+│   └── Types/              ← أنواع مخصصة أو Scalars أو Inputs
+│
+├── Http/
+│   ├── Requests/           ← نفس دورها تمامًا (للـ validation)
+│   │   ├── Admin/
+│   │   ├── User/
+│   │   └── Shared/
+│   ├── Middleware/         ← لو عندك قيود على GraphQL أو API
+│   └── Controllers/
+│       ├── Admin/          ← لو فيه dashboard تقليدي (blade)
+│       ├── Web/            ← صفحات frontend العادية
+│       └── Api/            ← ممكن تستخدمه لعمليات خارج GraphQL
+│
+├── Services/               ← منطق الأعمال (Business Logic)
+│   ├── Auth/
+│   ├── News/
+│   ├── Podcast/
+│   └── Shared/
+│
+├── Repositories/           ← التعامل المباشر مع Models
+│   ├── Auth/
+│   ├── News/
+│   ├── Podcast/
+│   └── Shared/
+│
+├── Jobs/                   ← المهام المؤجلة
+│
+├── Models/                 ← جداول قاعدة البيانات (Eloquent models)
+│   ├── Site.php
+│   ├── Podcast.php
+│   ├── News.php
+│   ├── Article.php
+│   ├── Video.php
+│   └── ...
+│
+├── Policies/               ← الصلاحيات (Gate/Policy)
+│
+└── Traits/                 ← أكواد مشتركة يعاد استخدامها

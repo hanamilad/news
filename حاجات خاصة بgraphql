@@ -1,0 +1,38 @@
+لو فى mutation معقدة 
+type Mutation {
+  register(name: String!, email: String!, password: String!): User
+    @field(resolver: "App\\GraphQL\\Mutations\\AuthMutator@register")
+
+  login(email: String!, password: String!): String
+    @field(resolver: "App\\GraphQL\\Mutations\\AuthMutator@login")
+}
+
+لو فى query معقدة 
+type Query {
+  userPosts(userId: ID!): [Post!]! @field(resolver: "App\\GraphQL\\Queries\\PostQuery@getUserPosts")
+}
+
+لو عندك type معقد 
+type User {
+  posts: [Post!]! @field(resolver: "App\\GraphQL\\Queries\\PostQuery@getUserPosts")
+}
+
+
+
+@guard(with: ["sanctum"]) علشان تحمي الاشياء الى انتا عاوز تحميها 
+
+
+// دى علشان ال Requests 
+$validator = Validator::make($args, (new RegisterRequest())->rules());
+$validator->validate(); 
+
+
+
+//علشان امسح الكاش 
+php artisan lighthouse:clear-cache
+
+//علشان تتاكد ان كل شى صح 
+php artisan lighthouse:validate-schema
+
+//علشان تعرض ال schema
+ php artisan lighthouse:print-schema  

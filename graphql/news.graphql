@@ -1,0 +1,81 @@
+type News {
+  id: ID!
+  title: String!
+  styled_description: String
+  is_urgent: Boolean
+  is_active: Boolean
+  user: User
+  category: Category
+  hashtags: [Hashtag!]
+  images: [NewsImage!]
+  links: [NewsLink!]
+  suggestedNews: [News!]
+  originalSuggestions: [News!]
+  created_at: DateTime
+  updated_at: DateTime
+}
+
+type NewsImage {
+  id: ID!
+  image_path: String
+  is_main: Boolean
+}
+
+type NewsLink {
+  id: ID!
+  video_link: String
+}
+
+input NewsLinkInput {
+  video_link: String
+}
+
+input NewsInput {
+  title: TranslatableInput!
+  styled_description: TranslatableInput
+  is_urgent: Boolean
+  is_active: Boolean
+  user_id: ID!
+  category_id: ID!
+  hashtag_ids: [ID!]
+  suggested_ids: [ID!]
+  links: [NewsLinkInput!]
+}
+
+extend type Query {
+  news_for_admin(
+    category_id: ID @where(operator: "=")
+    first: Int! = 10
+    page: Int = 1
+  ): News! 
+    @paginate(type: "PAGINATOR", model: "App\\Models\\News")
+
+  urgent_news(
+    first: Int! = 10
+    page: Int = 1
+  ): News! 
+    @paginate(type: "PAGINATOR", model: "App\\Models\\News")
+    @where(key: "is_urgent", operator: "=", value: true)
+
+
+  news_for_public(
+    category_id: ID @where(operator: "=")
+    first: Int! = 10
+    page: Int = 1
+  ): News!
+   @paginate(type: "PAGINATOR", model: "App\\Models\\News")
+   @where(key: "is_active", operator: "=", value: true)
+
+  FindNews(id: ID! @eq): News @find
+}
+
+extend type Mutation {
+  CreateNews(input: NewsInput!, images: [Upload!]): News
+    @field(resolver: "App\\GraphQL\\Mutations\\NewsMutator@create")
+
+  UpdateNews(id: ID!, input: NewsInput!, images: [Upload!]): News
+    @field(resolver: "App\\GraphQL\\Mutations\\NewsMutator@update")
+
+  DeleteNews(id: ID!): Boolean
+    @field(resolver: "App\\GraphQL\\Mutations\\NewsMutator@delete")
+}

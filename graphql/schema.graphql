@@ -1,0 +1,12 @@
+#import common.graphql
+#import template.graphql
+#import user.graphql
+#import category.graphql
+#import hashtag.graphql
+#import news.graphql
+#import article.graphql
+#import podcast.graphql
+#import video.graphql
+
+type Query
+type Mutation

@@ -1,0 +1,24 @@
+type Hashtag @model(class: "App\\Models\\Hashtag") {
+  id: ID!
+  name: String!
+}
+
+input HashtagInput {
+  name: TranslatableInput!
+}
+
+extend type Query {
+  hashtags: [Hashtag!]! @all
+  hashtag(id: ID! @eq): Hashtag @find
+}
+
+extend type Mutation {
+  CreateHashtag(input: HashtagInput!): Hashtag 
+    @field(resolver: "App\\GraphQL\\Mutations\\HashtagMutator@create")
+
+  UpdateHashtag(id: ID!, input: HashtagInput!): Hashtag 
+    @field(resolver: "App\\GraphQL\\Mutations\\HashtagMutator@update")
+
+  DeleteHashtag(id: ID!): Boolean 
+    @field(resolver: "App\\GraphQL\\Mutations\\HashtagMutator@delete")
+}

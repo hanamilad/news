@@ -1,0 +1,55 @@
+type Video {
+  id: ID!
+  description: String!
+  video_path: String!
+  type: String
+  is_active: Boolean
+  user: User
+  created_at: DateTime
+  updated_at: DateTime
+}
+
+input VideoInput {
+  description: TranslatableInput!
+  video_path: String!
+  type: String!
+  is_active: Boolean
+  user_id: ID!
+}   
+
+extend type Query {
+  videos_for_admin(
+    first: Int! = 10,
+    page: Int = 1
+  ): Video!
+      @paginate(type: "PAGINATOR", model: "App\\Models\\Video")
+
+  short_videos_for_public(
+    first: Int! = 10,
+    page: Int = 1
+  ): Video!
+    @paginate(type: "PAGINATOR", model: "App\\Models\\Video")
+    @where(key: "is_active", operator: "=", value: true)
+    @where(key: "type", operator: "=", value: "short")
+
+    long_videos_for_public(
+    first: Int! = 10,
+    page: Int = 1
+  ): Video!
+    @paginate(type: "PAGINATOR", model: "App\\Models\\Video")
+    @where(key: "is_active", operator: "=", value: true)
+    @where(key: "type", operator: "=", value: "long")
+
+  video(id: ID! @eq): Video @find
+}
+
+extend type Mutation {
+  CreateVideo(input: VideoInput!): Video
+    @field(resolver: "App\\GraphQL\\Mutations\\VideoMutator@create")
+
+  UpdateVideo(id: ID!, input: VideoInput!): Video
+    @field(resolver: "App\\GraphQL\\Mutations\\VideoMutator@update")
+
+  DeleteVideo(id: ID!): Boolean
+    @field(resolver: "App\\GraphQL\\Mutations\\VideoMutator@delete")
+}
