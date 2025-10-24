@@ -1,0 +1,46 @@
+type Reel {
+  id: ID!
+  description: String!
+  path: String!
+  type: String
+  is_active: Boolean
+  user: User
+  created_at: DateTime
+  updated_at: DateTime
+}
+
+
+input ReelInput {
+  description: TranslatableInput!
+  path: Upload
+  type: String
+  is_active: Boolean
+}   
+
+extend type Query {
+  reels_for_admin(
+    first: Int! = 10,
+    page: Int = 1
+  ): Reel!
+      @paginate(type: "PAGINATOR", model: "App\\Models\\Reel")
+
+  reels_for_public(
+    first: Int! = 10,
+    page: Int = 1
+  ): Reel!
+    @paginate(type: "PAGINATOR", model: "App\\Models\\Reel")
+    @where(key: "is_active", operator: "=", value: true)
+
+  reel(id: ID! @eq): Reel @find
+}
+
+extend type Mutation {
+  CreateReel(input: ReelInput!): Reel
+    @field(resolver: "App\\GraphQL\\Mutations\\ReelMutator@create")
+
+  UpdateReel(id: ID!, input: ReelInput!): Reel
+    @field(resolver: "App\\GraphQL\\Mutations\\ReelMutator@update")
+
+  DeleteReel(id: ID!): Boolean
+    @field(resolver: "App\\GraphQL\\Mutations\\ReelMutator@delete")
+}
