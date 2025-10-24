@@ -2,33 +2,49 @@
 
 namespace App\GraphQL\Mutations;
 
-use App\Models\User;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\ValidationException;
+use App\Services\Auth\AuthService;
 
 class AuthMutator
 {
+    protected AuthService $authService;
+
+    public function __construct(AuthService $authService)
+    {
+        $this->authService = $authService;
+    }
+
     public function register($_, array $args)
     {
-        $user = User::create([
-            'name' => $args['name'],
-            'email' => $args['email'],
-            'password' => Hash::make($args['password']),
-        ]);
+        return $this->authService->register($args);
+    }
 
-        return $user;
+    public function verifyEmail($_, array $args)
+    {
+        return $this->authService->verifyEmail($args['email'], $args['token']);
     }
 
     public function login($_, array $args)
     {
-        if (!Auth::attempt(['email' => $args['email'], 'password' => $args['password']])) {
-            throw ValidationException::withMessages([
-                'email' => ['Invalid credentials.'],
-            ]);
-        }
+        return $this->authService->login($args);
+    }
 
-        $user = Auth::user();
-        return $user->createToken('graphql_token')->plainTextToken;
+    public function refresh($_, array $args)
+    {
+        return $this->authService->refreshToken($args['refresh_token']);
+    }
+
+    public function forgetPass($_, array $args)
+    {
+        return $this->authService->forgetPassword($args['email']);
+    }
+
+    public function resetPass($_, array $args)
+    {
+        return $this->authService->resetPassword($args['token'], $args['email'], $args['password']);
+    }
+
+    public function logout($_, array $args)
+    {
+        return $this->authService->logout();
     }
 }

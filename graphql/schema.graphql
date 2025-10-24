@@ -1,6 +1,6 @@
 #import common.graphql
 #import template.graphql
-#import user.graphql
+#import auth.graphql
 #import category.graphql
 #import hashtag.graphql
 #import news.graphql

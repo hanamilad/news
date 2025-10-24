@@ -8,7 +8,3 @@ extend type Query {
   users: [User!]! @paginate
   user(id: ID!): User @find
 }
-
-extend type Mutation {
-  createUser(name: String!, email: String!, password: String!): User @create
-}
