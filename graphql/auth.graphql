@@ -10,15 +10,20 @@ type User {
   name: String!
   email: String!
   email_verified_at: String
-  access_token: String
-  refresh_token: String
-  message: String
 }
 
+type LoginResponse {
+  message: String!
+  user: User
+  access_token: String
+  refresh_token: String
+}
+
+
 extend type Mutation {
-  register(name: String!, email: String!, password: String!): User @field(resolver: "App\\GraphQL\\Mutations\\AuthMutator@register")
+  register(name: String!, email: String!, password: String!): LoginResponse @field(resolver: "App\\GraphQL\\Mutations\\AuthMutator@register")
   verifyEmail(email: String!, token: String!): String @field(resolver: "App\\GraphQL\\Mutations\\AuthMutator@verifyEmail")
-  login(email: String!, password: String!): User @field(resolver:"App\\GraphQL\\Mutations\\AuthMutator@login")
+  login(email: String!, password: String!): LoginResponse @field(resolver:"App\\GraphQL\\Mutations\\AuthMutator@login")
   refresh(refresh_token: String!): Tokens @field(resolver:"App\\GraphQL\\Mutations\\AuthMutator@refresh")
   forgetPass(email: String!): String @field(resolver:"App\\GraphQL\\Mutations\\AuthMutator@forgetPass")
   resetPass(token: String!, email: String!, password: String!): String @field(resolver:"App\\GraphQL\\Mutations\\AuthMutator@resetPass")
