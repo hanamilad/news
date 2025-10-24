@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Translatable\HasTranslations;
 use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
+use Illuminate\Support\Facades\Storage;
+
 
 class Reel extends Model
 {
@@ -26,17 +28,17 @@ class Reel extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function getPathAttribute($value)
+    {
+        if ($this->type === 'video') {
+            return $value;
+        }
+        if ($this->type === 'image') {
+            /** @var \Illuminate\Filesystem\FilesystemAdapter $storage */
+            $storage = Storage::disk('public');
+            return $storage->url($value);
+        }
+        return $value;
+    }
 }
-
-
-
-            // $table->id();
-            // $table->json('description')->nullable();
-            // $table->string('path')->nullable();
-            // $table->enum('type', ['video', 'image'])->default('video'); 
-            // $table->boolean('is_active')->default(true);
-            // $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
-            // $table->string('tenant_id');
-            // $table->timestamps();
-            // $table->softDeletes();
-            // $table->foreign('tenant_id')->references('id')->on('tenants')->onUpdate('cascade')->onDelete('cascade');
