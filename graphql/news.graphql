@@ -67,6 +67,15 @@ extend type Query {
    @where(key: "is_active", operator: "=", value: true)
 
   FindNews(id: ID! @eq): News @find
+
+    searchNews(
+    search: String
+    exclude: String
+    include: String
+    first: Int! = 10
+    page: Int = 1
+  ): [News!]!
+    @field(resolver: "App\\GraphQL\\Queries\\NewsQuery@searchNews")
 }
 
 extend type Mutation {

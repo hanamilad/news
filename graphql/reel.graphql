@@ -12,7 +12,7 @@ type Reel {
 
 input ReelInput {
   description: TranslatableInput!
-  path: Upload
+  path: String
   type: String
   is_active: Boolean
 }   
