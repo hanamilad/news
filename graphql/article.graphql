@@ -23,6 +23,8 @@ extend type Query {
     first: Int! = 10,
     page: Int = 1
   ): Article!
+      @guard(with: ["api"])
+      @can(ability: "article.view")
       @paginate(type: "PAGINATOR", model: "App\\Models\\Article")
 
   articles_for_public(
@@ -37,11 +39,17 @@ extend type Query {
 
 extend type Mutation {
   CreateArticle(input: ArticleInput!, image: Upload): Article
+    @guard(with: ["api"])
+    @can(ability: "article.create")
     @field(resolver: "App\\GraphQL\\Mutations\\ArticleMutator@create")
 
   UpdateArticle(id: ID!, input: ArticleInput!, image: Upload): Article
+    @guard(with: ["api"])
+    @can(ability: "article.update")
     @field(resolver: "App\\GraphQL\\Mutations\\ArticleMutator@update")
 
   DeleteArticle(id: ID!): Boolean
+    @guard(with: ["api"])
+    @can(ability: "article.delete")
     @field(resolver: "App\\GraphQL\\Mutations\\ArticleMutator@delete")
 }

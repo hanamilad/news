@@ -20,7 +20,9 @@ input PodcastInput {
 
 extend type Query {
   podcast_for_admin(first: Int! = 10,page: Int = 1): Podcast!
-      @paginate(type: "PAGINATOR", model: "App\\Models\\Podcast")
+    @guard(with: ["api"])
+    @can(ability: "podcast.view")
+    @paginate(type: "PAGINATOR", model: "App\\Models\\Podcast")
 
   podcast_for_public(first: Int! = 10,page: Int = 1): Podcast!
     @paginate(type: "PAGINATOR", model: "App\\Models\\Podcast")
@@ -31,11 +33,17 @@ extend type Query {
 
 extend type Mutation {
   CreatePodcast(input: PodcastInput!, audio: Upload): Podcast
+    @guard(with: ["api"])
+    @can(ability: "podcast.create")
     @field(resolver: "App\\GraphQL\\Mutations\\PodcastMutator@create")
 
   UpdatePodcast(id: ID!, input: PodcastInput!, audio: Upload): Podcast
+    @guard(with: ["api"])
+    @can(ability: "podcast.update")
     @field(resolver: "App\\GraphQL\\Mutations\\PodcastMutator@update")
 
   DeletePodcast(id: ID!): Boolean
+    @guard(with: ["api"])
+    @can(ability: "podcast.delete")
     @field(resolver: "App\\GraphQL\\Mutations\\PodcastMutator@delete")
 }

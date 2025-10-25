@@ -5,12 +5,7 @@ type Tokens {
   expires_in: Int!
 }
 
-type User {
-  id: ID!
-  name: String!
-  email: String!
-  email_verified_at: String
-}
+
 
 type LoginResponse {
   message: String!
@@ -27,5 +22,5 @@ extend type Mutation {
   refresh(refresh_token: String!): Tokens @field(resolver:"App\\GraphQL\\Mutations\\AuthMutator@refresh")
   forgetPass(email: String!): String @field(resolver:"App\\GraphQL\\Mutations\\AuthMutator@forgetPass")
   resetPass(token: String!, email: String!, password: String!): String @field(resolver:"App\\GraphQL\\Mutations\\AuthMutator@resetPass")
-  logout: Boolean @field(resolver:"App\\GraphQL\\Mutations\\AuthMutator@logout")
+  logout: Boolean @guard(with: ["api"]) @field(resolver:"App\\GraphQL\\Mutations\\AuthMutator@logout")
 }

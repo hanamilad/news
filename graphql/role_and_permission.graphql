@@ -1,0 +1,52 @@
+type Role {
+  id: ID!
+  name: String!
+  permissions: [Permission!]! @belongsToMany
+}
+
+type Permission {
+  id: ID!
+  name: String!
+}
+
+
+enum ActionRolePermissions {
+  ADD
+  REMOVE
+}
+
+
+extend type Query {
+  roles: [Role!]!
+  @guard(with: ["api"])
+  @can(ability: "roles.view")
+  @all(model: "Spatie\\Permission\\Models\\Role")
+
+  permissions: [Permission!]!
+  @guard(with: ["api"])
+  @can(ability: "permissions.view")
+  @all(model: "Spatie\\Permission\\Models\\Permission")
+}
+
+
+extend type Mutation {
+
+  createRole(name: String!): Role
+    @guard(with: ["api"])
+    @can(ability: "roles.create")
+    @field(resolver: "App\\GraphQL\\Mutations\\RoleMutator@create")
+
+  createPermission(name: String!): Permission
+    @guard(with: ["api"])
+    @can(ability: "permissions.create")
+    @field(resolver: "App\\GraphQL\\Mutations\\PermissionMutator@create")
+
+  manageRolePermissions(
+    role_id: ID!,
+    permissions: [ID!]!,
+    action: ActionRolePermissions! 
+  ): Role
+    @guard(with: ["api"])
+    @can(ability: "roles.managePermissions")
+    @field(resolver: "App\\GraphQL\\Mutations\\RoleMutator@managePermissions")
+}

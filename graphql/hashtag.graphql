@@ -14,11 +14,17 @@ extend type Query {
 
 extend type Mutation {
   CreateHashtag(input: HashtagInput!): Hashtag 
+    @guard(with: ["api"])
+    @can(ability: "hashtag.create")
     @field(resolver: "App\\GraphQL\\Mutations\\HashtagMutator@create")
 
   UpdateHashtag(id: ID!, input: HashtagInput!): Hashtag 
+    @guard(with: ["api"])
+    @can(ability: "hashtag.update")
     @field(resolver: "App\\GraphQL\\Mutations\\HashtagMutator@update")
 
   DeleteHashtag(id: ID!): Boolean 
+    @guard(with: ["api"])
+    @can(ability: "hashtag.delete")
     @field(resolver: "App\\GraphQL\\Mutations\\HashtagMutator@delete")
 }

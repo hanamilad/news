@@ -48,6 +48,8 @@ extend type Query {
     first: Int! = 10
     page: Int = 1
   ): News! 
+    @guard(with: ["api"])
+    @can(ability: "news.view")
     @paginate(type: "PAGINATOR", model: "App\\Models\\News")
 
   urgent_news(
@@ -80,11 +82,17 @@ extend type Query {
 
 extend type Mutation {
   CreateNews(input: NewsInput!, images: [Upload!]): News
+    @guard(with: ["api"])
+    @can(ability: "news.create")
     @field(resolver: "App\\GraphQL\\Mutations\\NewsMutator@create")
 
   UpdateNews(id: ID!, input: NewsInput!, images: [Upload!]): News
+    @guard(with: ["api"])
+    @can(ability: "news.update")
     @field(resolver: "App\\GraphQL\\Mutations\\NewsMutator@update")
 
   DeleteNews(id: ID!): Boolean
+    @guard(with: ["api"])
+    @can(ability: "news.delete")
     @field(resolver: "App\\GraphQL\\Mutations\\NewsMutator@delete")
 }

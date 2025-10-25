@@ -16,9 +16,11 @@ class ArticleService
     public function create(array $input,  $file): Article
     {
         return DB::transaction(function () use ($input, $file) {
+            $user = auth('api')->user();
+            $input['user_id'] = $user->id;
             $input['author_image'] = $this->storeAuthorImage($file);
             $article = $this->repo->create($input);
-            $this->log($article->user_id, 'create', Article::class, $article->id, null, $article->toArray());
+            $this->log($user->id, 'create', Article::class, $article->id, null, $article->toArray());
             return $article;
         });
     }
@@ -26,17 +28,19 @@ class ArticleService
     public function update(int $id, array $input, $file): Article
     {
         return DB::transaction(function () use ($id, $input, $file) {
+            $user = auth('api')->user();
+            $input['user_id'] = $user->id;
             $article = $this->repo->findById($id);
             $old = $article->toArray();
             $uploaded = $this->storeAuthorImage($file);
             if (!empty($uploaded)) {
-                if ($article->author_image &&Storage::disk('public')->exists($article->author_image)) {
+                if ($article->author_image && Storage::disk('public')->exists($article->author_image)) {
                     Storage::disk('public')->delete($article->author_image);
                 }
                 $input['author_image'] = $uploaded;
             }
             $updated = $this->repo->update($article, $input);
-            $this->log(request()->user()->id ?? $updated->user_id, 'update', Article::class, $updated->id, $old, $updated->toArray());
+            $this->log($user->id, 'update', Article::class, $updated->id, $old, $updated->toArray());
             return $updated;
         });
     }
@@ -44,13 +48,14 @@ class ArticleService
     public function delete(int $id): bool
     {
         return DB::transaction(function () use ($id) {
+            $user = auth('api')->user();
             $article = $this->repo->findById($id);
             $old = $article->toArray();
             if ($article->author_image && Storage::disk('public')->exists($article->author_image)) {
                 Storage::disk('public')->delete($article->author_image);
             }
             $deleted = $this->repo->delete($article);
-            $this->log(request()->user()->id ?? $article->user_id, 'delete', Article::class, $article->id, $old, null);
+            $this->log($user->id, 'delete', Article::class, $article->id, $old, null);
             return $deleted;
         });
     }

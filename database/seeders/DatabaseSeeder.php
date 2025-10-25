@@ -20,6 +20,12 @@ class DatabaseSeeder extends Seeder
         User::factory()->create([
             'name' => 'Test User',
             'email' => 'test@example.com',
+            'password' => '123456',
+            'tenant_id' => null,
         ]);
+        $this->call(
+            PermissionRoleSeeder::class,
+            TenantSeeder::class,
+        );
     }
 }

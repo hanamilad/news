@@ -22,7 +22,9 @@ extend type Query {
     first: Int! = 10,
     page: Int = 1
   ): Video!
-      @paginate(type: "PAGINATOR", model: "App\\Models\\Video")
+    @guard(with: ["api"])
+    @can(ability: "video.view")
+    @paginate(type: "PAGINATOR", model: "App\\Models\\Video")
 
   short_videos_for_public(
     first: Int! = 10,
@@ -45,11 +47,17 @@ extend type Query {
 
 extend type Mutation {
   CreateVideo(input: VideoInput!): Video
+    @guard(with: ["api"])
+    @can(ability: "video.create")
     @field(resolver: "App\\GraphQL\\Mutations\\VideoMutator@create")
 
   UpdateVideo(id: ID!, input: VideoInput!): Video
+    @guard(with: ["api"])
+    @can(ability: "video.update")
     @field(resolver: "App\\GraphQL\\Mutations\\VideoMutator@update")
 
   DeleteVideo(id: ID!): Boolean
+    @guard(with: ["api"])
+    @can(ability: "video.delete")
     @field(resolver: "App\\GraphQL\\Mutations\\VideoMutator@delete")
 }

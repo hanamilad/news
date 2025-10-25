@@ -16,11 +16,17 @@ extend type Query {
 
 extend type Mutation {
   CreateCategory(input: CategoryInput!): Category 
+    @guard(with: ["api"])
+    @can(ability: "categories.create")
     @field(resolver: "App\\GraphQL\\Mutations\\CategoryMutator@create")
 
   UpdateCategory(id: ID!, input: CategoryInput!): Category 
+    @guard(with: ["api"])
+    @can(ability: "categories.update")
     @field(resolver: "App\\GraphQL\\Mutations\\CategoryMutator@update")
 
   DeleteCategory(id: ID!): Boolean 
+    @guard(with: ["api"])
+    @can(ability: "categories.delete")
     @field(resolver: "App\\GraphQL\\Mutations\\CategoryMutator@delete")
 }
