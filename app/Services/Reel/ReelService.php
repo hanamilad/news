@@ -17,9 +17,11 @@ class ReelService
     public function create(array $input): Reel
     {
         return DB::transaction(function () use ($input) {
+            $user = auth('api')->user();
+            $input['user_id'] = $user->id;
             $input['path'] = $this->handlePath($input);
             $reel = $this->repo->create($input);
-            $this->log($reel->user_id,'create',Reel::class,$reel->id,null,$reel->toArray());
+            $this->log($user->id, 'create', Reel::class, $reel->id, null, $reel->toArray());
             return $reel;
         });
     }
@@ -27,6 +29,8 @@ class ReelService
     public function update(int $id, array $input): Reel
     {
         return DB::transaction(function () use ($id, $input) {
+            $user = auth('api')->user();
+            $input['user_id'] = $user->id;
             $reel = $this->repo->findById($id);
             $old = $reel->toArray();
             $newPath = $this->handlePath($input, $reel->path);
@@ -37,7 +41,7 @@ class ReelService
                 $input['path'] = $newPath;
             }
             $updated = $this->repo->update($reel, $input);
-            $this->log(request()->user()->id ?? $updated->user_id,'update',Reel::class,$updated->id,$old,$updated->toArray());
+            $this->log($user->id, 'update', Reel::class, $updated->id, $old, $updated->toArray());
             return $updated;
         });
     }
@@ -45,6 +49,7 @@ class ReelService
     public function delete(int $id): bool
     {
         return DB::transaction(function () use ($id) {
+            $user = auth('api')->user();
             $reel = $this->repo->findById($id);
             $old = $reel->toArray();
 
@@ -54,7 +59,7 @@ class ReelService
 
             $deleted = $this->repo->delete($reel);
 
-            $this->log(request()->user()->id ?? $reel->user_id,'delete',Reel::class,$reel->id,$old,null);
+            $this->log($user->id, 'delete', Reel::class, $reel->id, $old, null);
 
             return $deleted;
         });

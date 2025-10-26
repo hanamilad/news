@@ -18,7 +18,6 @@ class ArticleRequest extends FormRequest
             'content.*' => 'nullable|string',
             'author_name' => 'required|array',
             'author_name.*' => 'nullable|string|max:255',
-            'author_image' => 'nullable|image',
             'is_active' => 'nullable|boolean',
         ];
     }
@@ -33,7 +32,6 @@ class ArticleRequest extends FormRequest
             'author_name.array' => 'يجب إرسال أسم المؤلف كمجموعة من الترجمات (مثلاً ar, en).',
             'author_name.*.string'   => 'كل ترجمة يجب أن تكون نص.',
             'author_name.max'      => 'كل ترجمة يجب ألا تتجاوز 255 حرف.',
-            'author_image.image'   => 'صورة المؤلف يجب ان تكون صورة ',
             'is_active.boolean' => 'The active flag must be true or false.',
         ];
     }

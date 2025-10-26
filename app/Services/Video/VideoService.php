@@ -14,8 +14,10 @@ class VideoService
     public function create(array $input): Video
     {
         return DB::transaction(function () use ($input) {
+            $user = auth('api')->user();
+            $input['user_id'] = $user->id;
             $video = $this->repo->create($input);
-            $this->log($video->user_id, 'create', Video::class, $video->id, null, $video->toArray());
+            $this->log($user->id, 'create', Video::class, $video->id, null, $video->toArray());
             return $video;
         });
     }
@@ -23,10 +25,12 @@ class VideoService
     public function update(int $id, array $input): Video
     {
         return DB::transaction(function () use ($id, $input) {
+            $user = auth('api')->user();
+            $input['user_id'] = $user->id;
             $video = $this->repo->findById($id);
             $old = $video->toArray();
             $updated = $this->repo->update($video, $input);
-            $this->log( request()->user()->id ?? $updated->user_id, 'update', Video::class, $updated->id, $old, $updated->toArray());
+            $this->log($user->id, 'update', Video::class, $updated->id, $old, $updated->toArray());
             return $updated;
         });
     }
@@ -34,10 +38,11 @@ class VideoService
     public function delete(int $id): bool
     {
         return DB::transaction(function () use ($id) {
+            $user = auth('api')->user();
             $video = $this->repo->findById($id);
             $old = $video->toArray();
             $deleted = $this->repo->delete($video);
-            $this->log(request()->user()->id ?? $video->user_id, 'delete', Video::class, $video->id, $old, null);
+            $this->log($user->id, 'delete', Video::class, $video->id, $old, null);
             return $deleted;
         });
     }

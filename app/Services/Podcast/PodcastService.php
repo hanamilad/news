@@ -16,9 +16,11 @@ class PodcastService
     public function create(array $input,  $file): Podcast
     {
         return DB::transaction(function () use ($input, $file) {
+            $user = auth('api')->user();
+            $input['user_id'] = $user->id;
             $input['audio_path'] = $this->storeAudioPath($file);
             $podcast = $this->repo->create($input);
-            $this->log($podcast->user_id, 'create', Podcast::class, $podcast->id, null, $podcast->toArray());
+            $this->log($user->id, 'create', Podcast::class, $podcast->id, null, $podcast->toArray());
             return $podcast;
         });
     }
@@ -26,17 +28,19 @@ class PodcastService
     public function update(int $id, array $input, $file): Podcast
     {
         return DB::transaction(function () use ($id, $input, $file) {
+            $user = auth('api')->user();
+            $input['user_id'] = $user->id;
             $podcast = $this->repo->findById($id);
             $old = $podcast->toArray();
             $uploaded = $this->storeAudioPath($file);
             if (!empty($uploaded)) {
-                if ($podcast->audio_path &&Storage::disk('public')->exists($podcast->audio_path)) {
+                if ($podcast->audio_path && Storage::disk('public')->exists($podcast->audio_path)) {
                     Storage::disk('public')->delete($podcast->audio_path);
                 }
                 $input['audio_path'] = $uploaded;
             }
             $updated = $this->repo->update($podcast, $input);
-            $this->log( request()->user()->id ?? $updated->user_id, 'update', Podcast::class, $updated->id, $old, $updated->toArray());
+            $this->log($user->id, 'update', Podcast::class, $updated->id, $old, $updated->toArray());
             return $updated;
         });
     }
@@ -44,13 +48,14 @@ class PodcastService
     public function delete(int $id): bool
     {
         return DB::transaction(function () use ($id) {
+            $user = auth('api')->user();
             $podcast = $this->repo->findById($id);
             $old = $podcast->toArray();
             if ($podcast->audio_path && Storage::disk('public')->exists($podcast->audio_path)) {
                 Storage::disk('public')->delete($podcast->audio_path);
             }
             $deleted = $this->repo->delete($podcast);
-            $this->log(request()->user()->id ?? $podcast->user_id, 'delete', Podcast::class, $podcast->id, $old, null);
+            $this->log($user->id, 'delete', Podcast::class, $podcast->id, $old, null);
             return $deleted;
         });
     }

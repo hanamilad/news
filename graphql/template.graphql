@@ -2,3 +2,29 @@ type Template {
   id: ID!
   name: String!
 }
+
+
+input TemplateInput {
+  name: String!
+}
+
+extend type Query {
+  template: [Template!]! @all
+}
+
+extend type Mutation {
+  CreateTemplate(input: TemplateInput!): Template 
+    @guard(with: ["api"])
+    @can(ability: "templates.create")
+    @field(resolver: "App\\GraphQL\\Mutations\\TemplateMutator@create")
+
+  UpdateTemplate(id: ID!, input: TemplateInput!): Template 
+    @guard(with: ["api"])
+    @can(ability: "templates.update")
+    @field(resolver: "App\\GraphQL\\Mutations\\TemplateMutator@update")
+
+  DeleteTemplate(id: ID!): Boolean 
+    @guard(with: ["api"])
+    @can(ability: "templates.delete")
+    @field(resolver: "App\\GraphQL\\Mutations\\TemplateMutator@delete")
+}

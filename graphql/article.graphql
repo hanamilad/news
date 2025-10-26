@@ -14,7 +14,6 @@ type Article {
 input ArticleInput {
   content: TranslatableInput!
   author_name: TranslatableInput!
-  author_image: String
   is_active: Boolean
 }   
 

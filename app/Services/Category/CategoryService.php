@@ -14,18 +14,20 @@ class CategoryService
 
     public function create(array $input): Category
     {
+        $user = auth('api')->user();
         $category = $this->repo->create($input);
-        $this->log($category->user_id, 'create', Category::class, $category->id, null, $category->toArray());
+        $this->log($user->id, 'create', Category::class, $category->id, null, $category->toArray());
         return $category;
     }
 
     public function update(int $id, array $input): Category
     {
         return DB::transaction(function () use ($id, $input) {
+            $user = auth('api')->user();
             $category = $this->repo->findById($id);
             $old = $category->toArray();
             $updated = $this->repo->update($category, $input);
-            $this->log(request()->user()->id ?? $updated->user_id, 'update', Category::class, $updated->id, $old, $updated->toArray());
+            $this->log($user->id, 'update', Category::class, $updated->id, $old, $updated->toArray());
             return $updated;
         });
     }
@@ -33,10 +35,11 @@ class CategoryService
     public function delete(int $id): bool
     {
         return DB::transaction(function () use ($id) {
+            $user = auth('api')->user();
             $category = $this->repo->findById($id);
             $old = $category->toArray();
             $deleted = $this->repo->delete($category);
-            $this->log(request()->user()->id ?? $category->user_id, 'delete', Category::class, $category->id, $old, null);
+            $this->log($user->id, 'delete', Category::class, $category->id, $old, null);
             return $deleted;
         });
     }

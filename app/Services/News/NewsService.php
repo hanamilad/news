@@ -22,9 +22,11 @@ class NewsService
     public function create(array $input, array $files = []): News
     {
         return DB::transaction(function () use ($input, $files) {
+            $user = auth('api')->user();
+            $input['user_id'] = $user->id;
             $input['images'] = $this->storeFilesAndBuildImages($files);
             $news = $this->repo->create($input);
-            $this->log($news->user_id, 'create', News::class, $news->id, null, $news->toArray());
+            $this->log($user->id, 'create', News::class, $news->id, null, $news->toArray());
             return $news;
         });
     }
@@ -32,6 +34,8 @@ class NewsService
     public function update(int $id, array $input, array $files = []): News
     {
         return DB::transaction(function () use ($id, $input, $files) {
+            $user = auth('api')->user();
+            $input['user_id'] = $user->id;
             $news = $this->repo->findById($id);
             $old = $news->toArray();
             $uploaded = $this->storeFilesAndBuildImages($files);
@@ -39,7 +43,7 @@ class NewsService
                 $input['images'] = $uploaded;
             }
             $updated = $this->repo->update($news, $input);
-            $this->log(request()->user()->id ?? $updated->user_id, 'update', News::class, $updated->id, $old, $updated->toArray());
+            $this->log($user->id, 'update', News::class, $updated->id, $old, $updated->toArray());
             return $updated;
         });
     }
@@ -47,6 +51,7 @@ class NewsService
     public function delete(int $id): bool
     {
         return DB::transaction(function () use ($id) {
+            $user = auth('api')->user();
             $news = $this->repo->findById($id);
             $old = $news->toArray();
             foreach ($news->images as $img) {
@@ -55,7 +60,7 @@ class NewsService
                 }
             }
             $deleted = $this->repo->delete($news);
-            $this->log(request()->user()->id ?? $news->user_id, 'delete', News::class, $news->id, $old, null);
+            $this->log($user->id, 'delete', News::class, $news->id, $old, null);
             return $deleted;
         });
     }
