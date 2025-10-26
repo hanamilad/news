@@ -123,4 +123,8 @@ return [
     'tracing' => [
         'driver' => Nuwave\Lighthouse\Tracing\ApolloTracing\ApolloTracing::class,
     ],
+    'scalars' => [
+        'JSON' => App\GraphQL\Scalars\JSON::class,
+    ],
+
 ];

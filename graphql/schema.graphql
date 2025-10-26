@@ -1,6 +1,7 @@
 #import common.graphql
 #import template.graphql
 #import role_and_permission.graphql
+#import activity_logs.php
 #import user.graphql
 #import auth.graphql
 #import category.graphql

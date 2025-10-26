@@ -35,6 +35,10 @@ class User extends Authenticatable
         ];
     }
 
+    public function activity_logs() {
+        return $this->hasMany(ActivityLog::class);
+    }
+
 
     public function scopeApplyTrashedFilter($query, $args)
     {

@@ -5,6 +5,7 @@ type User {
   email_verified_at: String
   roles: [Role!]! @belongsToMany
   permissions: [Permission!]! @belongsToMany
+  activity_logs: [ActivityLog!]! @hasMany
 }
 
 input UserInput {
