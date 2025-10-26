@@ -25,6 +25,6 @@ extend type Mutation {
 
   DeleteHashtag(id: ID!): Boolean 
     @guard(with: ["api"])
-    @can(ability: "hashtag.delete")
+    @can(ability: "hashtag.delete", model: "App\\Models\\Hashtag")
     @field(resolver: "App\\GraphQL\\Mutations\\HashtagMutator@delete")
 }

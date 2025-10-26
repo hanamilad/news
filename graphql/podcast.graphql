@@ -44,6 +44,6 @@ extend type Mutation {
 
   DeletePodcast(id: ID!): Boolean
     @guard(with: ["api"])
-    @can(ability: "podcast.delete")
+    @can(ability: "podcast.delete", model: "App\\Models\\Podcast")
     @field(resolver: "App\\GraphQL\\Mutations\\PodcastMutator@delete")
 }

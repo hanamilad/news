@@ -58,6 +58,6 @@ extend type Mutation {
 
   DeleteVideo(id: ID!): Boolean
     @guard(with: ["api"])
-    @can(ability: "video.delete")
+    @can(ability: "video.delete", model: "App\\Models\\Video")
     @field(resolver: "App\\GraphQL\\Mutations\\VideoMutator@delete")
 }

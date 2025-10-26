@@ -1,0 +1,39 @@
+type ContactMessage @model(class: "App\\Models\\ContactMessage") {
+id: ID!
+name: String!
+email: String!
+phone: String
+subject: String
+message: String!
+is_read: Boolean
+}
+input ContactMessageInput {
+name: String!
+email: String!
+phone: String
+subject: String
+message: String!
+}
+
+extend type Query {
+contactMessages: [ContactMessage!]!
+@all
+@guard(with: ["api"])
+@can(ability: "contact_messages.view")
+}
+
+extend type Mutation {
+sendContactMessage(input: ContactMessageInput!): ContactMessage
+@field(resolver: "App\\GraphQL\\Mutations\\ContactMessageMutator@create")
+
+setIsRead(id: ID!, is_read: Boolean!): ContactMessage
+@guard(with: ["api"])
+@can(ability: "contact_messages.update")
+@field(resolver: "App\\GraphQL\\Mutations\\ContactMessageMutator@setIsRead")
+
+
+DeleteContactMessage(id: ID!): Boolean
+@guard(with: ["api"])
+@can(ability: "contact_messages.delete", model: "App\\Models\\ContactMessage")
+@field(resolver: "App\\GraphQL\\Mutations\\ContactMessageMutator@delete")
+}

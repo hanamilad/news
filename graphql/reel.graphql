@@ -9,11 +9,16 @@ type Reel {
   updated_at: DateTime
 }
 
+enum TypeReel {
+image
+video
+}
+
 
 input ReelInput {
   description: TranslatableInput!
   path: String
-  type: String
+  type: TypeReel
   is_active: Boolean
 }   
 
@@ -49,6 +54,6 @@ extend type Mutation {
 
   DeleteReel(id: ID!): Boolean
     @guard(with: ["api"])
-    @can(ability: "reel.delete")
+    @can(ability: "reel.delete", model: "App\\Models\\Reel")
     @field(resolver: "App\\GraphQL\\Mutations\\ReelMutator@delete")
 }

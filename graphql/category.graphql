@@ -27,6 +27,6 @@ extend type Mutation {
 
   DeleteCategory(id: ID!): Boolean 
     @guard(with: ["api"])
-    @can(ability: "categories.delete")
+    @can(ability: "categories.delete", model: "App\\Models\\Category")
     @field(resolver: "App\\GraphQL\\Mutations\\CategoryMutator@delete")
 }

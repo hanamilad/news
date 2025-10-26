@@ -25,6 +25,6 @@ extend type Mutation {
 
   DeleteTemplate(id: ID!): Boolean 
     @guard(with: ["api"])
-    @can(ability: "templates.delete")
+    @can(ability: "templates.delete", model: "App\\Models\\Template")
     @field(resolver: "App\\GraphQL\\Mutations\\TemplateMutator@delete")
 }
