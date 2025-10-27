@@ -9,10 +9,16 @@ type Video {
   updated_at: DateTime
 }
 
+enum VideoType{
+  short
+  long
+}
+
+
 input VideoInput {
   description: TranslatableInput!
   video_path: String!
-  type: String!
+  type: VideoType!
   is_active: Boolean
   user_id: ID!
 }   

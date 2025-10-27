@@ -58,6 +58,7 @@ class PermissionRoleSeeder extends Seeder
             'contact_messages.update',
             'contact_messages.view',
             'contact_messages.delete',
+            'tenant.update',
         ];
 
         foreach ($permissions as $perm) {

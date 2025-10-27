@@ -1,0 +1,10 @@
+extend type Query {
+  currentTenant: JSON @field(resolver: "App\\GraphQL\\Mutations\\TenantMutator@current")
+}
+
+extend type Mutation {
+  updateTenantData(data: JSON!): JSON
+    @guard(with: ["api"])
+    @can(ability: "tenant.update")
+    @field(resolver: "App\\GraphQL\\Mutations\\TenantMutator@updateData")
+}
