@@ -17,7 +17,9 @@ class TenantMutator
         if (!$tenantRecord) {
             throw new \Exception('Tenant record not found.');
         }
-        return $tenantRecord->toArray();
+        $data = $tenantRecord->toArray();
+        unset($data['id'], $data['created_at'], $data['updated_at'], $data['data']);
+        return $data;
     }
 
     public function updateData($_, array $args)
