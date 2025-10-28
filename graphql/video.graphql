@@ -20,7 +20,6 @@ input VideoInput {
   video_path: String!
   type: VideoType!
   is_active: Boolean
-  user_id: ID!
 }   
 
 extend type Query {

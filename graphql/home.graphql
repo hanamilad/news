@@ -1,0 +1,30 @@
+type HomeSection {
+  latest_news: [News!]        
+  urgent_news_by_category: [CategoryUrgentNews!] 
+  category_news: [CategoryNews!]
+  videos: [Video!]        
+  podcasts: [Podcast!]          
+  articles: [Article!]         
+}
+
+type CategoryUrgentNews {
+  category: Category!
+  news: [News!]!
+}
+
+type CategoryNews {
+  category: Category!
+  news: [News!]!
+}
+
+extend type Query {
+  home(
+    latest_limit: Int = 10
+    urgent_limit: Int = 5
+    category_limit: Int = 5
+    video_limit: Int = 5
+    podcast_limit: Int = 5
+    article_limit: Int = 5
+  ): HomeSection
+    @field(resolver: "App\\GraphQL\\Queries\\HomeQuery@home")
+}

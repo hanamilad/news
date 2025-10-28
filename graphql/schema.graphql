@@ -13,6 +13,8 @@
 #import video.graphql
 #import reel.graphql
 #import contact_message.graphql
+#import team_member.graphql
+#import home.graphql
 
 type Query
 type Mutation
