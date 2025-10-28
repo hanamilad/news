@@ -34,7 +34,8 @@ class TenantMutator
         Tenant::where('id', $tenant->id)->update([
             'data' => $args['data'],
         ]);
-        $updatedTenant = Tenant::find($tenant->id);
-        return $updatedTenant->toArray();
+        $data =  Tenant::find($tenant->id);
+        unset($data['id'], $data['created_at'], $data['updated_at'], $data['data']);
+        return $data;
     }
 }

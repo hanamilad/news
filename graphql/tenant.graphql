@@ -3,8 +3,8 @@ extend type Query {
 }
 
 extend type Mutation {
-  updateTenantData(data: JSON!): JSON
+  updateTenantData(data: JSON!): JSON 
     @guard(with: ["api"])
-    @can(ability: "tenant.update")
+    @can(ability: "tenant.update", model: "App\\Models\\Template")
     @field(resolver: "App\\GraphQL\\Mutations\\TenantMutator@updateData")
 }
