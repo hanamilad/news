@@ -70,4 +70,6 @@ class News extends Model
             'original_news_id'
         );
     }
+
+    
 }

@@ -34,8 +34,9 @@ class ArticleService
             $old = $article->toArray();
             $uploaded = $this->storeAuthorImage($file);
             if (!empty($uploaded)) {
-                if ($article->author_image && Storage::disk('public')->exists($article->author_image)) {
-                    Storage::disk('public')->delete($article->author_image);
+                $originalPath = ltrim($article->getRawOriginal('author_image'), '/');
+                if ($article->author_image && Storage::disk('spaces')->exists($originalPath)) {
+                    Storage::disk('spaces')->delete($originalPath);
                 }
                 $input['author_image'] = $uploaded;
             }
@@ -51,8 +52,9 @@ class ArticleService
             $user = auth('api')->user();
             $article = $this->repo->findById($id);
             $old = $article->toArray();
-            if ($article->author_image && Storage::disk('public')->exists($article->author_image)) {
-                Storage::disk('public')->delete($article->author_image);
+            $originalPath = ltrim($article->getRawOriginal('author_image'), '/');
+            if ($article->author_image && Storage::disk('spaces')->exists($originalPath)) {
+                Storage::disk('spaces')->delete($originalPath);
             }
             $deleted = $this->repo->delete($article);
             $this->log($user->id, 'delete', Article::class, $article->id, $old, null);
@@ -64,7 +66,7 @@ class ArticleService
     {
         $path = "";
         if ($file instanceof UploadedFile && $file->isValid()) {
-            $path = $file->store('article_images', ['disk' => 'public']);
+            $path = $file->store('article_images', ['disk' => 'spaces']);
         }
         return $path;
     }

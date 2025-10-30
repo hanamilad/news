@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
+
 
 class NewsImage extends Model
 {
@@ -21,8 +23,11 @@ class NewsImage extends Model
         return $this->belongsTo(News::class);
     }
 
-    public function getImageAttribute()
+
+    public function getImagePathAttribute($value)
     {
-        return asset('storage/' . $this->image_path);
+        /** @var \Illuminate\Filesystem\FilesystemAdapter $disk */
+        $disk = Storage::disk('spaces');
+        return $value ? $disk->url($value) : null;
     }
 }

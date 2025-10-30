@@ -55,8 +55,9 @@ class NewsService
             $news = $this->repo->findById($id);
             $old = $news->toArray();
             foreach ($news->images as $img) {
-                if ($img->image_path && Storage::disk('public')->exists($img->image_path)) {
-                    Storage::disk('public')->delete($img->image_path);
+                $originalPath = ltrim($img->getRawOriginal('image_path'), '/');
+                if ($img->image_path && Storage::disk('spaces')->exists($originalPath)) {
+                    Storage::disk('spaces')->delete($originalPath);
                 }
             }
             $deleted = $this->repo->delete($news);
@@ -70,7 +71,7 @@ class NewsService
         $out = [];
         foreach ($files as $i => $file) {
             if ($file instanceof UploadedFile && $file->isValid()) {
-                $path = $file->store('news_images', ['disk' => 'public']);
+                $path = $file->store('news_images', ['disk' => 'spaces']);
                 $out[] = [
                     'image_path' => $path,
                     'is_main' => $i === 0,

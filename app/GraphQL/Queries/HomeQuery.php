@@ -45,7 +45,7 @@ class HomeQuery
 
         // 3️ الأخبار العادية حسب الفئة
         $normalCategories = Category::whereHas('news', function ($q) {
-            $q->where('is_active', true)->where('is_urgent', false);
+            $q->where('is_active', true);
         })->get();
 
         $categoryNews = $normalCategories->map(function ($cat) use ($categoryLimit) {
@@ -53,7 +53,6 @@ class HomeQuery
                 'category' => $cat,
                 'news' => $cat->news()
                     ->where('is_active', true)
-                    ->where('is_urgent', false)
                     ->latest()
                     ->take($categoryLimit)
                     ->get(),

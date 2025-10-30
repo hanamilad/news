@@ -7,10 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Translatable\HasTranslations;
 use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
+use Illuminate\Support\Facades\Storage;
+
 
 class Article extends Model
 {
-    use SoftDeletes, BelongsToTenant, HasTranslations ,AutoTranslatableAttributes;
+    use SoftDeletes, BelongsToTenant, HasTranslations, AutoTranslatableAttributes;
     protected $fillable = [
         'content',
         'author_name',
@@ -27,5 +29,11 @@ class Article extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+    public function getAuthorImageAttribute($value)
+    {
+        /** @var \Illuminate\Filesystem\FilesystemAdapter $disk */
+        $disk = Storage::disk('spaces');
+        return $value ? $disk->url($value) : null;
     }
 }
