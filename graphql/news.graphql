@@ -45,11 +45,6 @@ input NewsInput {
 }
 
 
-type NewsWithPagination {
-  News: [News!]!
-  category: Category
-}
-
 extend type Query {
   news_for_admin(
     category_id: ID @where(operator: "=")
@@ -74,9 +69,11 @@ extend type Query {
     category_id: ID!
     first: Int! = 10
     page: Int = 1
-  ): NewsWithPagination!
+  ): [News!]!
    @paginate(type: "PAGINATOR", model: "App\\Models\\News")
    @where(key: "is_active", operator: "=", value: true)
+
+
 
   FindNews(id: ID! @eq): News @find
 
