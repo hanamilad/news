@@ -15,6 +15,8 @@ type News {
   updated_at: DateTime
 }
 
+
+
 type NewsImage {
   id: ID!
   image_path: String
@@ -42,6 +44,12 @@ input NewsInput {
   links: [NewsLinkInput!]
 }
 
+
+type NewsWithPagination {
+  News: [News!]!
+  category: Category
+}
+
 extend type Query {
   news_for_admin(
     category_id: ID @where(operator: "=")
@@ -60,11 +68,13 @@ extend type Query {
     @where(key: "is_urgent", operator: "=", value: true)
 
 
+
+
   news_for_public(
-    category_id: ID @where(operator: "=")
+    category_id: ID!
     first: Int! = 10
     page: Int = 1
-  ): News!
+  ): NewsWithPagination!
    @paginate(type: "PAGINATOR", model: "App\\Models\\News")
    @where(key: "is_active", operator: "=", value: true)
 

@@ -15,9 +15,9 @@ class NewsQuery
             $search = $args['search'];
             $query->where(function ($q) use ($search) {
                 $q->where('title->ar', 'LIKE', "%{$search}%")
-                  ->orWhere('title->en', 'LIKE', "%{$search}%")
-                  ->orWhere('styled_description->ar', 'LIKE', "%{$search}%")
-                  ->orWhere('styled_description->en', 'LIKE', "%{$search}%");
+                    ->orWhere('title->en', 'LIKE', "%{$search}%")
+                    ->orWhere('styled_description->ar', 'LIKE', "%{$search}%")
+                    ->orWhere('styled_description->en', 'LIKE', "%{$search}%");
             });
         }
 
@@ -26,9 +26,9 @@ class NewsQuery
             $exclude = $args['exclude'];
             $query->where(function ($q) use ($exclude) {
                 $q->where('title->ar', 'NOT LIKE', "%{$exclude}%")
-                  ->where('title->en', 'NOT LIKE', "%{$exclude}%")
-                  ->where('styled_description->ar', 'NOT LIKE', "%{$exclude}%")
-                  ->where('styled_description->en', 'NOT LIKE', "%{$exclude}%");
+                    ->where('title->en', 'NOT LIKE', "%{$exclude}%")
+                    ->where('styled_description->ar', 'NOT LIKE', "%{$exclude}%")
+                    ->where('styled_description->en', 'NOT LIKE', "%{$exclude}%");
             });
         }
 
@@ -37,9 +37,9 @@ class NewsQuery
             $include = $args['include'];
             $query->where(function ($q) use ($include) {
                 $q->where('title->ar', 'LIKE', "%{$include}%")
-                  ->orWhere('title->en', 'LIKE', "%{$include}%")
-                  ->orWhere('styled_description->ar', 'LIKE', "%{$include}%")
-                  ->orWhere('styled_description->en', 'LIKE', "%{$include}%");
+                    ->orWhere('title->en', 'LIKE', "%{$include}%")
+                    ->orWhere('styled_description->ar', 'LIKE', "%{$include}%")
+                    ->orWhere('styled_description->en', 'LIKE', "%{$include}%");
             });
         }
 
