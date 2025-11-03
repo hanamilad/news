@@ -34,8 +34,9 @@ class TeamMemberService
             $old = $team_member->toArray();
             $uploaded = $this->storeTeamMemberImages($file);
             if (!empty($uploaded)) {
-                if ($team_member->image && Storage::disk('public')->exists($team_member->image)) {
-                    Storage::disk('public')->delete($team_member->image);
+                $originalPath = ltrim($team_member->getRawOriginal('image'), '/');
+                if ($team_member->image && Storage::disk('spaces')->exists($originalPath)) {
+                    Storage::disk('spaces')->delete($originalPath);
                 }
                 $input['image'] = $uploaded;
             }
@@ -51,8 +52,9 @@ class TeamMemberService
             $user = auth('api')->user();
             $team_member = $this->repo->findById($id);
             $old = $team_member->toArray();
-            if ($team_member->image && Storage::disk('public')->exists($team_member->image)) {
-                Storage::disk('public')->delete($team_member->image);
+            $originalPath = ltrim($team_member->getRawOriginal('image'), '/');
+            if ($team_member->image && Storage::disk('spaces')->exists($originalPath)) {
+                Storage::disk('spaces')->delete($originalPath);
             }
             $deleted = $this->repo->delete($team_member);
             $this->log($user->id, 'delete', TeamMember::class, $team_member->id, $old, null);
@@ -64,7 +66,7 @@ class TeamMemberService
     {
         $path = "";
         if ($file instanceof UploadedFile && $file->isValid()) {
-            $path = $file->store('team_member_images', ['disk' => 'public']);
+            $path = $file->store('team_member_images', ['disk' => 'spaces']);
         }
         return $path;
     }

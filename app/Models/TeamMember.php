@@ -6,6 +6,8 @@ use App\Traits\AutoTranslatableAttributes;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Translatable\HasTranslations;
 use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
+use Illuminate\Support\Facades\Storage;
+
 
 class TeamMember extends Model
 {
@@ -21,4 +23,10 @@ class TeamMember extends Model
     protected $casts = [
         'is_read' => 'boolean',
     ];
+    public function getImageAttribute($value)
+    {
+        /** @var \Illuminate\Filesystem\FilesystemAdapter $disk */
+        $disk = Storage::disk('spaces');
+        return $value ? $disk->url($value) : null;
+    }
 }

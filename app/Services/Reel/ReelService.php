@@ -35,8 +35,9 @@ class ReelService
             $old = $reel->toArray();
             $newPath = $this->handlePath($input, $reel->path);
             if ($newPath && $newPath !== $reel->path && $reel->type === 'image') {
-                if ($reel->path && Storage::disk('public')->exists($reel->path)) {
-                    Storage::disk('public')->delete($reel->path);
+                $originalPath = ltrim($reel->getRawOriginal('path'), '/');
+                if ($reel->type === 'image' && $reel->path && Storage::disk('spaces')->exists($originalPath)) {
+                    Storage::disk('spaces')->delete($originalPath);
                 }
                 $input['path'] = $newPath;
             }
@@ -52,13 +53,11 @@ class ReelService
             $user = auth('api')->user();
             $reel = $this->repo->findById($id);
             $old = $reel->toArray();
-
-            if ($reel->type === 'image' && $reel->path && Storage::disk('public')->exists($reel->path)) {
-                Storage::disk('public')->delete($reel->path);
+            $originalPath = ltrim($reel->getRawOriginal('path'), '/');
+            if ($reel->type === 'image' && $reel->path && Storage::disk('spaces')->exists($originalPath)) {
+                Storage::disk('spaces')->delete($originalPath);
             }
-
             $deleted = $this->repo->delete($reel);
-
             $this->log($user->id, 'delete', Reel::class, $reel->id, $old, null);
 
             return $deleted;
@@ -71,7 +70,7 @@ class ReelService
         $path = $oldPath;
         if ($input['type'] === 'image') {
             if (isset($input['path']) && $input['path'] instanceof UploadedFile) {
-                $path = $input['path']->store('reel_images', ['disk' => 'public']);
+                $path = $input['path']->store('reel_images', ['disk' => 'spaces']);
             } elseif (isset($input['path']) && is_string($input['path'])) {
                 $path = $input['path'];
             }

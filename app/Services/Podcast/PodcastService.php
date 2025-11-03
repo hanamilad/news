@@ -34,9 +34,11 @@ class PodcastService
             $old = $podcast->toArray();
             $uploaded = $this->storeAudioPath($file);
             if (!empty($uploaded)) {
-                if ($podcast->audio_path && Storage::disk('public')->exists($podcast->audio_path)) {
-                    Storage::disk('public')->delete($podcast->audio_path);
+                $originalPath = ltrim($podcast->getRawOriginal('audio_path'), '/');
+                if ($podcast->audio_path && Storage::disk('spaces')->exists($originalPath)) {
+                    Storage::disk('spaces')->delete($originalPath);
                 }
+
                 $input['audio_path'] = $uploaded;
             }
             $updated = $this->repo->update($podcast, $input);
@@ -51,8 +53,9 @@ class PodcastService
             $user = auth('api')->user();
             $podcast = $this->repo->findById($id);
             $old = $podcast->toArray();
-            if ($podcast->audio_path && Storage::disk('public')->exists($podcast->audio_path)) {
-                Storage::disk('public')->delete($podcast->audio_path);
+            $originalPath = ltrim($podcast->getRawOriginal('audio_path'), '/');
+            if ($podcast->audio_path && Storage::disk('spaces')->exists($originalPath)) {
+                Storage::disk('spaces')->delete($originalPath);
             }
             $deleted = $this->repo->delete($podcast);
             $this->log($user->id, 'delete', Podcast::class, $podcast->id, $old, null);
@@ -64,7 +67,7 @@ class PodcastService
     {
         $path = "";
         if ($file instanceof UploadedFile && $file->isValid()) {
-            $path = $file->store('podcast', ['disk' => 'public']);
+            $path = $file->store('podcast', ['disk' => 'spaces']);
         }
         return $path;
     }
