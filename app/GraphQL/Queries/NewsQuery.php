@@ -3,6 +3,8 @@
 namespace App\GraphQL\Queries;
 
 use App\Models\News;
+use Illuminate\Database\Eloquent\Builder;
+
 
 class NewsQuery
 {
@@ -45,5 +47,10 @@ class NewsQuery
 
         // نرجع النتائج
         return $query->orderByDesc('created_at')->paginate($args['first'] ?? 10, ['*'], 'page', $args['page'] ?? 1);
+    }
+
+    public function newsForPublicBuilder($_, array $args): Builder
+    {
+        return \App\Models\News::forPublic($args['category_id']);
     }
 }

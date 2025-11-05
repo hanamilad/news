@@ -10,7 +10,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 class News extends Model
 {
-    use SoftDeletes,BelongsToTenant,HasTranslations,AutoTranslatableAttributes;
+    use SoftDeletes, BelongsToTenant, HasTranslations, AutoTranslatableAttributes;
     protected $fillable = [
         'title',
         'styled_description',
@@ -19,7 +19,7 @@ class News extends Model
         'user_id',
         'category_id',
     ];
-    public $translatable = ['title','styled_description'];
+    public $translatable = ['title', 'styled_description'];
 
     protected $casts = [
         'is_urgent' => 'boolean',
@@ -71,5 +71,11 @@ class News extends Model
         );
     }
 
-    
+    public function scopeForPublic($query, $categoryId)
+    {
+        return $query->where('category_id', $categoryId)
+            ->where('is_active', true)
+            ->orderBy('is_urgent', 'desc')
+            ->orderBy('created_at', 'desc');
+    }
 }
