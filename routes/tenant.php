@@ -7,7 +7,6 @@ use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 use MLL\GraphiQL\Facades\GraphiQL;
 
-
 /*
 |--------------------------------------------------------------------------
 | Tenant Routes
@@ -25,5 +24,7 @@ Route::middleware([
     InitializeTenancyByDomain::class,
     PreventAccessFromCentralDomains::class,
 ])->group(function () {
-    GraphiQL::routes();
+    Route::get('/', function () {
+        return 'This is your multi-tenant application. The id of the current tenant is ' . tenant('id');
+    });
 });
