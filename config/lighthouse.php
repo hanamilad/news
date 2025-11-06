@@ -5,8 +5,8 @@ declare(strict_types=1);
 
 return [
     'route' => [
-        'uri' => '/graphql',
-        'name' => 'graphql',
+        'uri' => '/graphql-sb',
+        'name' => 'graphql-sb',
         'middleware' => [
             'api',
             \Stancl\Tenancy\Middleware\InitializeTenancyByDomain::class,
