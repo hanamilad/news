@@ -18,7 +18,7 @@ return [
     'routes' => [
         '/graphiql' => [
             'name' => 'graphiql',
-            'endpoint' => '/graphql',
+            'endpoint' => '/graphql-sb',
         ],
     ],
 
