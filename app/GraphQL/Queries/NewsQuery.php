@@ -51,6 +51,6 @@ class NewsQuery
 
     public function newsForPublicBuilder($_, array $args): Builder
     {
-        return \App\Models\News::forPublic($args['category_id']);
+        return News::forPublic($args['category_id']);
     }
 }
