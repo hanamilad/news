@@ -63,8 +63,6 @@ extend type Query {
     @where(key: "is_urgent", operator: "=", value: true)
 
 
-
-
   news_for_public(
     category_id: ID!
     first: Int! = 10
@@ -73,7 +71,7 @@ extend type Query {
     @paginate(
       defaultCount: 10
       builder: "App\\GraphQL\\Queries\\NewsQuery@newsForPublicBuilder"
-    )
+  )
 
 
 
