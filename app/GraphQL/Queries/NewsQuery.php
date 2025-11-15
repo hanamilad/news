@@ -12,7 +12,6 @@ class NewsQuery
     {
         $query = News::query();
 
-        // البحث في العنوان والوصف
         if (!empty($args['search'])) {
             $search = $args['search'];
             $query->where(function ($q) use ($search) {
@@ -23,7 +22,6 @@ class NewsQuery
             });
         }
 
-        // استبعاد كلمات معينة
         if (!empty($args['exclude'])) {
             $exclude = $args['exclude'];
             $query->where(function ($q) use ($exclude) {
@@ -34,7 +32,6 @@ class NewsQuery
             });
         }
 
-        // التحقق من وجود كلمة معينة
         if (!empty($args['include'])) {
             $include = $args['include'];
             $query->where(function ($q) use ($include) {
@@ -45,7 +42,6 @@ class NewsQuery
             });
         }
 
-        // نرجع النتائج
         return $query->orderByDesc('created_at')->paginate($args['first'] ?? 10, ['*'], 'page', $args['page'] ?? 1);
     }
 

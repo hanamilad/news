@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('categories', function (Blueprint $table) {
-            $table->boolean('show_in_navbar')->default(false)->after('name');
+            $table->json('description')->after('name');
+            $table->boolean('show_in_navbar')->default(false)->after('description');
             $table->boolean('show_in_homepage')->default(false)->after('show_in_navbar');
         });
     }
@@ -23,6 +24,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('categories', function (Blueprint $table) {
+            $table->dropColumn('description');
             $table->dropColumn('show_in_navbar');
             $table->dropColumn('show_in_homepage');
         });

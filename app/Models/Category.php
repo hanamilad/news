@@ -13,6 +13,7 @@ class Category extends Model
     use SoftDeletes, BelongsToTenant, HasTranslations, AutoTranslatableAttributes;
     protected $fillable = [
         'name',
+        'description',
         'show_in_navbar',
         'show_in_homepage',
         'template_id'
@@ -21,7 +22,7 @@ class Category extends Model
         'show_in_navbar' => 'boolean',
         'show_in_homepage' => 'boolean',
     ];
-    public $translatable = ['name'];
+    public $translatable = ['name','description'];
 
     public function articles()
     {

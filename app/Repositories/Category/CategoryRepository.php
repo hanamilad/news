@@ -15,6 +15,7 @@ class CategoryRepository
     {
         $category = Category::create([
             'name' => $data['name'],
+            'description' => $data['description'] ?? '',
             'show_in_navbar' => $data['show_in_navbar'] ?? false,
             'show_in_homepage' => $data['show_in_homepage'] ?? false,
             'template_id' => $data['template_id'],
@@ -26,6 +27,7 @@ class CategoryRepository
     {
         $category->update([
             'name' => $data['name'] ?? $category->getTranslations('name'),
+            'description' => $data['description'] ?? $category->getTranslations('description'),
             'show_in_navbar' => $data['show_in_navbar'] ?? $category->show_in_navbar,
             'show_in_homepage' => $data['show_in_homepage'] ?? $category->show_in_homepage,
             'template_id' => $data['template_id'] ?? $category->template_id,
