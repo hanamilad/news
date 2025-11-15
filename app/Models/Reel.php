@@ -20,6 +20,7 @@ class Reel extends Model
         'type',
         'is_active',
         'user_id',
+        'sort_order',
     ];
     public $translatable = ['description'];
     protected $casts = [

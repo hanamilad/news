@@ -30,6 +30,7 @@ video
 input ReelGroupInput {
   title: TranslatableInput!
   is_active: Boolean
+  sort_order: Int
 }
 
 input ReelInput {
@@ -37,6 +38,7 @@ input ReelInput {
   description: TranslatableInput!
   path: String
   type: TypeReel!
+  sort_order: Int
   is_active: Boolean
 }  
 
@@ -53,6 +55,7 @@ extend type Query {
     @guard(with: ["api"])
     @can(ability: "reel_group.view")
     @paginate(type: "PAGINATOR", model: "App\\Models\\ReelGroup")
+    @orderBy(column: "sort_order", direction: ASC)
 
   reel_groups_for_public(
     first: Int! = 10
@@ -60,6 +63,7 @@ extend type Query {
   ): ReelGroup!
     @paginate(type: "PAGINATOR", model: "App\\Models\\ReelGroup")
     @where(column: "is_active", operator: EQ, value: true)
+    @orderBy(column: "sort_order", direction: ASC)
 
   reel_group(id: ID! @eq): ReelGroup @find
 }
@@ -71,7 +75,6 @@ extend type Query {
 
 
 extend type Query {
-  # للإدمن - عرض كل الريلز
   reels_for_admin(
     reel_group_id: ID @eq
     first: Int! = 10
@@ -80,8 +83,8 @@ extend type Query {
     @guard(with: ["api"])
     @can(ability: "reel.view")
     @paginate(type: "PAGINATOR", model: "App\\Models\\Reel")
+    @orderBy(column: "sort_order", direction: ASC)
 
-  # للجمهور - عرض الريلز النشطة فقط
   reels_for_public(
     reel_group_id: ID @eq
     first: Int! = 10
@@ -89,8 +92,8 @@ extend type Query {
   ): Reel!
     @paginate(type: "PAGINATOR", model: "App\\Models\\Reel")
     @where(column: "is_active", operator: EQ, value: true)
+    @orderBy(column: "sort_order", direction: ASC)
 
-  # جلب ريل واحد
   reel(id: ID! @eq): Reel @find
 }
 

@@ -16,6 +16,7 @@ class ReelGroup extends Model
         'user_id',
         'title',
         'is_active',
+        'sort_order',
     ];
 
     public $translatable = ['title'];
