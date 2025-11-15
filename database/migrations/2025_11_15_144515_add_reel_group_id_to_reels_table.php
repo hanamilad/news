@@ -9,6 +9,7 @@ return new class extends Migration {
     {
         Schema::table('reels', function (Blueprint $table) {
             $table->unsignedBigInteger('reel_group_id')->nullable()->after('id');
+            $table->integer('sort_order')->default(0)->after('reel_group_id');
             $table->foreign('reel_group_id')
                 ->references('id')
                 ->on('reel_groups')
@@ -21,6 +22,7 @@ return new class extends Migration {
         Schema::table('reels', function (Blueprint $table) {
             $table->dropForeign(['reel_group_id']);
             $table->dropColumn('reel_group_id');
+            $table->dropColumn('sort_order');
         });
     }
 };
