@@ -23,6 +23,7 @@ class ReelRequest extends FormRequest
             'path' => [$isUpdate ? 'sometimes' : 'required', 'string'],
             'type' => [$isUpdate ? 'sometimes' : 'required', 'in:video,image'],
             'is_active' => ['sometimes', 'boolean'],
+            'sort_order' => ['sometimes', 'integer'],
         ];
     }
 
@@ -35,6 +36,8 @@ class ReelRequest extends FormRequest
             'path.required' => 'المسار مطلوب',
             'type.required' => 'نوع الملف مطلوب',
             'type.in' => 'نوع الملف يجب أن يكون صورة أو فيديو',
+            'is_active.boolean' => 'يجب أن يكون الحالة النشطة أو غيرها',
+            'sort_order.integer' => 'ترتيب الفرز يجب أن يكون رقمًا صحيحًا',
         ];
     }
 }

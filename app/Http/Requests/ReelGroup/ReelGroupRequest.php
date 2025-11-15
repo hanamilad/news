@@ -18,6 +18,7 @@ class ReelGroupRequest extends FormRequest
             'title.ar' => ['required', 'string', 'max:255'],
             'title.en' => ['required', 'string', 'max:255'],
             'is_active' => ['sometimes', 'boolean'],
+            'sort_order' => ['sometimes', 'integer'],
         ];
     }
 
@@ -28,6 +29,8 @@ class ReelGroupRequest extends FormRequest
             'title.array' => 'يجب أن يكون العنوان مصفوفة',
             'title.ar.required' => 'العنوان بالعربية مطلوب',
             'title.en.required' => 'العنوان بالإنجليزية مطلوب',
+            'is_active.boolean' => 'يجب أن يكون الحالة النشطة أو غيرها',
+            'sort_order.integer' => 'ترتيب الفرز يجب أن يكون رقمًا صحيحًا',
         ];
     }
 }
