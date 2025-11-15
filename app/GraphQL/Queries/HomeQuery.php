@@ -55,19 +55,16 @@ class HomeQuery
             ];
         });
 
-        // 4️ الفيديوهات
         $videos = Video::where('is_active', true)
             ->latest()
             ->take($videoLimit)
             ->get();
 
-        // 5️ البودكاست
         $podcasts = Podcast::where('is_active', true)
             ->latest()
             ->take($podcastLimit)
             ->get();
 
-        // 6️ المقالات
         $articles = Article::where('is_active', true)
             ->latest()
             ->take($articleLimit)
