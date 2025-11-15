@@ -8,6 +8,7 @@ class Template extends Model
 {
     protected $fillable = [
         'name',
+        'value',
     ];
 
     public function categories()

@@ -1,11 +1,13 @@
 type Template {
   id: ID!
   name: String!
+  value: String!
 }
 
 
 input TemplateInput {
   name: String!
+  value: String!
 }
 
 extend type Query {
