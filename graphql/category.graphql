@@ -1,11 +1,15 @@
 type Category @model(class: "App\\Models\\Category") {
   id: ID!
   name: String!
+  show_in_navbar: Boolean
+  show_in_homepage: Boolean
   template : Template
 }
 
 input CategoryInput {
   name: TranslatableInput!
+  show_in_navbar : Boolean
+  show_in_homepage: Boolean
   template_id:ID!
 }
 

@@ -16,6 +16,8 @@ class CategoryRequest extends FormRequest
     {
         return [
             'name' => 'required|array',
+            'show_in_navbar' => 'nullable|boolean',
+            'show_in_homepage' => 'nullable|boolean',
             'name.*' => 'nullable|string|max:255',
             'template_id' =>'required|exists:templates,id'
         ];

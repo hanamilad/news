@@ -12,7 +12,6 @@ class HomeQuery
 {
     public function home($_, array $args)
     {
-        // إعداد الحدود المرسلة من الفرونت
         $latestLimit   = $args['latest_limit'] ?? 10;
         $urgentLimit   = $args['urgent_limit'] ?? 5;
         $categoryLimit = $args['category_limit'] ?? 5;
@@ -20,13 +19,11 @@ class HomeQuery
         $podcastLimit  = $args['podcast_limit'] ?? 5;
         $articleLimit  = $args['article_limit'] ?? 5;
 
-        // 1️ أحدث الأخبار من كل الفئات
         $latestNews = News::where('is_active', true)
             ->latest()
             ->take($latestLimit)
             ->get();
 
-        // 2️ الأخبار العاجلة حسب الفئة (فقط الفئات اللي فيها عاجل)
         $urgentCategories = Category::whereHas('news', function ($q) {
             $q->where('is_urgent', true)->where('is_active', true);
         })->get();
@@ -43,8 +40,7 @@ class HomeQuery
             ];
         });
 
-        // 3️ الأخبار العادية حسب الفئة
-        $normalCategories = Category::whereHas('news', function ($q) {
+        $normalCategories = Category::showInHomepage()->whereHas('news', function ($q) {
             $q->where('is_active', true);
         })->get();
 

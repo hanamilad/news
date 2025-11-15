@@ -13,7 +13,13 @@ class Category extends Model
     use SoftDeletes, BelongsToTenant, HasTranslations, AutoTranslatableAttributes;
     protected $fillable = [
         'name',
+        'show_in_navbar',
+        'show_in_homepage',
         'template_id'
+    ];
+    protected $casts = [
+        'show_in_navbar' => 'boolean',
+        'show_in_homepage' => 'boolean',
     ];
     public $translatable = ['name'];
 
@@ -30,5 +36,15 @@ class Category extends Model
     public function news()
     {
         return $this->hasMany(News::class);
+    }
+
+    public function scopeShowInNavbar($query)
+    {
+        return $query->where('show_in_navbar', true);
+    }
+
+    public function scopeShowInHomepage($query)
+    {
+        return $query->where('show_in_homepage', true);
     }
 }
