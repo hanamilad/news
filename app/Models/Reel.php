@@ -14,6 +14,7 @@ class Reel extends Model
 {
     use SoftDeletes, BelongsToTenant, HasTranslations, AutoTranslatableAttributes;
     protected $fillable = [
+        'reel_group_id',
         'description',
         'path',
         'type',
@@ -29,16 +30,27 @@ class Reel extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function group()
+    {
+        return $this->belongsTo(ReelGroup::class, 'reel_group_id');
+    }
+
     public function getPathAttribute($value)
     {
-        if ($this->type === 'video') {
+        if (!$value) {
+            return null;
+        }
+
+        if (str_starts_with($value, 'http://') || str_starts_with($value, 'https://')) {
             return $value;
         }
-        if ($this->type === 'image') {
+        
+        if (str_contains($value, 'reel_images') || str_contains($value, 'reel_videos')) {
             /** @var \Illuminate\Filesystem\FilesystemAdapter $storage */
-            $storage = Storage::disk('public');
+            $storage = Storage::disk('spaces');
             return $storage->url($value);
         }
+        
         return $value;
     }
 }

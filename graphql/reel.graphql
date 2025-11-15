@@ -1,10 +1,23 @@
+type ReelGroup {
+  id: ID!
+  title: String!
+  is_active: Boolean!
+  user: User @belongsTo
+  reels: [Reel!]! @hasMany
+  created_at: DateTime
+  updated_at: DateTime
+}
+
+
 type Reel {
   id: ID!
-  description: String!
-  path: String!
-  type: String
-  is_active: Boolean
-  user: User
+  reel_group_id: ID
+  description: String
+  path: String
+  type: TypeReel!
+  is_active: Boolean!
+  user: User @belongsTo
+  group: ReelGroup @belongsTo
   created_at: DateTime
   updated_at: DateTime
 }
@@ -14,32 +27,99 @@ image
 video
 }
 
+input ReelGroupInput {
+  title: TranslatableInput!
+  is_active: Boolean
+}
 
 input ReelInput {
+  reel_group_id: ID
   description: TranslatableInput!
   path: String
-  type: TypeReel
+  type: TypeReel!
   is_active: Boolean
-}   
+}  
+
+
+# ============================================
+# ReelGroup Queries
+# ============================================
 
 extend type Query {
+  reel_groups_for_admin(
+    first: Int! = 10
+    page: Int = 1
+  ): ReelGroup!
+    @guard(with: ["api"])
+    @can(ability: "reel_group.view")
+    @paginate(type: "PAGINATOR", model: "App\\Models\\ReelGroup")
+
+  reel_groups_for_public(
+    first: Int! = 10
+    page: Int = 1
+  ): ReelGroup!
+    @paginate(type: "PAGINATOR", model: "App\\Models\\ReelGroup")
+    @where(column: "is_active", operator: EQ, value: true)
+
+  reel_group(id: ID! @eq): ReelGroup @find
+}
+
+# ============================================
+# Reel Queries
+# ============================================
+
+
+
+extend type Query {
+  # للإدمن - عرض كل الريلز
   reels_for_admin(
-    first: Int! = 10,
+    reel_group_id: ID @eq
+    first: Int! = 10
     page: Int = 1
   ): Reel!
     @guard(with: ["api"])
     @can(ability: "reel.view")
     @paginate(type: "PAGINATOR", model: "App\\Models\\Reel")
 
+  # للجمهور - عرض الريلز النشطة فقط
   reels_for_public(
-    first: Int! = 10,
+    reel_group_id: ID @eq
+    first: Int! = 10
     page: Int = 1
   ): Reel!
     @paginate(type: "PAGINATOR", model: "App\\Models\\Reel")
-    @where(key: "is_active", operator: "=", value: true)
+    @where(column: "is_active", operator: EQ, value: true)
 
+  # جلب ريل واحد
   reel(id: ID! @eq): Reel @find
 }
+
+
+# ============================================
+# ReelGroup Mutations
+# ============================================
+
+
+extend type Mutation {
+  CreateReelGroup(input: ReelGroupInput!): ReelGroup
+    @guard(with: ["api"])
+    @can(ability: "reel_group.create")
+    @field(resolver: "App\\GraphQL\\Mutations\\ReelGroupMutator@create")
+
+  UpdateReelGroup(id: ID!, input: ReelGroupInput!): ReelGroup
+    @guard(with: ["api"])
+    @can(ability: "reel_group.update", model: "App\\Models\\ReelGroup")
+    @field(resolver: "App\\GraphQL\\Mutations\\ReelGroupMutator@update")
+
+  DeleteReelGroup(id: ID!): Boolean
+    @guard(with: ["api"])
+    @can(ability: "reel_group.delete", model: "App\\Models\\ReelGroup")
+    @field(resolver: "App\\GraphQL\\Mutations\\ReelGroupMutator@delete")
+}
+
+# ============================================
+# Reel Mutations
+# ============================================
 
 extend type Mutation {
   CreateReel(input: ReelInput!): Reel
@@ -49,7 +129,7 @@ extend type Mutation {
 
   UpdateReel(id: ID!, input: ReelInput!): Reel
     @guard(with: ["api"])
-    @can(ability: "reel.update")
+    @can(ability: "reel.update", model: "App\\Models\\Reel")
     @field(resolver: "App\\GraphQL\\Mutations\\ReelMutator@update")
 
   DeleteReel(id: ID!): Boolean

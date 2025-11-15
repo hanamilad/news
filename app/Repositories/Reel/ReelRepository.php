@@ -14,6 +14,7 @@ class ReelRepository
     public function create(array $data): Reel
     {
         $reel = Reel::create([
+            'reel_group_id' => $data['reel_group_id'] ?? null,
             'description' => $data['description'],
             'path' => $data['path'],
             'type' => $data['type'],
@@ -26,6 +27,7 @@ class ReelRepository
     public function update(Reel $reel, array $data): Reel
     {
         $reel->update([
+            'reel_group_id' => $data['reel_group_id'] ?? $reel->reel_group_id,
             'description' => $data['description'] ?? $reel->getTranslations('description'),
             'path' => $data['path'] ?? $reel->path,
             'type' => $data['type'] ?? $reel->type,
