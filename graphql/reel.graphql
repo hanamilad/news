@@ -39,7 +39,7 @@ input ReelGroupInput {
 input ReelInput {
   id: ID
   description: TranslatableInput
-  path: String
+  path: Upload
   type: TypeReel!
   sort_order: Int
   is_active: Boolean
