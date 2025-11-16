@@ -10,7 +10,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 class ReelGroup extends Model
 {
-    use SoftDeletes, BelongsToTenant, HasTranslations ,AutoTranslatableAttributes;
+    use SoftDeletes, BelongsToTenant, HasTranslations, AutoTranslatableAttributes;
 
     protected $fillable = [
         'user_id',
@@ -20,6 +20,7 @@ class ReelGroup extends Model
     ];
 
     public $translatable = ['title'];
+    protected $appends = ['cover_image'];
 
     public function reels()
     {
@@ -29,5 +30,15 @@ class ReelGroup extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function getCoverImageAttribute()
+    {
+        $lastReel = $this->reels()
+            ->whereNotNull('path')
+            ->orderBy('sort_order', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->first();
+        return $lastReel ? $lastReel->path : null;
     }
 }

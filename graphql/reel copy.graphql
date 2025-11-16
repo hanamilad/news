@@ -10,6 +10,7 @@ type ReelGroup {
   updated_at: DateTime
 }
 
+
 type Reel {
   id: ID!
   reel_group_id: ID
@@ -25,9 +26,11 @@ type Reel {
 }
 
 enum TypeReel {
-      image
-      video
+image
+video
 }
+
+
 
 input ReelGroupInput {
   title: TranslatableInput!
@@ -38,43 +41,28 @@ input ReelGroupInput {
 
 input ReelInput {
   id: ID
-  description: TranslatableInput
+  description: TranslatableInput!
   path: String
   type: TypeReel!
   sort_order: Int
   is_active: Boolean
-}
+}  
 
 extend type Query {
   reels_for_admin(
-    first: Int! @rules(apply: ["required", "integer", "min:1", "max:100"])
-    page: Int @rules(apply: ["integer", "min:1"])
-  ): ReelGroupPaginator!
+    first: Int! = 10
+    page: Int = 1
+  ): [ReelGroup!]!
     @guard(with: ["api"])
     @can(ability: "reel.view")
     @field(resolver: "App\\GraphQL\\Queries\\ReelQuery@reels_for_admin")
     
+
   reels_for_public(
-    first: Int! @rules(apply: ["required", "integer", "min:1", "max:100"])
-    page: Int @rules(apply: ["integer", "min:1"])
-  ): ReelGroupPaginator!
+    first: Int! = 10
+    page: Int = 1
+  ): [ReelGroup!]!
     @field(resolver: "App\\GraphQL\\Queries\\ReelQuery@reels_for_public")
-}
-
-type ReelGroupPaginator {
-  paginatorInfo: PaginatorInfo!
-  data: [ReelGroup!]!
-}
-
-type PaginatorInfo {
-  count: Int!
-  currentPage: Int!
-  firstItem: Int
-  hasMorePages: Boolean!
-  lastItem: Int
-  lastPage: Int!
-  perPage: Int!
-  total: Int!
 }
 
 extend type Mutation {
@@ -85,11 +73,11 @@ extend type Mutation {
 
   UpdateReelGroup(id: ID!, input: ReelGroupInput!): ReelGroup
     @guard(with: ["api"])
-    @can(ability: "reel.update", find: "id", model: "App\\Models\\ReelGroup")
+    @can(ability: "reel.update", model: "App\\Models\\ReelGroup")
     @field(resolver: "App\\GraphQL\\Mutations\\ReelGroupMutator@update")
 
   DeleteReelGroup(id: ID!): Boolean
     @guard(with: ["api"])
-    @can(ability: "reel.delete", find: "id", model: "App\\Models\\ReelGroup")
+    @can(ability: "reel.delete", model: "App\\Models\\ReelGroup")
     @field(resolver: "App\\GraphQL\\Mutations\\ReelGroupMutator@delete")
 }

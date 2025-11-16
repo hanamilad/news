@@ -17,7 +17,7 @@ class ReelRepository
             $data['sort_order'] = $this->resolveSortOrder($data['reel_group_id'] ?? null, $data['sort_order'] ?? null);
             $reel = Reel::create([
                 'reel_group_id' => $data['reel_group_id'] ?? null,
-                'description' => $data['description'],
+                'description' => $data['description'] ?? null,
                 'path' => $data['path'],
                 'type' => $data['type'] ?? null,
                 'is_active' => $data['is_active'] ?? true,

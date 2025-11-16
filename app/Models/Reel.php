@@ -35,7 +35,6 @@ class Reel extends Model
     {
         return $this->belongsTo(ReelGroup::class, 'reel_group_id');
     }
-
     public function getPathAttribute($value)
     {
         if (!$value) {
