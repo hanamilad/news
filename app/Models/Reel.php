@@ -20,6 +20,7 @@ class Reel extends Model
         'type',
         'is_active',
         'user_id',
+        'news_id',
         'sort_order',
     ];
     public $translatable = ['description'];
@@ -29,6 +30,11 @@ class Reel extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+    
+    public function news()
+    {
+        return $this->belongsTo(News::class);
     }
 
     public function group()
@@ -44,13 +50,13 @@ class Reel extends Model
         if (str_starts_with($value, 'http://') || str_starts_with($value, 'https://')) {
             return $value;
         }
-        
+
         if (str_contains($value, 'reel_images') || str_contains($value, 'reel_videos')) {
             /** @var \Illuminate\Filesystem\FilesystemAdapter $storage */
             $storage = Storage::disk('spaces');
             return $storage->url($value);
         }
-        
+
         return $value;
     }
 }

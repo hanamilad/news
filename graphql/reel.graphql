@@ -19,6 +19,7 @@ type Reel {
   is_active: Boolean
   sort_order: Int
   user: User @belongsTo
+  news: News @belongsTo
   group: ReelGroup @belongsTo
   created_at: DateTime
   updated_at: DateTime
@@ -27,6 +28,7 @@ type Reel {
 enum TypeReel {
       image
       video
+      news
 }
 
 input ReelGroupInput {
@@ -41,6 +43,7 @@ input ReelInput {
   description: TranslatableInput
   path: Upload
   type: TypeReel!
+  news_id: ID
   sort_order: Int
   is_active: Boolean
 }

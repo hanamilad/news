@@ -17,6 +17,7 @@ class ReelRepository
             $data['sort_order'] = $this->resolveSortOrder($data['reel_group_id'] ?? null, $data['sort_order'] ?? null);
             $reel = Reel::create([
                 'reel_group_id' => $data['reel_group_id'] ?? null,
+                'news_id' => $data['news_id'] ?? null,
                 'description' => $data['description'] ?? null,
                 'path' => $data['path'],
                 'type' => $data['type'] ?? null,
@@ -43,6 +44,7 @@ class ReelRepository
                 'type' => $data['type'] ?? $reel->type,
                 'is_active' => $data['is_active'] ?? $reel->is_active,
                 'user_id' => $data['user_id'] ?? $reel->user_id,
+                'news_id' => $data['news_id'] ?? $reel->news_id,
                 'sort_order' => $newSortOrder,
             ]);
             return $reel->fresh();

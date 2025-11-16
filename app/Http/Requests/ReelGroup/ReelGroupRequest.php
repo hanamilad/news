@@ -30,7 +30,8 @@ class ReelGroupRequest extends FormRequest
             'reels.*.description.ar' => ['sometimes', 'string'],
             'reels.*.description.en' => ['sometimes', 'string'],
             'reels.*.path' => [$isUpdate ? 'sometimes' : 'required'],
-            'reels.*.type' => [$isUpdate ? 'sometimes' : 'required', 'in:video,image'],
+            'reels.*.type' => [$isUpdate ? 'sometimes' : 'required', 'in:video,image,news'],
+            'reels.*.news_id' => ['sometimes', 'exists:news,id'],
             'reels.*.is_active' => ['sometimes', 'boolean'],
             'reels.*.sort_order' => ['sometimes', 'integer'],
         ];
