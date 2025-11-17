@@ -54,7 +54,7 @@ extend type Query {
     page: Int @rules(apply: ["integer", "min:1"])
   ): ReelGroupPaginator!
     @guard(with: ["api"])
-    @can(ability: "reel.view")
+    @can(ability: "reel.view", model: "App\\Models\\ReelGroup")
     @field(resolver: "App\\GraphQL\\Queries\\ReelQuery@reels_for_admin")
     
   reels_for_public(
