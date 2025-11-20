@@ -19,6 +19,7 @@ class ArticleRequest extends FormRequest
             'author_name' => 'required|array',
             'author_name.*' => 'nullable|string|max:255',
             'is_active' => 'nullable|boolean',
+            'publish_date' => 'nullable|date',
         ];
     }
 

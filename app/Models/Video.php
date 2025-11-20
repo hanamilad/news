@@ -16,6 +16,7 @@ class Video extends Model
         'video_path',
         'type',
         'is_active',
+        'publish_date',
         'user_id',
     ];
     public $translatable = ['description'];
@@ -31,6 +32,7 @@ class Video extends Model
     public function scopeForPublic($query)
     {
         return $query->where('is_active', true)
+            ->where('publish_date', '<=', now())
             ->orderBy('created_at', 'desc');
     }
 }

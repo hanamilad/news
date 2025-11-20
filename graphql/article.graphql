@@ -5,6 +5,7 @@ type Article {
   author_image: String
   is_active: Boolean
   user: User
+  publish_date: DateTime
   created_at: DateTime
   updated_at: DateTime
 }
@@ -15,6 +16,7 @@ input ArticleInput {
   content: TranslatableInput!
   author_name: TranslatableInput!
   is_active: Boolean
+  publish_date: DateTime
 }   
 
 extend type Query {

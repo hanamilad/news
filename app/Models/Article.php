@@ -18,6 +18,7 @@ class Article extends Model
         'author_name',
         'author_image',
         'is_active',
+        'publish_date',
         'user_id',
     ];
     public $translatable = ['content', 'author_name'];
@@ -40,6 +41,7 @@ class Article extends Model
     public function scopeForPublic($query)
     {
         return $query->where('is_active', true)
+            ->where('publish_date', '<=', now())
             ->orderBy('created_at', 'desc');
     }
 }

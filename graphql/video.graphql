@@ -5,6 +5,7 @@ type Video {
   type: String
   is_active: Boolean
   user: User
+  publish_date: DateTime
   created_at: DateTime
   updated_at: DateTime
 }
@@ -20,6 +21,7 @@ input VideoInput {
   video_path: String!
   type: VideoType!
   is_active: Boolean
+  publish_date: DateTime
 }   
 
 extend type Query {

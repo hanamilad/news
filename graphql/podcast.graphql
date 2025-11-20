@@ -6,6 +6,7 @@ type Podcast {
   audio_path: String
   is_active: Boolean
   user: User
+  publish_date: DateTime
   created_at: DateTime
   updated_at: DateTime
 }
@@ -15,6 +16,7 @@ input PodcastInput {
   host_name: TranslatableInput!
   description: TranslatableInput
   is_active: Boolean
+  publish_date: DateTime
   user_id: ID!
 }   
 

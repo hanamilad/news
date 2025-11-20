@@ -19,6 +19,7 @@ class VideoRequest extends FormRequest
             'video_path' => 'required|string|max:255',
             'type' => 'required|string|in:short,long',
             'is_active' => 'nullable|boolean',
+            'publish_date' => 'nullable|date',
         ];
     }
 

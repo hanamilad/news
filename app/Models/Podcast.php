@@ -19,6 +19,7 @@ class Podcast extends Model
         'description',
         'audio_path',
         'is_active',
+        'publish_date',
         'user_id',
     ];
     public $translatable = ['title', 'host_name', 'description'];
@@ -42,6 +43,7 @@ class Podcast extends Model
     public function scopeForPublic($query)
     {
         return $query->where('is_active', true)
+            ->where('publish_date', '<=', now())
             ->orderBy('created_at', 'desc');
     }
 }

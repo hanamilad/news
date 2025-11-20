@@ -11,9 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('news', function (Blueprint $table) {
-            $table->boolean('is_main')->default(false)->after('is_active');
-            $table->date('publish_date')->nullable()->after('category_id');
+        Schema::table('videos', function (Blueprint $table) {
+            $table->date('publish_date')->nullable()->after('is_active');
         });
     }
 
@@ -22,8 +21,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('news', function (Blueprint $table) {
-            $table->dropColumn('is_main');
+        Schema::table('videos', function (Blueprint $table) {
             $table->dropColumn('publish_date');
         });
     }

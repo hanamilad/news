@@ -23,6 +23,7 @@ class PodcastRequest extends FormRequest
             'description' => 'required|array',
             'description.*' => 'nullable|string',
             'is_active' => 'nullable|boolean',
+            'publish_date' => 'nullable|date',
         ];
     }
 
