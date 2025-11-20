@@ -12,66 +12,51 @@ class HomeQuery
 {
     public function home($_, array $args)
     {
-        $latestLimit   = $args['latest_limit'] ?? 10;
+        $mainNewsLimit = $args['main_news_limit'] ?? 6;
         $urgentLimit   = $args['urgent_limit'] ?? 5;
         $categoryLimit = $args['category_limit'] ?? 5;
         $videoLimit    = $args['video_limit'] ?? 5;
         $podcastLimit  = $args['podcast_limit'] ?? 5;
         $articleLimit  = $args['article_limit'] ?? 5;
 
-        $latestNews = News::where('is_active', true)
-            ->latest()
-            ->take($latestLimit)
-            ->get();
+        $mainNews = News::forPublic(null, false, true)->take($mainNewsLimit)->get();
 
         $urgentCategories = Category::whereHas('news', function ($q) {
-            $q->where('is_urgent', true)->where('is_active', true);
-        })->get();
+            $q->forPublic(null, true);
+        })->with(['news' => function ($q) use ($urgentLimit) {
+            $q->forPublic(null, true)->take($urgentLimit);
+        }])->get();
 
-        $urgentNewsByCategory = $urgentCategories->map(function ($cat) use ($urgentLimit) {
+        $urgentNewsByCategory = $urgentCategories->map(function ($cat) {
             return [
                 'category' => $cat,
-                'news' => $cat->news()
-                    ->where('is_urgent', true)
-                    ->where('is_active', true)
-                    ->latest()
-                    ->take($urgentLimit)
-                    ->get(),
+                'news' => $cat->news,
             ];
         });
 
-        $normalCategories = Category::showInHomepage()->whereHas('news', function ($q) {
-            $q->where('is_active', true);
-        })->get();
 
-        $categoryNews = $normalCategories->map(function ($cat) use ($categoryLimit) {
+        $normalCategories = Category::showInHomepage()
+            ->whereHas('news', function ($q) {
+                $q->forPublic();
+            })
+            ->with(['news' => function ($q) use ($categoryLimit) {
+                $q->forPublic()->take($categoryLimit);
+            }])
+            ->get();
+        $categoryNews = $normalCategories->map(function ($cat) {
             return [
                 'category' => $cat,
-                'news' => $cat->news()
-                    ->where('is_active', true)
-                    ->latest()
-                    ->take($categoryLimit)
-                    ->get(),
+                'news' => $cat->news,
             ];
         });
 
-        $videos = Video::where('is_active', true)
-            ->latest()
-            ->take($videoLimit)
-            ->get();
 
-        $podcasts = Podcast::where('is_active', true)
-            ->latest()
-            ->take($podcastLimit)
-            ->get();
-
-        $articles = Article::where('is_active', true)
-            ->latest()
-            ->take($articleLimit)
-            ->get();
+        $videos = Video::forPublic()->take($videoLimit)->get();
+        $podcasts = Podcast::forPublic()->take($podcastLimit)->get();
+        $articles = Article::forPublic()->take($articleLimit)->get();
 
         return [
-            'latest_news' => $latestNews,
+            'mainNews' => $mainNews,
             'urgent_news_by_category' => $urgentNewsByCategory,
             'category_news' => $categoryNews,
             'videos' => $videos,

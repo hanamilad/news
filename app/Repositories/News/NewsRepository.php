@@ -18,6 +18,8 @@ class NewsRepository
             'styled_description' => $data['styled_description'] ?? null,
             'is_urgent' => $data['is_urgent'] ?? false,
             'is_active' => $data['is_active'] ?? false,
+            'is_main' => $data['is_main'] ?? false,
+            'publish_date' => $data['publish_date'] ?? now(),
             'user_id' => $data['user_id'],
             'category_id' => $data['category_id'],
         ]);
@@ -54,6 +56,8 @@ class NewsRepository
             'styled_description' => $data['styled_description'] ?? $news->getTranslations('styled_description'),
             'is_urgent' => $data['is_urgent'] ?? $news->is_urgent,
             'is_active' => $data['is_active'] ?? $news->is_active,
+            'is_main' => $data['is_main'] ?? $news->is_main,
+            'publish_date' => $data['publish_date'] ?? $news->publish_date,
             'user_id' => $data['user_id'] ?? $news->user_id,
             'category_id' => $data['category_id'] ?? $news->category_id,
         ]);

@@ -22,7 +22,6 @@ class PodcastRequest extends FormRequest
             'host_name.*' => 'nullable|string|max:255',
             'description' => 'required|array',
             'description.*' => 'nullable|string',
-            'audio_path' => 'required|audio',
             'is_active' => 'nullable|boolean',
         ];
     }
@@ -41,8 +40,6 @@ class PodcastRequest extends FormRequest
             'description.required' => 'الوصف  مطلوب.',
             'description.array' => 'يجب إرسال الاسم كمجموعة من الترجمات (مثلاً ar, en).',
             'description.*.string' => 'كل ترجمة يجب أن تكون نص.',
-            'audio_path.required' => 'الملف الصوتى مطلوب.',
-            'audio_path.audio'    => 'يجب ان يكون الملف الصوتى بامتداد صحيح .',
             'is_active.boolean' => 'The active flag must be true or false.',
         ];
     }

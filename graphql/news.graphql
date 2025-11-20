@@ -4,6 +4,7 @@ type News {
   styled_description: String
   is_urgent: Boolean
   is_active: Boolean
+  is_main: Boolean
   user: User
   category: Category
   hashtags: [Hashtag!]
@@ -11,6 +12,7 @@ type News {
   links: [NewsLink!]
   suggestedNews: [News!]! @field(resolver: "App\\GraphQL\\Resolvers\\NewsResolver@suggestedNews")
   originalSuggestions: [News!]
+  publish_date: DateTime
   created_at: DateTime
   updated_at: DateTime
 }
@@ -37,7 +39,8 @@ input NewsInput {
   styled_description: TranslatableInput
   is_urgent: Boolean
   is_active: Boolean
-  user_id: ID!
+  is_main: Boolean
+  publish_date: DateTime
   category_id: ID!
   hashtag_ids: [ID!]
   suggested_ids: [ID!]
@@ -72,8 +75,6 @@ extend type Query {
       defaultCount: 10
       builder: "App\\GraphQL\\Queries\\NewsQuery@newsForPublicBuilder"
   )
-
-
 
   FindNews(id: ID! @eq): News @find
 

@@ -16,14 +16,17 @@ class News extends Model
         'styled_description',
         'is_urgent',
         'is_active',
+        'is_main',
         'user_id',
         'category_id',
+        'publish_date'
     ];
     public $translatable = ['title', 'styled_description'];
 
     protected $casts = [
         'is_urgent' => 'boolean',
         'is_active'   => 'boolean',
+        'is_main' => 'boolean',
     ];
 
     public function user()
@@ -61,11 +64,27 @@ class News extends Model
         );
     }
 
-    public function scopeForPublic($query, $categoryId)
+    public function scopePublishDate($query)
     {
-        return $query->where('category_id', $categoryId)
-            ->where('is_active', true)
-            ->orderBy('is_urgent', 'desc')
-            ->orderBy('created_at', 'desc');
+        return $query->where('publish_date', '<=', now());
+    }
+
+    public function scopeForPublic($query, $categoryId = null,$filterUrgent = false,$filterMain = false)
+    {
+        $query->where('is_active', true)
+            ->where('publish_date', '<=', now());
+
+        if ($categoryId !== null) {
+            $query->where('category_id', $categoryId);
+        }
+
+        if ($filterUrgent) {
+            $query->where('is_urgent', true);
+        }
+
+        if ($filterMain) {
+            $query->where('is_main', true);
+        }
+        return $query->orderBy('created_at', 'desc');
     }
 }

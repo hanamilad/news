@@ -38,4 +38,10 @@ class Podcast extends Model
         $disk = Storage::disk('spaces');
         return $value ? $disk->url($value) : null;
     }
+
+    public function scopeForPublic($query)
+    {
+        return $query->where('is_active', true)
+            ->orderBy('created_at', 'desc');
+    }
 }

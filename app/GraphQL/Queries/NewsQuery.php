@@ -5,48 +5,55 @@ namespace App\GraphQL\Queries;
 use App\Models\News;
 use Illuminate\Database\Eloquent\Builder;
 
-
 class NewsQuery
 {
+    private function addSearchCondition($query, array $fields, string $value, string $operator = 'LIKE', string $boolean = 'or')
+    {
+        $query->where(function ($q) use ($fields, $value, $operator, $boolean) {
+            foreach ($fields as $index => $field) {
+                if ($index === 0) {
+                    $q->where($field, $operator, "%{$value}%");
+                } else {
+                    if ($boolean === 'or') {
+                        $q->orWhere($field, $operator, "%{$value}%");
+                    } else {
+                        $q->where($field, $operator, "%{$value}%");
+                    }
+                }
+            }
+        });
+    }
+
     public function searchNews($_, array $args)
     {
-        $query = News::query();
+        $query = News::forPublic();
+
+        $fields = [
+            'title->ar', 'title->en',
+            'styled_description->ar', 'styled_description->en',
+        ];
 
         if (!empty($args['search'])) {
-            $search = $args['search'];
-            $query->where(function ($q) use ($search) {
-                $q->where('title->ar', 'LIKE', "%{$search}%")
-                    ->orWhere('title->en', 'LIKE', "%{$search}%")
-                    ->orWhere('styled_description->ar', 'LIKE', "%{$search}%")
-                    ->orWhere('styled_description->en', 'LIKE', "%{$search}%");
-            });
+            $this->addSearchCondition($query, $fields, $args['search'], 'LIKE', 'or');
         }
 
         if (!empty($args['exclude'])) {
-            $exclude = $args['exclude'];
-            $query->where(function ($q) use ($exclude) {
-                $q->where('title->ar', 'NOT LIKE', "%{$exclude}%")
-                    ->where('title->en', 'NOT LIKE', "%{$exclude}%")
-                    ->where('styled_description->ar', 'NOT LIKE', "%{$exclude}%")
-                    ->where('styled_description->en', 'NOT LIKE', "%{$exclude}%");
-            });
+            $this->addSearchCondition($query, $fields, $args['exclude'], 'NOT LIKE', 'and');
         }
 
         if (!empty($args['include'])) {
-            $include = $args['include'];
-            $query->where(function ($q) use ($include) {
-                $q->where('title->ar', 'LIKE', "%{$include}%")
-                    ->orWhere('title->en', 'LIKE', "%{$include}%")
-                    ->orWhere('styled_description->ar', 'LIKE', "%{$include}%")
-                    ->orWhere('styled_description->en', 'LIKE', "%{$include}%");
-            });
+            $this->addSearchCondition($query, $fields, $args['include'], 'LIKE', 'or');
         }
 
-        return $query->orderByDesc('created_at')->paginate($args['first'] ?? 10, ['*'], 'page', $args['page'] ?? 1);
+        $perPage = isset($args['first']) && is_numeric($args['first']) ? (int)$args['first'] : 10;
+        $page = isset($args['page']) && is_numeric($args['page']) ? (int)$args['page'] : 1;
+
+        return $query->orderByDesc('created_at')
+                     ->paginate($perPage, ['*'], 'page', $page);
     }
 
     public function newsForPublicBuilder($_, array $args): Builder
     {
-        return News::forPublic($args['category_id']);
+        return News::forPublic($args['category_id'] ?? null);
     }
 }

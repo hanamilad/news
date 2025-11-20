@@ -10,7 +10,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 class Video extends Model
 {
-    use BelongsToTenant,SoftDeletes,HasTranslations,AutoTranslatableAttributes;
+    use BelongsToTenant, SoftDeletes, HasTranslations, AutoTranslatableAttributes;
     protected $fillable = [
         'description',
         'video_path',
@@ -27,5 +27,10 @@ class Video extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+    public function scopeForPublic($query)
+    {
+        return $query->where('is_active', true)
+            ->orderBy('created_at', 'desc');
     }
 }
