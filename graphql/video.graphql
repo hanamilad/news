@@ -19,7 +19,7 @@ enum VideoType{
 
 input VideoInput {
   description: TranslatableInput!
-  video_path: String!
+  video_path: String
   type: VideoType!
   is_active: Boolean
   publish_date: DateTime
