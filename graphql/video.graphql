@@ -2,7 +2,6 @@ type Video {
   id: ID!
   description: String!
   video_path: String
-  video: String
   type: String
   is_active: Boolean
   user: User

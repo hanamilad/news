@@ -17,7 +17,6 @@ class Video extends Model
     protected $fillable = [
         'description',
         'video_path',
-        'video',
         'type',
         'is_active',
         'publish_date',
@@ -34,11 +33,15 @@ class Video extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function getVideoAttribute($value)
+    public function getVideoPathAttribute($value)
     {
-        /** @var \Illuminate\Filesystem\FilesystemAdapter $disk */
-        $disk = Storage::disk('spaces');
-        return $value ? $disk->url($value) : null;
+        if(str_contains($value, 'videos')){
+            /** @var \Illuminate\Filesystem\FilesystemAdapter $disk */
+            $disk = Storage::disk('spaces');
+            return $value ? $disk->url($value) : null;
+        }else{
+            return $value;
+        }
     }
     public function scopeForPublic($query)
     {
