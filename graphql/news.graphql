@@ -12,7 +12,7 @@ type News {
   links: [NewsLink!]
   suggestedNews: [News!]! @field(resolver: "App\\GraphQL\\Resolvers\\NewsResolver@suggestedNews")
   publish_date: DateTime
-  created_at: DateTime
+  created_at: String
   updated_at: DateTime
 }
 

@@ -7,7 +7,7 @@ type Article {
   is_active: Boolean
   user: User
   publish_date: DateTime
-  created_at: DateTime
+  created_at: String
   updated_at: DateTime
 }
 
