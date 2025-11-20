@@ -11,7 +11,6 @@ type News {
   images: [NewsImage!]
   links: [NewsLink!]
   suggestedNews: [News!]! @field(resolver: "App\\GraphQL\\Resolvers\\NewsResolver@suggestedNews")
-  originalSuggestions: [News!]
   publish_date: DateTime
   created_at: DateTime
   updated_at: DateTime
@@ -43,7 +42,6 @@ input NewsInput {
   publish_date: DateTime
   category_id: ID!
   hashtag_ids: [ID!]
-  suggested_ids: [ID!]
   links: [NewsLinkInput!]
 }
 

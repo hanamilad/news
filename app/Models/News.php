@@ -54,15 +54,6 @@ class News extends Model
         return $this->hasMany(NewsLink::class);
     }
 
-    public function originalSuggestions()
-    {
-        return $this->belongsToMany(
-            News::class,
-            'suggested_news',
-            'suggested_news_id',
-            'original_news_id'
-        );
-    }
 
     public function scopePublishDate($query)
     {

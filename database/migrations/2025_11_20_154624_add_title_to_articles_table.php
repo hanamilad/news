@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('videos', function (Blueprint $table) {
-            $table->date('publish_date')->nullable()->after('is_active');
+        Schema::table('articles', function (Blueprint $table) {
+            $table->json('title')->after('id');
         });
     }
 
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('videos', function (Blueprint $table) {
-            $table->dropColumn('publish_date');
+        Schema::table('articles', function (Blueprint $table) {
+            $table->dropColumn('title');
         });
     }
 };

@@ -19,6 +19,7 @@ class PodcastRepository
             'description' => $data['description'] ?? '',
             'audio_path' => $data['audio_path'],
             'is_active' => $data['is_active'] ?? true,
+            'publish_date' => $data['publish_date'] ?? now(),
             'user_id' => $data['user_id'],
         ]);
         return $podcast;
@@ -32,6 +33,7 @@ class PodcastRepository
             'description' => $data['description'] ?? $podcast->getTranslations('description'),
             'audio_path' => $data['audio_path'] ?? $podcast->audio_path,
             'is_active' => $data['is_active'] ?? $podcast->is_active,
+            'publish_date' => $data['publish_date'] ?? $podcast->publish_date,
             'user_id' => $data['user_id'] ?? $podcast->user_id,
         ]);
 

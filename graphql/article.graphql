@@ -1,5 +1,6 @@
 type Article {
   id: ID!
+  title: String!
   content: String!
   author_name: String!
   author_image: String
@@ -13,6 +14,7 @@ type Article {
 
 
 input ArticleInput {
+  title: TranslatableInput!
   content: TranslatableInput!
   author_name: TranslatableInput!
   is_active: Boolean

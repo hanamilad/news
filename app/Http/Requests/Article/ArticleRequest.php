@@ -3,7 +3,6 @@
 namespace App\Http\Requests\Article;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class ArticleRequest extends FormRequest
 {
@@ -14,6 +13,8 @@ class ArticleRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'title' => 'required|array',
+            'title.*' => 'nullable|string|max:255',
             'content' => 'required|array',
             'content.*' => 'nullable|string',
             'author_name' => 'required|array',
@@ -26,6 +27,9 @@ class ArticleRequest extends FormRequest
     public function messages(): array
     {
         return [
+            'title.required' => 'عنوان المقالة مطلوب.',
+            'title.array' => 'يجب إرسال العنوان كمجموعة من الترجمات (مثلاً ar, en).',
+            'title.*.string' => 'كل ترجمة يجب أن تكون نص.',
             'content.required' => 'محتوى المقالة مطلوب.',
             'content.array' => 'يجب إرسال المحتوى كمجموعة من الترجمات (مثلاً ar, en).',
             'content.*.string' => 'كل ترجمة يجب أن تكون نص.',

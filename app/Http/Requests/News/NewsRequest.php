@@ -28,16 +28,6 @@ class NewsRequest extends FormRequest
             'category_id' => 'required|exists:categories,id',
             'hashtag_ids' => 'nullable|array',
             'hashtag_ids.*' => 'exists:hashtags,id',
-            'suggested_ids' => 'nullable|array',
-            'suggested_ids.*' => [
-                'integer',
-                'exists:news,id',
-                function ($attribute, $value, $fail) use ($newsId) {
-                    if (!empty($newsId) && $value == $newsId) {
-                        $fail('A news item cannot be suggested to itself.');
-                    }
-                }
-            ],
             'links' => 'nullable|array',
             'links.*.video_link' => 'nullable|string',
         ];
@@ -60,9 +50,6 @@ class NewsRequest extends FormRequest
             'category_id.exists'   => 'The selected category does not exist.',
             'hashtag_ids.array' => 'Hashtags must be provided as an array.',
             'hashtag_ids.*.exists' => 'One or more selected hashtags are invalid.',
-            'suggested_ids.array' => 'Suggested news must be provided as an array.',
-            'suggested_ids.*.integer' => 'Each suggested news ID must be an integer.',
-            'suggested_ids.*.exists' => 'One or more suggested news items do not exist.',
             'links.array' => 'Links must be provided as an array.',
             'links.*.video_link.string' => 'Each video link must be a string.',
         ];

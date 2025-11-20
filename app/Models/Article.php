@@ -14,6 +14,7 @@ class Article extends Model
 {
     use SoftDeletes, BelongsToTenant, HasTranslations, AutoTranslatableAttributes;
     protected $fillable = [
+        'title',
         'content',
         'author_name',
         'author_image',
@@ -21,7 +22,7 @@ class Article extends Model
         'publish_date',
         'user_id',
     ];
-    public $translatable = ['content', 'author_name'];
+    public $translatable = ['title', 'content', 'author_name'];
 
     protected $casts = [
         'is_active' => 'boolean',

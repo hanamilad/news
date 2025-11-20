@@ -14,10 +14,12 @@ class ArticleRepository
     public function create(array $data): Article
     {
         $article = Article::create([
+            'title' => $data['title'],
             'content' => $data['content'],
             'author_name' => $data['author_name'],
             'author_image' => $data['author_image'],
             'is_active' => $data['is_active'] ?? true,
+            'publish_date' => $data['publish_date'] ?? now(),
             'user_id' => $data['user_id'],
         ]);
         return $article;
@@ -26,10 +28,12 @@ class ArticleRepository
     public function update(Article $article, array $data): Article
     {
         $article->update([
+            'title' => $data['title'] ?? $article->getTranslations('title'),
             'content' => $data['content'] ?? $article->getTranslations('content'),
             'author_name' => $data['author_name'] ?? $article->getTranslations('author_name'),
             'author_image' => $data['author_image'] ?? $article->author_image,
             'is_active' => $data['is_active'] ?? $article->is_active,
+            'publish_date' => $data['publish_date'] ?? $article->publish_date,
             'user_id' => $data['user_id'] ?? $article->user_id,
         ]);
 
