@@ -26,9 +26,6 @@ class NewsRepository
             $news->hashtags()->sync($data['hashtag_ids']);
         }
 
-        if (!empty($data['suggested_ids'])) {
-            $news->suggestedNews()->sync($data['suggested_ids']);
-        }
 
         if (!empty($data['images'])) {
             foreach ($data['images'] as $img) {
@@ -47,7 +44,7 @@ class NewsRepository
             }
         }
 
-        return $news->load(['hashtags', 'suggestedNews', 'images', 'links']);
+        return $news->load(['hashtags', 'images', 'links']);
     }
 
     public function update(News $news, array $data): News
@@ -65,9 +62,6 @@ class NewsRepository
             $news->hashtags()->sync($data['hashtag_ids'] ?: []);
         }
 
-        if (array_key_exists('suggested_ids', $data)) {
-            $news->suggestedNews()->sync($data['suggested_ids'] ?: []);
-        }
 
         if (array_key_exists('images', $data)) {
             $news->images()->delete();
@@ -88,7 +82,7 @@ class NewsRepository
             }
         }
 
-        return $news->fresh(['hashtags', 'suggestedNews', 'images', 'links']);
+        return $news->fresh(['hashtags', 'images', 'links']);
     }
 
     public function delete(News $news): bool

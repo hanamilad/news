@@ -9,7 +9,7 @@ type News {
   hashtags: [Hashtag!]
   images: [NewsImage!]
   links: [NewsLink!]
-  suggestedNews: [News!]
+  suggestedNews: [News!]! @field(resolver: "App\\GraphQL\\Resolvers\\NewsResolver@suggestedNews")
   originalSuggestions: [News!]
   created_at: DateTime
   updated_at: DateTime
