@@ -18,7 +18,7 @@ class VideoMutator
             throw new ValidationException($validator);
         }
 
-        return $this->service->create($input, $args['image'] ?? null);
+        return $this->service->create($input, $args['video'] ?? null);
     }
 
     public function update($_, array $args)
@@ -31,7 +31,7 @@ class VideoMutator
             throw new ValidationException($validator);
         }
 
-        return $this->service->update($id, $input, $args['image'] ?? null);
+        return $this->service->update($id, $input, $args['video'] ?? null);
     }
 
     public function delete($_, array $args)

@@ -1,7 +1,8 @@
 type Video {
   id: ID!
   description: String!
-  video_path: String!
+  video_path: String
+  video: String
   type: String
   is_active: Boolean
   user: User
@@ -53,12 +54,12 @@ extend type Query {
 }
 
 extend type Mutation {
-  CreateVideo(input: VideoInput!): Video
+  CreateVideo(input: VideoInput!, video: Upload): Video
     @guard(with: ["api"])
     @can(ability: "video.create")
     @field(resolver: "App\\GraphQL\\Mutations\\VideoMutator@create")
 
-  UpdateVideo(id: ID!, input: VideoInput!): Video
+  UpdateVideo(id: ID!, input: VideoInput!,video: Upload): Video
     @guard(with: ["api"])
     @can(ability: "video.update")
     @field(resolver: "App\\GraphQL\\Mutations\\VideoMutator@update")

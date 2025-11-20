@@ -16,6 +16,7 @@ class VideoRepository
         $video = Video::create([
             'description' => $data['description'],
             'video_path' => $data['video_path'],
+            'video' => $data['video'] ?? null,
             'type' => $data['type'],
             'is_active' => $data['is_active'] ?? true,
             'publish_date' => $data['publish_date'] ?? now(),
@@ -29,6 +30,7 @@ class VideoRepository
         $video->update([
             'description' => $data['description'] ?? $video->getTranslations('description'),
             'video_path' => $data['video_path'] ?? $video->video_path,
+            'video' => $data['video'] ?? $video->video,
             'type' => $data['type'] ?? $video->type,
             'is_active' => $data['is_active'] ?? $video->is_active,
             'publish_date' => $data['publish_date'] ?? $video->publish_date,
