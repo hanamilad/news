@@ -4,6 +4,8 @@ type Category @model(class: "App\\Models\\Category") {
   description:String
   show_in_navbar: Boolean
   show_in_homepage: Boolean
+  show_in_grid: Boolean
+  grid_order: Int
   template : Template
 }
 
@@ -12,6 +14,8 @@ input CategoryInput {
   description:TranslatableInput
   show_in_navbar : Boolean
   show_in_homepage: Boolean
+  show_in_grid: Boolean
+  grid_order:Int
   template_id:ID!
 }
 

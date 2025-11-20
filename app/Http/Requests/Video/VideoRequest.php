@@ -20,7 +20,7 @@ class VideoRequest extends FormRequest
             'video' => 'nullable|file|mimes:mp4,mov,avi|max:204800',
             'type' => 'required|string|in:short,long',
             'is_active' => 'nullable|boolean',
-            'publish_date' => 'nullable|date',
+            'publish_date' => 'nullable|date_format:Y-m-d H:i:s',
         ];
     }
 

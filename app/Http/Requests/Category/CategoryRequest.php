@@ -21,6 +21,8 @@ class CategoryRequest extends FormRequest
             'description.*' => 'nullable|string|max:255',
             'show_in_navbar' => 'nullable|boolean',
             'show_in_homepage' => 'nullable|boolean',
+            'show_in_grid' => 'nullable|boolean',
+            'grid_order' => 'nullable|integer',
             'template_id' =>'required|exists:templates,id'
         ];
     }

@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('podcasts', function (Blueprint $table) {
-            $table->date('publish_date')->nullable()->after('is_active');
+            $table->datetime('publish_date')->nullable()->after('is_active');
         });
     }
 

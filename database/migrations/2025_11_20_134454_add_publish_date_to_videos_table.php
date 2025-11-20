@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('videos', function (Blueprint $table) {
-            $table->date('publish_date')->nullable()->after('is_active');
+            $table->datetime('publish_date')->nullable()->after('is_active');
         });
     }
 

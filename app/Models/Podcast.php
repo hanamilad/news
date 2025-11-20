@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\AutoTranslatableAttributes;
+use App\Traits\ClearsHomeCache;
 use App\Traits\HasHumanCreatedAt;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -13,7 +14,7 @@ use Illuminate\Support\Facades\Storage;
 
 class Podcast extends Model
 {
-    use BelongsToTenant, HasTranslations, SoftDeletes, AutoTranslatableAttributes,HasHumanCreatedAt;
+    use BelongsToTenant, HasTranslations, SoftDeletes, AutoTranslatableAttributes,HasHumanCreatedAt,ClearsHomeCache;
     protected $fillable = [
         'title',
         'host_name',
