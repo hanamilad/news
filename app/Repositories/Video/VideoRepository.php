@@ -15,7 +15,7 @@ class VideoRepository
     {
         $video = Video::create([
             'description' => $data['description'],
-            'video_path' => $data['video_path'],
+            'video_path' => $data['video_path'] ?? '',
             'video' => $data['video'] ?? null,
             'type' => $data['type'],
             'is_active' => $data['is_active'] ?? true,

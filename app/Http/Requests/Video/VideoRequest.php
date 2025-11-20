@@ -17,6 +17,7 @@ class VideoRequest extends FormRequest
             'description' => 'required|array',
             'description.*' => 'nullable|string',
             'video_path' => 'nullable|string|max:255',
+            'video' => 'nullable|file|mimes:mp4,mov,avi|max:204800',
             'type' => 'required|string|in:short,long',
             'is_active' => 'nullable|boolean',
             'publish_date' => 'nullable|date',
