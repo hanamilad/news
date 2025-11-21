@@ -168,4 +168,22 @@ class AuthService
             return 'تم تسجيل الخروج بنجاح.';
         });
     }
+    public function changePassword(string $currentPassword, string $newPassword)
+    {
+        return DB::transaction(function () use ($currentPassword, $newPassword) {
+            $user = Auth::user();
+            if (!$user) {
+                throw new Error('لم يتم تسجيل الدخول.');
+            }
+
+            if (!Hash::check($currentPassword, $user->password)) {
+                throw new Error('كلمة المرور الحالية غير صحيحة.');
+            }
+            $this->repo->updatePassword($user, $newPassword);
+            return [
+                'message'        => 'تم تغيير كلمة المرور بنجاح.',
+                'user'           => $user,
+            ];
+        });
+    }
 }
