@@ -11,16 +11,12 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class UserService
 {
-    protected UserRepository $repo;
-
-    public function __construct(UserRepository $repo)
-    {
-        $this->repo = $repo;
-    }
+    public function __construct(protected UserRepository $repo){}
 
     public function create(array $input)
     {
         $input['password'] = Hash::make($input['password']);
+        $input['email_verified_at'] = now();
         return $this->repo->create($input);
     }
 

@@ -3,10 +3,13 @@
 namespace App\Repositories\User;
 
 use App\Models\User;
+use App\Repositories\Auth\AuthRepository;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class UserRepository
 {
+    public function __construct(protected AuthRepository $authRepo) {}
+
     public function findOrFail(int $id): User
     {
         $user = User::find($id);
@@ -25,6 +28,7 @@ class UserRepository
     public function softDelete(int $id): ?User
     {
         $user = User::findOrFail($id);
+        $this->authRepo->deleteUserTokens($user);
         $user->delete();
         return $user;
     }
