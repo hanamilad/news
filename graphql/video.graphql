@@ -38,7 +38,7 @@ extend type Query {
     page: Int = 1
   ): Video!
     @paginate(type: "PAGINATOR", model: "App\\Models\\Video")
-    @where(key: "is_active", operator: "=", value: true)
+    @scope(name: "forPublic")
     @where(key: "type", operator: "=", value: "short")
 
     long_videos_for_public(
@@ -46,7 +46,7 @@ extend type Query {
     page: Int = 1
   ): Video!
     @paginate(type: "PAGINATOR", model: "App\\Models\\Video")
-    @where(key: "is_active", operator: "=", value: true)
+    @scope(name: "forPublic")
     @where(key: "type", operator: "=", value: "long")
 
   video(id: ID! @eq): Video @find

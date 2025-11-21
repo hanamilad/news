@@ -12,12 +12,16 @@ use Illuminate\Support\Facades\DB;
 class VideoService
 {
     use LogActivity;
-    public function __construct(protected VideoRepository $repo) {}
+    public function __construct(
+        protected VideoRepository $repo,
+        protected \App\Services\Localization\TranslationService $translator
+    ) {}
     public function create(array $input, $video): Video
     {
         return DB::transaction(function () use ($input, $video) {
             $user = auth('api')->user();
             $input['user_id'] = $user->id;
+            $input['description'] = $this->ensureEnTranslation($input['description'] ?? []);
             $input['video_path'] = $this->storeVideo($video);
             $video = $this->repo->create($input);
             $this->log($user->id, 'create', Video::class, $video->id, null, $video->toArray());
@@ -30,6 +34,9 @@ class VideoService
         return DB::transaction(function () use ($id, $input, $video) {
             $user = auth('api')->user();
             $input['user_id'] = $user->id;
+            if (isset($input['description']) && is_array($input['description'])) {
+                $input['description'] = $this->ensureEnTranslation($input['description']);
+            }
             $video = $this->repo->findById($id);
             $old = $video->toArray();
             $uploaded = $this->storeVideo($video);
@@ -68,5 +75,15 @@ class VideoService
             $path = $file->store('videos', ['disk' => 'spaces']);
         }
         return $path;
+    }
+
+    protected function ensureEnTranslation(array $trans): array
+    {
+        $ar = $trans['ar'] ?? null;
+        $en = $trans['en'] ?? null;
+        if (!$en && $ar) {
+            $trans['en'] = $this->translator->translateOrFallback($ar, 'ar', 'en');
+        }
+        return $trans;
     }
 }

@@ -18,10 +18,12 @@
         "nuwave/lighthouse": "^6.63",
         "spatie/laravel-permission": "^6.21",
         "spatie/laravel-translatable": "^6.11",
-        "stancl/tenancy": "^3.9"
+        "stancl/tenancy": "^3.9",
+        "stichoza/google-translate-php": "^5.3"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
+        "laravel/boost": "^1.8",
         "laravel/pail": "^1.2.2",
         "laravel/pint": "^1.24",
         "laravel/sail": "^1.41",

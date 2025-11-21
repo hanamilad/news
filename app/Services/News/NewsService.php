@@ -12,7 +12,10 @@ use Illuminate\Support\Facades\DB;
 class NewsService
 {
     use LogActivity;
-    public function __construct(protected NewsRepository $repo) {}
+    public function __construct(
+        protected NewsRepository $repo,
+        protected \App\Services\Localization\TranslationService $translator
+    ) {}
 
     public function findById(int $id)
     {
@@ -24,6 +27,10 @@ class NewsService
         return DB::transaction(function () use ($input, $files) {
             $user = auth('api')->user();
             $input['user_id'] = $user->id;
+            $input['title'] = $this->ensureEn($input['title'] ?? []);
+            if (isset($input['styled_description']) && is_array($input['styled_description'])) {
+                $input['styled_description'] = $this->ensureEn($input['styled_description']);
+            }
             $input['images'] = $this->storeFilesAndBuildImages($files);
             $news = $this->repo->create($input);
             $this->log($user->id, 'create', News::class, $news->id, null, $news->toArray());
@@ -38,6 +45,12 @@ class NewsService
             $input['user_id'] = $user->id;
             $news = $this->repo->findById($id);
             $old = $news->toArray();
+            if (isset($input['title']) && is_array($input['title'])) {
+                $input['title'] = $this->ensureEn($input['title']);
+            }
+            if (isset($input['styled_description']) && is_array($input['styled_description'])) {
+                $input['styled_description'] = $this->ensureEn($input['styled_description']);
+            }
             $uploaded = $this->storeFilesAndBuildImages($files);
             if (!empty($uploaded)) {
                 $input['images'] = $uploaded;
@@ -79,5 +92,15 @@ class NewsService
             }
         }
         return $out;
+    }
+
+    protected function ensureEn(array $trans): array
+    {
+        $ar = $trans['ar'] ?? null;
+        $en = $trans['en'] ?? null;
+        if (!$en && $ar) {
+            $trans['en'] = $this->translator->translateOrFallback($ar, 'ar', 'en');
+        }
+        return $trans;
     }
 }

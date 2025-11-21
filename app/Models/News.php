@@ -29,6 +29,7 @@ class News extends Model
         'is_urgent' => 'boolean',
         'is_active'   => 'boolean',
         'is_main' => 'boolean',
+        'publish_date' => 'datetime',
     ];
 
     public function user()

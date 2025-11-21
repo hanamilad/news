@@ -35,7 +35,7 @@ extend type Query {
     page: Int = 1
   ): Article!
     @paginate(type: "PAGINATOR", model: "App\\Models\\Article")
-    @where(key: "is_active", operator: "=", value: true)
+    @scope(name: "forPublic")
 
   article(id: ID! @eq): Article @find
 }

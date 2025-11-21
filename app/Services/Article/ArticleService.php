@@ -12,12 +12,18 @@ use Illuminate\Support\Facades\DB;
 class ArticleService
 {
     use LogActivity;
-    public function __construct(protected ArticleRepository $repo) {}
+    public function __construct(
+        protected ArticleRepository $repo,
+        protected \App\Services\Localization\TranslationService $translator
+    ) {}
     public function create(array $input,  $file): Article
     {
         return DB::transaction(function () use ($input, $file) {
             $user = auth('api')->user();
             $input['user_id'] = $user->id;
+            $input['title'] = $this->ensureEn($input['title'] ?? []);
+            $input['content'] = $this->ensureEn($input['content'] ?? []);
+            $input['author_name'] = $this->ensureEn($input['author_name'] ?? []);
             $input['author_image'] = $this->storeAuthorImage($file);
             $article = $this->repo->create($input);
             $this->log($user->id, 'create', Article::class, $article->id, null, $article->toArray());
@@ -39,6 +45,11 @@ class ArticleService
                     Storage::disk('spaces')->delete($originalPath);
                 }
                 $input['author_image'] = $uploaded;
+            }
+            foreach (['title', 'content', 'author_name'] as $field) {
+                if (isset($input[$field]) && is_array($input[$field])) {
+                    $input[$field] = $this->ensureEn($input[$field]);
+                }
             }
             $updated = $this->repo->update($article, $input);
             $this->log($user->id, 'update', Article::class, $updated->id, $old, $updated->toArray());
@@ -69,5 +80,15 @@ class ArticleService
             $path = $file->store('article_images', ['disk' => 'spaces']);
         }
         return $path;
+    }
+
+    protected function ensureEn(array $trans): array
+    {
+        $ar = $trans['ar'] ?? null;
+        $en = $trans['en'] ?? null;
+        if (!$en && $ar) {
+            $trans['en'] = $this->translator->translateOrFallback($ar, 'ar', 'en');
+        }
+        return $trans;
     }
 }

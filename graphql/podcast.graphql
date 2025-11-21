@@ -28,7 +28,7 @@ extend type Query {
 
   podcast_for_public(first: Int! = 10,page: Int = 1): Podcast!
     @paginate(type: "PAGINATOR", model: "App\\Models\\Podcast")
-    @where(key: "is_active", operator: "=", value: true)
+    @scope(name: "forPublic")
 
  podcast(id: ID! @eq): Podcast @find
 }
