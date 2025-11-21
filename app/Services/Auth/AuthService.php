@@ -32,7 +32,7 @@ class AuthService
             $user = $this->repo->createUser($data);
             $tokenRow = $this->repo->createPasswordResetToken($user->email, $this->otpValidityMinutes);
 
-            Mail::to($user->email)->send(new OTPMail($tokenRow->token, 'تأكيد البريد الإلكتروني'));
+            Mail::to($user->email)->queue(new OTPMail($tokenRow->token, 'تأكيد البريد الإلكتروني'));
 
             return array_merge($user->toArray(), [
                 'message' => 'تم إنشاء الحساب بنجاح. تم إرسال رمز التحقق إلى بريدك الإلكتروني.'
@@ -126,7 +126,7 @@ class AuthService
 
             $tokenRow = $this->repo->createPasswordResetToken($email, $this->otpValidityMinutes);
 
-            Mail::to($email)->send(new OTPMail($tokenRow->token, 'إعادة تعيين كلمة المرور'));
+            Mail::to($email)->queue(new OTPMail($tokenRow->token, 'إعادة تعيين كلمة المرور'));
 
             return 'تم إرسال رمز إعادة التعيين إلى بريدك الإلكتروني.';
         });

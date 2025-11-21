@@ -3,17 +3,18 @@
 namespace App\Traits;
 
 use Illuminate\Support\Facades\Cache;
+use App\Support\HomeCache;
 
 trait ClearsHomeCache
 {
     protected static function bootClearsHomeCache(): void
     {
         static::saved(function() {
-            Cache::store('file')->clear();
+            HomeCache::forgetAll();
         });
         
         static::deleted(function() {
-            Cache::store('file')->clear();
+            HomeCache::forgetAll();
         });
     }
 }

@@ -29,6 +29,7 @@ class HomeQuery
             $cacheKey = 'tenant_' . tenant('id') . ':' . $cacheKey;
         }
 
+        \App\Support\HomeCache::registerKey($cacheKey);
         return cache()->store('file')->remember($cacheKey, self::CACHE_TTL, function () use ($limits) {
             return [
                 'mainNews' => News::forPublic(null, false, true)->take($limits['main_news'])->get(),

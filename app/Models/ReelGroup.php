@@ -27,6 +27,14 @@ class ReelGroup extends Model
         return $this->hasMany(Reel::class);
     }
 
+    public function coverReel()
+    {
+        // pick latest reel by sort_order that has a path
+        return $this->hasOne(Reel::class)
+            ->whereNotNull('path')
+            ->latestOfMany('sort_order');
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -34,11 +42,7 @@ class ReelGroup extends Model
 
     public function getCoverImageAttribute()
     {
-        $lastReel = $this->reels()
-            ->whereNotNull('path')
-            ->orderBy('sort_order', 'desc')
-            ->orderBy('created_at', 'desc')
-            ->first();
-        return $lastReel ? $lastReel->path : null;
+        $reel = $this->relationLoaded('coverReel') ? $this->getRelation('coverReel') : $this->coverReel()->first();
+        return $reel ? $reel->path : null;
     }
 }

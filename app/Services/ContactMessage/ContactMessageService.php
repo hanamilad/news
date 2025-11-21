@@ -28,6 +28,6 @@ class ContactMessageService
     public function sendEmailToAdmin($message)
     {
         $adminEmail = config('mail.admin_email', 'admin@example.com');
-        Mail::to($adminEmail)->send(new ContactMessageMail($message));
+        Mail::to($adminEmail)->queue(new ContactMessageMail($message));
     }
 }
