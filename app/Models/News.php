@@ -18,6 +18,7 @@ class News extends Model
         'styled_description',
         'is_urgent',
         'is_active',
+        'is_admin_approved',
         'is_main',
         'user_id',
         'category_id',
@@ -28,6 +29,7 @@ class News extends Model
     protected $casts = [
         'is_urgent' => 'boolean',
         'is_active'   => 'boolean',
+        'is_admin_approved' => 'boolean',
         'is_main' => 'boolean',
         'publish_date' => 'datetime',
     ];
@@ -66,6 +68,7 @@ class News extends Model
     public function scopeForPublic($query, $categoryId = null,$filterUrgent = false,$filterMain = false)
     {
         $query->where('is_active', true)
+            ->where('is_admin_approved', true)
             ->where('publish_date', '<=', now());
 
         if ($categoryId !== null) {

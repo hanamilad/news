@@ -20,6 +20,7 @@ class Video extends Model
         'video_path',
         'type',
         'is_active',
+        'is_admin_approved',
         'publish_date',
         'user_id',
     ];
@@ -27,6 +28,7 @@ class Video extends Model
 
     protected $casts = [
         'is_active' => 'boolean',
+        'is_admin_approved' => 'boolean',
     ];
 
     public function user()
@@ -47,6 +49,7 @@ class Video extends Model
     public function scopeForPublic($query)
     {
         return $query->where('is_active', true)
+            ->where('is_admin_approved', true)
             ->where('publish_date', '<=', now())
             ->orderBy('created_at', 'desc');
     }
