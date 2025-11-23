@@ -68,6 +68,10 @@ class PermissionRoleSeeder extends Seeder
             'reel_group.create',
             'reel_group.update',
             'reel_group.delete',
+            'task.view',
+            'task.create',
+            'task.update',
+            'task.delete',
         ];
 
         foreach ($permissions as $perm) {
