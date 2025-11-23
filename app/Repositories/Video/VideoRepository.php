@@ -18,6 +18,7 @@ class VideoRepository
             'video_path' => $data['video_path'] ?? '',
             'type' => $data['type'],
             'is_active' => $data['is_active'] ?? true,
+            'is_admin_approved' => $data['is_admin_approved'] ?? false,
             'publish_date' => $data['publish_date'] ?? now(),
             'user_id' => $data['user_id'],
         ]);
@@ -31,6 +32,7 @@ class VideoRepository
             'video_path' => $data['video_path'] ?? $video->video_path,
             'type' => $data['type'] ?? $video->type,
             'is_active' => $data['is_active'] ?? $video->is_active,
+            'is_admin_approved' => $data['is_admin_approved'] ?? $video->is_admin_approved,
             'publish_date' => $data['publish_date'] ?? $video->publish_date,
             'user_id' => $data['user_id'] ?? $video->user_id,
         ]);

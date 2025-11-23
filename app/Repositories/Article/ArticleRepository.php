@@ -19,6 +19,7 @@ class ArticleRepository
             'author_name' => $data['author_name'],
             'author_image' => $data['author_image'],
             'is_active' => $data['is_active'] ?? true,
+            'is_admin_approved' => $data['is_admin_approved'] ?? false,
             'publish_date' => $data['publish_date'] ?? now(),
             'user_id' => $data['user_id'],
         ]);
@@ -33,6 +34,7 @@ class ArticleRepository
             'author_name' => $data['author_name'] ?? $article->getTranslations('author_name'),
             'author_image' => $data['author_image'] ?? $article->author_image,
             'is_active' => $data['is_active'] ?? $article->is_active,
+            'is_admin_approved' => $data['is_admin_approved'] ?? $article->is_admin_approved,
             'publish_date' => $data['publish_date'] ?? $article->publish_date,
             'user_id' => $data['user_id'] ?? $article->user_id,
         ]);

@@ -19,6 +19,7 @@ class ReelGroupRepository
             return ReelGroup::create([
                 'title' => $data['title'],
                 'is_active' => $data['is_active'] ?? true,
+                'is_admin_approved' => $data['is_admin_approved'] ?? false,
                 'user_id' => $data['user_id'],
                 'sort_order' => $data['sort_order'],
             ]);
@@ -35,6 +36,7 @@ class ReelGroupRepository
             $group->update([
                 'title' => $data['title'] ?? $group->getTranslations('title'),
                 'is_active' => $data['is_active'] ?? $group->is_active,
+                'is_admin_approved' => $data['is_admin_approved'] ?? $group->is_admin_approved,
                 'sort_order' => $newSortOrder,
             ]);
 

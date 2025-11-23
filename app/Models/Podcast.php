@@ -14,13 +14,14 @@ use Illuminate\Support\Facades\Storage;
 
 class Podcast extends Model
 {
-    use BelongsToTenant, HasTranslations, SoftDeletes, AutoTranslatableAttributes,HasHumanCreatedAt,ClearsHomeCache;
+    use BelongsToTenant, HasTranslations, SoftDeletes, AutoTranslatableAttributes, HasHumanCreatedAt, ClearsHomeCache;
     protected $fillable = [
         'title',
         'host_name',
         'description',
         'audio_path',
         'is_active',
+        'is_admin_approved',
         'publish_date',
         'user_id',
     ];
@@ -28,6 +29,8 @@ class Podcast extends Model
 
     protected $casts = [
         'is_active' => 'boolean',
+        'is_admin_approved' => 'boolean',
+        'publish_date' => 'datetime',
     ];
 
     public function user()
@@ -45,6 +48,7 @@ class Podcast extends Model
     public function scopeForPublic($query)
     {
         return $query->where('is_active', true)
+            ->where('is_admin_approved', true)
             ->where('publish_date', '<=', now())
             ->orderBy('created_at', 'desc');
     }

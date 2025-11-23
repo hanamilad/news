@@ -5,6 +5,7 @@ type ReelGroup {
   reels: [Reel!]! @hasMany
   cover_image: String
   is_active: Boolean
+  is_admin_approved: Boolean
   sort_order: Int
   created_at: DateTime
   updated_at: DateTime
@@ -34,6 +35,7 @@ enum TypeReel {
 input ReelGroupInput {
   title: TranslatableInput!
   is_active: Boolean
+  is_admin_approved: Boolean
   sort_order: Int
   reels: [ReelInput!]
 }

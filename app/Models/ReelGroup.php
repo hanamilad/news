@@ -16,6 +16,7 @@ class ReelGroup extends Model
         'user_id',
         'title',
         'is_active',
+        'is_admin_approved',
         'sort_order',
     ];
 
