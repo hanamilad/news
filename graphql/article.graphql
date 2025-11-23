@@ -55,4 +55,7 @@ extend type Mutation {
     @guard(with: ["api"])
     @can(ability: "article.delete", model: "App\\Models\\Article")
     @field(resolver: "App\\GraphQL\\Mutations\\ArticleMutator@delete")
+
+  SearchArticlesByAuthor(name: String!): [Article!]!
+    @field(resolver: "App\\GraphQL\\Mutations\\ArticleMutator@searchByAuthor")
 }

@@ -39,4 +39,10 @@ class ArticleMutator
         $id = (int)$args['id'];
         return $this->service->delete($id);
     }
+
+    public function searchByAuthor($_, array $args)
+    {
+        $name = (string)($args['name'] ?? '');
+        return $this->service->searchByAuthor($name);
+    }
 }

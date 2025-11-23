@@ -91,4 +91,15 @@ class ArticleService
         }
         return $trans;
     }
+
+    public function searchByAuthor(string $name)
+    {
+        return Article::forPublic()
+            ->where(function ($q) use ($name) {
+                $q->where('author_name->ar', 'LIKE', "%$name%")
+                  ->orWhere('author_name->en', 'LIKE', "%$name%");
+            })
+            ->orderByDesc('created_at')
+            ->get();
+    }
 }
