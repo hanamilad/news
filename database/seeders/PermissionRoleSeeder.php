@@ -23,6 +23,7 @@ class PermissionRoleSeeder extends Seeder
             'user.viewAny',
             'user.view',
             'user.create',
+            'user.update',
             'user.deactivate',
             'user.restore',
             'user.delete',

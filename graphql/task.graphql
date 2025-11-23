@@ -1,0 +1,98 @@
+type Task {
+  id: ID!
+  title: String!
+  description: String
+  note: String
+  start_date: DateTime
+  delivery_date: DateTime
+  is_priority: Boolean
+  status: TaskStatus!
+  users: [User!]! @belongsToMany
+  created_at: DateTime
+  updated_at: DateTime
+}
+
+enum TaskStatus {
+  pending
+  in_progress
+  done
+  canceled
+}
+
+input TaskInput {
+  title: String!
+  description: String
+  note: String
+  assign_to: [ID!]
+  start_date: DateTime
+  delivery_date: DateTime
+  is_priority: Boolean
+}
+
+input TaskUpdateInput {
+  title: String
+  description: String
+  note: String
+  assign_to: [ID!]
+  start_date: DateTime
+  delivery_date: DateTime
+  is_priority: Boolean
+}
+
+input FinishTaskItemInput {
+  id: ID!
+  note: String
+}
+
+extend type Query {
+  tasks_for_admin(first: Int! = 10, page: Int = 1): Task!
+    @guard(with: ["api"])
+    @can(ability: "task.view")
+    @paginate(type: "PAGINATOR", model: "App\\Models\\Task")
+    
+  my_tasks(first: Int! = 10, page: Int = 1): Task!
+    @guard(with: ["api"])
+    @paginate(
+      defaultCount: 10,
+      builder: "App\\GraphQL\\Queries\\TaskQuery@myTasksBuilder"
+    )
+
+  task(id: ID! @eq): Task @find
+}
+
+extend type Mutation {
+  CreateTask(input: TaskInput!): Task
+    @guard(with: ["api"])
+    @can(ability: "task.create")
+    @field(resolver: "App\\GraphQL\\Mutations\\TaskMutator@create")
+
+  UpdateTask(id: ID!, input: TaskUpdateInput!): Task
+    @guard(with: ["api"])
+    @can(ability: "task.update")
+    @field(resolver: "App\\GraphQL\\Mutations\\TaskMutator@update")
+
+  DeleteTask(id: ID!): Boolean
+    @guard(with: ["api"])
+    @can(ability: "task.delete", model: "App\\Models\\Task")
+    @field(resolver: "App\\GraphQL\\Mutations\\TaskMutator@delete")
+
+  AssignUsersToTask(task_id: ID!, user_ids: [ID!]!): Task
+    @guard(with: ["api"])
+    @can(ability: "task.update")
+    @field(resolver: "App\\GraphQL\\Mutations\\TaskMutator@assignUsers")
+
+  UnassignUsersFromTask(task_id: ID!, user_ids: [ID!]!): Task
+    @guard(with: ["api"])
+    @can(ability: "task.update")
+    @field(resolver: "App\\GraphQL\\Mutations\\TaskMutator@unassignUsers")
+
+  UpdateTaskStatus(task_id: ID!, status: TaskStatus!): Task
+    @guard(with: ["api"])
+    @can(ability: "task.update")
+    @field(resolver: "App\\GraphQL\\Mutations\\TaskMutator@setStatus")
+
+  FinishingTasks(items: [FinishTaskItemInput!]!): [Task!]!
+    @guard(with: ["api"])
+    @can(ability: "task.update")
+    @field(resolver: "App\\GraphQL\\Mutations\\TaskMutator@finishingTasks")
+}

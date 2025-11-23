@@ -15,6 +15,7 @@
 #import contact_message.graphql
 #import team_member.graphql
 #import home.graphql
+#import task.graphql
 
 type Query
 type Mutation
