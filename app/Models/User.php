@@ -7,9 +7,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Support\Collection;
 use Spatie\Permission\Traits\HasRoles;
 use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
+use Illuminate\Support\Facades\Storage;
+
 
 class User extends Authenticatable
 {
@@ -20,6 +21,9 @@ class User extends Authenticatable
         'email',
         'password',
         'email_verified_at',
+        'phone_number',
+        'logo',
+        'job_title',
     ];
 
     protected $hidden = [
@@ -51,5 +55,12 @@ class User extends Authenticatable
         }
 
         return $query;
+    }
+
+    public function getLogoAttribute($value)
+    {
+        /** @var \Illuminate\Filesystem\FilesystemAdapter $disk */
+        $disk = Storage::disk('spaces');
+        return $value ? $disk->url($value) : null;
     }
 }

@@ -15,7 +15,12 @@ class UserMutator
 
     public function create($_, array $args)
     {
-        return $this->service->create($args['input']);
+        return $this->service->create($args['input'], $args['logo'] ?? null);
+    }
+
+    public function update($_, array $args)
+    {
+        return $this->service->update((int)$args['id'], $args['input'], $args['logo'] ?? null);
     }
 
     public function deactivate($_, array $args)
