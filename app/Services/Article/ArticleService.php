@@ -96,10 +96,9 @@ class ArticleService
     {
         return Article::forPublic()
             ->where(function ($q) use ($name) {
-                $q->where('author_name->ar', 'LIKE', "%$name%")
-                  ->orWhere('author_name->en', 'LIKE', "%$name%");
+                $q->whereRaw("JSON_UNQUOTE(JSON_EXTRACT(author_name, '$.ar')) LIKE ?", ["%{$name}%"])
+                    ->orWhereRaw("JSON_UNQUOTE(JSON_EXTRACT(author_name, '$.en')) LIKE ?", ["%{$name}%"]);
             })
-            ->orderByDesc('created_at')
             ->get();
     }
 }
