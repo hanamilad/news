@@ -19,8 +19,8 @@ class TaskRequest extends FormRequest
             'note' => 'nullable|string',
             'assign_to' => 'nullable|array',
             'assign_to.*' => 'integer|exists:users,id',
-            'start_date' => 'nullable|date_format:Y-m-d H:i:s',
-            'delivery_date' => 'nullable|date_format:Y-m-d H:i:s',
+            'start_date' => 'nullable|date',
+            'delivery_date' => 'nullable|date',
             'is_priority' => 'nullable|boolean',
         ];
     }
