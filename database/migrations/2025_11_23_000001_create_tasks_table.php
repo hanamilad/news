@@ -10,7 +10,8 @@ return new class extends Migration
     {
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('tenant_id')->nullable();
+            $table->string('tenant_id');
+            $table->foreign('tenant_id')->references('id')->on('tenants')->onUpdate('cascade')->onDelete('cascade');
             $table->string('title');
             $table->text('description')->nullable();
             $table->dateTime('start_date')->nullable();
