@@ -19,18 +19,24 @@ input CategoryInput {
   template_id:ID!
 }
 
+input UpdateCategoryInput {
+  id: ID!
+  data: CategoryInput!
+}
+
+
 extend type Query {
   categories: [Category!]! @all
   category(id: ID! @eq): Category @find
 }
 
 extend type Mutation {
-  CreateCategory(input: CategoryInput!): Category 
+  CreateCategory(input: [CategoryInput!]!): [Category!]! 
     @guard(with: ["api"])
     @can(ability: "categories.create")
     @field(resolver: "App\\GraphQL\\Mutations\\CategoryMutator@create")
 
-  UpdateCategory(id: ID!, input: CategoryInput!): Category 
+  UpdateCategory(input: [UpdateCategoryInput!]!): [Category!]! 
     @guard(with: ["api"])
     @can(ability: "categories.update")
     @field(resolver: "App\\GraphQL\\Mutations\\CategoryMutator@update")
