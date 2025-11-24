@@ -1,0 +1,8 @@
+type PhoneOtpResponse {
+  message: String!
+}
+
+extend type Mutation {
+  clientRequestPhoneOtp(phone: String!): PhoneOtpResponse @field(resolver: "App\\GraphQL\\Mutations\\ClientMutator@requestOtp")
+  clientVerifyPhoneOtp(phone: String!, otp: String!): String @field(resolver: "App\\GraphQL\\Mutations\\ClientMutator@verifyOtp")
+}

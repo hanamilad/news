@@ -16,6 +16,8 @@
         "league/flysystem-aws-s3-v3": "3.0",
         "mll-lab/laravel-graphiql": "^4.0",
         "nuwave/lighthouse": "^6.63",
+        "propaganistas/laravel-phone": "^6.0",
+        "pusher/pusher-php-server": "^7.2",
         "spatie/laravel-permission": "^6.21",
         "spatie/laravel-translatable": "^6.11",
         "stancl/tenancy": "^3.9",

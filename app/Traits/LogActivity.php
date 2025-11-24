@@ -20,6 +20,8 @@ trait LogActivity
         'App\Models\Video' => 'فيديو',
         'App\Models\Template' => 'قالب',
         'App\Models\User' => 'مستخدم',
+        'App\Models\Client' => 'زائر',
+
     ];
     protected function log($userId, string $action, string $modelType, $modelId, $old = null, $new = null): void
     {

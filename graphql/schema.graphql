@@ -17,6 +17,7 @@
 #import home.graphql
 #import task.graphql
 #import ads.graphql
+#import Client.graphql
 
 type Query
 type Mutation

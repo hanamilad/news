@@ -8,7 +8,6 @@ use App\Models\PasswordResetToken;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
-use GraphQL\Error\Error;
 
 class AuthRepository
 {

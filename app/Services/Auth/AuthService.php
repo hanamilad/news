@@ -5,6 +5,7 @@ namespace App\Services\Auth;
 use App\Repositories\Auth\AuthRepository;
 use App\Models\User;
 use App\Mail\OTPMail;
+use App\Services\RateLimiter\OtpRateLimiterService;
 use GraphQL\Error\Error;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\Events\PasswordReset;
@@ -16,13 +17,9 @@ use App\Traits\LogActivity;
 class AuthService
 {
     use LogActivity;
-    protected AuthRepository $repo;
     protected int $otpValidityMinutes = 15;
 
-    public function __construct(AuthRepository $repo)
-    {
-        $this->repo = $repo;
-    }
+    public function __construct(protected AuthRepository $repo, protected OtpRateLimiterService $limit) {}
 
     public function register(array $data)
     {
@@ -126,6 +123,10 @@ class AuthService
             $user = $this->repo->findUserByEmail($email);
             if (!$user) {
                 return 'إذا كان البريد موجوداً، تم إرسال رمز إعادة التعيين إليه.';
+            }
+            $result = $this->limit->check($email);
+            if ($result) {
+                return ['message' => $result['message']];
             }
 
             $tokenRow = $this->repo->createPasswordResetToken($email, $this->otpValidityMinutes);
