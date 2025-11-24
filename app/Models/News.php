@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Traits\AutoTranslatableAttributes;
 use App\Traits\ClearsHomeCache;
 use App\Traits\HasHumanCreatedAt;
+use App\Traits\NotifiesAdminsForApproval;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Translatable\HasTranslations;
@@ -12,7 +13,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 class News extends Model
 {
-    use SoftDeletes, BelongsToTenant, HasTranslations, AutoTranslatableAttributes,HasHumanCreatedAt,ClearsHomeCache;
+    use SoftDeletes, BelongsToTenant, HasTranslations, AutoTranslatableAttributes,HasHumanCreatedAt,ClearsHomeCache, NotifiesAdminsForApproval;
     protected $fillable = [
         'title',
         'styled_description',

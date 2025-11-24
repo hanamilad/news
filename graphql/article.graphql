@@ -5,6 +5,7 @@ type Article {
   author_name: String!
   author_image: String
   is_active: Boolean
+  is_admin_approved : Boolean
   user: User
   publish_date: DateTime
   created_at: String
@@ -18,6 +19,7 @@ input ArticleInput {
   content: TranslatableInput!
   author_name: TranslatableInput!
   is_active: Boolean
+  is_admin_approved : Boolean
   publish_date: DateTime
 }   
 

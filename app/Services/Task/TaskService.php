@@ -4,6 +4,7 @@ namespace App\Services\Task;
 
 use App\Repositories\Task\TaskRepository;
 use App\Models\Task;
+use App\Services\Notification\NotificationService;
 use App\Traits\LogActivity;
 use Illuminate\Support\Facades\DB;
 
@@ -13,7 +14,7 @@ class TaskService
 
     public function __construct(
         protected TaskRepository $repo,
-        protected \App\Services\Notification\TaskNotificationService $notifier
+        protected NotificationService $notifier
     ) {}
 
     public function findById(int $id): Task
@@ -28,7 +29,22 @@ class TaskService
             $task = $this->repo->create($input);
             $this->log($user?->id, 'اضافة', Task::class, $task->id, null, $task->toArray());
             if (!empty($input['assign_to'])) {
-                $this->notifier->notifyTaskAssigned($task, $input['assign_to'], $user);
+                $this->notifier->notifyUsersAboutEvent(
+                    type: 'task',
+                    data: [
+                        'task_id' => $task->id,
+                        'title' => $task->title,
+                        'description' => $task->description,
+                        'is_priority' => $task->is_priority,
+                        'start_date' => $task->start_date,
+                        'delivery_date' => $task->delivery_date,
+                    ],
+                    userIds: $input['assign_to'],
+                    creator: [
+                        'id' => $user->id,
+                        'name' => $user->name,
+                    ]
+                );
             }
             return $task;
         });
@@ -67,8 +83,20 @@ class TaskService
             $updated = $this->repo->assignUsers($task, $userIds);
             $newAssigned = array_values(array_diff($updated->users->pluck('id')->all(), $oldAssigned));
             if (!empty($newAssigned)) {
-                $this->notifier->notifyTaskAssigned($updated, $newAssigned, $user);
+                $this->notifier->notifyUsersAboutEvent(
+                    type: 'task_assigned',
+                    data: [
+                        'task_id' => $updated->id,
+                        'title' => $updated->title,
+                    ],
+                    userIds: $newAssigned,
+                    creator: [
+                        'id' => $user->id,
+                        'name' => $user->name,
+                    ]
+                );
             }
+
             $this->log($user?->id, 'تعيين مهمة لموظفين', Task::class, $updated->id, $oldAssigned, $updated->toArray());
             return $updated;
         });
@@ -105,7 +133,9 @@ class TaskService
             $updatedTasks = [];
             foreach ($items as $item) {
                 $id = (int) ($item['id'] ?? 0);
-                if (!$id) { continue; }
+                if (!$id) {
+                    continue;
+                }
                 $task = $this->repo->findById($id);
                 $old = $task->toArray();
                 $task = $this->repo->update($task, [
