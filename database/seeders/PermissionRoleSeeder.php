@@ -72,6 +72,10 @@ class PermissionRoleSeeder extends Seeder
             'task.create',
             'task.update',
             'task.delete',
+            'ads.view',
+            'ads.create',
+            'ads.update',
+            'ads.delete',
         ];
 
         foreach ($permissions as $perm) {

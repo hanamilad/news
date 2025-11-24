@@ -7,6 +7,7 @@ type Category @model(class: "App\\Models\\Category") {
   show_in_grid: Boolean
   grid_order: Int
   template : Template
+  ad : Ad
 }
 
 input CategoryInput {

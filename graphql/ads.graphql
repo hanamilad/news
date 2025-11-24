@@ -1,0 +1,72 @@
+type Ad {
+  id: ID!
+  title: String!
+  image: String
+  is_active: Boolean
+  start_date: DateTime
+  expiry_date: DateTime
+  user: User @belongsTo
+  category: Category @belongsTo
+  created_at: String
+  updated_at: DateTime
+}
+
+input AdInput {
+  title: TranslatableInput!
+  category_id: ID!
+  start_date: DateTime!
+  expiry_date: DateTime!
+  is_active: Boolean
+}
+
+input AdUpdateInput {
+  title: TranslatableInput
+  category_id: ID
+  start_date: DateTime
+  expiry_date: DateTime
+  is_active: Boolean
+}
+
+extend type Query {
+  ads_for_admin(
+    first: Int! = 10,
+    page: Int = 1
+  ): Ad!
+    @guard(with: ["api"])
+    @can(ability: "ads.view")
+    @paginate(type: "PAGINATOR", model: "App\\Models\\Ad")
+
+  ads_for_public(
+    category_id: ID,
+    first: Int! = 10,
+    page: Int = 1
+  ): [Ad!]!
+    @paginate(
+      defaultCount: 10,
+      builder: "App\\GraphQL\\Queries\\AdQuery@adsForPublicBuilder"
+    )
+
+  FindAd(id: ID! @eq): Ad @find
+}
+
+extend type Mutation {
+  CreateAd(input: AdInput!, image: Upload): Ad
+    @guard(with: ["api"])
+    @can(ability: "ads.create")
+    @field(resolver: "App\\GraphQL\\Mutations\\AdMutator@create")
+
+  UpdateAd(id: ID!, input: AdUpdateInput!, image: Upload): Ad
+    @guard(with: ["api"])
+    @can(ability: "ads.update")
+    @field(resolver: "App\\GraphQL\\Mutations\\AdMutator@update")
+
+  DeleteAd(id: ID!): Boolean
+    @guard(with: ["api"])
+    @can(ability: "ads.delete", model: "App\\Models\\Ad")
+    @field(resolver: "App\\GraphQL\\Mutations\\AdMutator@delete")
+
+  ChangeAdStatus(id: ID!, is_active: Boolean!): Ad
+    @guard(with: ["api"])
+    @can(ability: "ads.update")
+    @field(resolver: "App\\GraphQL\\Mutations\\AdMutator@changeStatus")
+}
