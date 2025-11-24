@@ -11,7 +11,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 class Category extends Model
 {
-    use SoftDeletes, BelongsToTenant, HasTranslations, AutoTranslatableAttributes,ClearsHomeCache;
+    use SoftDeletes, BelongsToTenant, HasTranslations, AutoTranslatableAttributes, ClearsHomeCache;
     protected $fillable = [
         'name',
         'description',
@@ -43,6 +43,11 @@ class Category extends Model
     public function template()
     {
         return $this->belongsTo(Template::class);
+    }
+
+    public function ad()
+    {
+        return $this->hasOne(Ad::class);
     }
 
     public function news()

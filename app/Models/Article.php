@@ -37,10 +37,6 @@ class Article extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function ad()
-    {
-        return $this->hasOne(Ad::class);
-    }
     public function getAuthorImageAttribute($value)
     {
         /** @var \Illuminate\Filesystem\FilesystemAdapter $disk */
