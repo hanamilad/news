@@ -1,98 +1,92 @@
 type User {
-  id: ID!
-  name: String!
-  email: String!
-  email_verified_at: String
-  phone_number: String
-  logo: String
-  job_title: String
-  roles: [Role!]! @belongsToMany
-  permissions: [Permission!]! @belongsToMany
-  activity_logs: [ActivityLog!]! @hasMany
+    id: ID!
+    name: String!
+    email: String!
+    email_verified_at: String
+    phone_number: String
+    logo: String
+    job_title: String
+    roles: [Role!]! @belongsToMany
+    permissions: [Permission!]! @belongsToMany
+    activity_logs: [ActivityLog!]! @hasMany
 }
 
 input UserInput {
-  name: String!
-  email: String!
-  password: String!
-  phone_number: String
-  job_title: String
+    name: String!
+    email: String!
+    password: String!
+    phone_number: String
+    job_title: String
 }
 
 input UserUpdateInput {
-  name: String
-  email: String
-  password: String
-  phone_number: String
-  logo: String
-  job_title: String
+    name: String
+    email: String
+    password: String
+    phone_number: String
+    logo: String
+    job_title: String
 }
 
-
 enum AccessType {
-  ROLE
-  PERMISSION
+    ROLE
+    PERMISSION
 }
 
 extend type Query {
-  users(
-    first: Int! = 10,
-    page: Int = 1,
-    withTrashed: Boolean = false,
-    onlyTrashed: Boolean = false
-  ): User!
-    @guard(with: ["api"])
-    @can(ability: "user.viewAny")
-    @paginate(type: "PAGINATOR",model: "App\\Models\\User",scopes: ["applyTrashedFilter"])
+    users(
+        first: Int! = 10
+        page: Int = 1
+        withTrashed: Boolean = false
+        onlyTrashed: Boolean = false
+    ): User!
+        @guard(with: ["api"])
+        @can(ability: "user.viewAny")
+        @paginate(
+            type: "PAGINATOR"
+            model: "App\\Models\\User"
+            scopes: ["applyTrashedFilter"]
+        )
 
-  user(id: ID!): User
-  @guard(with: ["api"])
-  @can(ability: "user.view")
-  @find
+    user(id: ID! @eq): User
+        @find
+        @guard(with: ["api"])
+        @can(ability: "user.view")
 }
 
-
 extend type Mutation {
-  createUser(input: UserInput!, logo: Upload): User
-    @guard(with: ["api"])
-    @can(ability: "user.create")
-    @field(resolver: "App\\GraphQL\\Mutations\\UserMutator@create")
+    createUser(input: UserInput!, logo: Upload): User
+        @guard(with: ["api"])
+        @can(ability: "user.create")
+        @field(resolver: "App\\GraphQL\\Mutations\\UserMutator@create")
 
-  updateUser(id: ID!, input: UserUpdateInput!, logo: Upload): User
-    @guard(with: ["api"])
-    @can(ability: "user.update")
-    @field(resolver: "App\\GraphQL\\Mutations\\UserMutator@update")
+    updateUser(id: ID!, input: UserUpdateInput!, logo: Upload): User
+        @guard(with: ["api"])
+        @can(ability: "user.update")
+        @field(resolver: "App\\GraphQL\\Mutations\\UserMutator@update")
 
-  deactivateUser(id: ID!): User
-    @guard(with: ["api"])
-    @can(ability: "user.deactivate")
-    @field(resolver: "App\\GraphQL\\Mutations\\UserMutator@deactivate")
+    deactivateUser(id: ID!): User
+        @guard(with: ["api"])
+        @can(ability: "user.deactivate")
+        @field(resolver: "App\\GraphQL\\Mutations\\UserMutator@deactivate")
 
-  restoreUser(id: ID!): User
-    @guard(with: ["api"])
-    @can(ability: "user.restore")
-    @field(resolver: "App\\GraphQL\\Mutations\\UserMutator@restore")
+    restoreUser(id: ID!): User
+        @guard(with: ["api"])
+        @can(ability: "user.restore")
+        @field(resolver: "App\\GraphQL\\Mutations\\UserMutator@restore")
 
-  deleteUser(id: ID!): Boolean
-    @guard(with: ["api"])
-    @can(ability: "user.delete")
-    @field(resolver: "App\\GraphQL\\Mutations\\UserMutator@delete")
-  
-  manageUserAccess(
-    user_id: ID!,
-    type: AccessType!,   
-    access_id: ID! 
-    ): User
-      @guard(with: ["api"])
-      @can(ability: "user.manageUserAccess")
-      @field(resolver: "App\\GraphQL\\Mutations\\UserMutator@manageAccess")
+    deleteUser(id: ID!): Boolean
+        @guard(with: ["api"])
+        @can(ability: "user.delete")
+        @field(resolver: "App\\GraphQL\\Mutations\\UserMutator@delete")
 
-  removeUserAccess(
-    user_id: ID!,
-    type: AccessType!,
-    access_id: ID!
-    ): User
-      @guard(with: ["api"])
-      @can(ability: "user.removeUserAccess")
-      @field(resolver: "App\\GraphQL\\Mutations\\UserMutator@removeAccess")
+    manageUserAccess(user_id: ID!, type: AccessType!, access_id: ID!): User
+        @guard(with: ["api"])
+        @can(ability: "user.manageUserAccess")
+        @field(resolver: "App\\GraphQL\\Mutations\\UserMutator@manageAccess")
+
+    removeUserAccess(user_id: ID!, type: AccessType!, access_id: ID!): User
+        @guard(with: ["api"])
+        @can(ability: "user.removeUserAccess")
+        @field(resolver: "App\\GraphQL\\Mutations\\UserMutator@removeAccess")
 }
