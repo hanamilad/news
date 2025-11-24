@@ -26,7 +26,7 @@ class AdService
             $input['title'] = $this->ensureEn($input['title'] ?? []);
             $input['image'] = $this->storeImage($file);
             $ad = $this->repo->create($input);
-            $this->log($user->id, 'create', Ad::class, $ad->id, null, $ad->toArray());
+            $this->log($user->id, 'اضافة', Ad::class, $ad->id, null, $ad->toArray());
             return $ad;
         });
     }
@@ -50,7 +50,7 @@ class AdService
                 $input['title'] = $this->ensureEn($input['title']);
             }
             $updated = $this->repo->update($ad, $input);
-            $this->log($user->id, 'update', Ad::class, $updated->id, $old, $updated->toArray());
+            $this->log($user->id, 'تعديل', Ad::class, $updated->id, $old, $updated->toArray());
             return $updated;
         });
     }
@@ -66,7 +66,7 @@ class AdService
                 Storage::disk('spaces')->delete($originalPath);
             }
             $deleted = $this->repo->delete($ad);
-            $this->log($user->id, 'delete', Ad::class, $ad->id, $old, null);
+            $this->log($user->id, 'حذف', Ad::class, $ad->id, $old, null);
             return $deleted;
         });
     }
@@ -78,7 +78,7 @@ class AdService
             $ad = $this->repo->findById($id);
             $old = $ad->toArray();
             $updated = $this->repo->update($ad, ['is_active' => $isActive]);
-            $this->log($user->id, 'change_status', Ad::class, $updated->id, $old, $updated->toArray());
+            $this->log($user->id, 'تغيير حالة', Ad::class, $updated->id, $old, $updated->toArray());
             return $updated;
         });
     }

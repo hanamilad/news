@@ -20,7 +20,7 @@ class TeamMemberService
             $input['user_id'] = $user->id;
             $input['image'] = $this->storeTeamMemberImages($file);
             $team_member = $this->repo->create($input);
-            $this->log($user->id, 'create', TeamMember::class, $team_member->id, null, $team_member->toArray());
+            $this->log($user->id, 'اضافة', TeamMember::class, $team_member->id, null, $team_member->toArray());
             return $team_member;
         });
     }
@@ -41,7 +41,7 @@ class TeamMemberService
                 $input['image'] = $uploaded;
             }
             $updated = $this->repo->update($team_member, $input);
-            $this->log($user->id, 'update', TeamMember::class, $updated->id, $old, $updated->toArray());
+            $this->log($user->id, 'تعديل', TeamMember::class, $updated->id, $old, $updated->toArray());
             return $updated;
         });
     }
@@ -57,7 +57,7 @@ class TeamMemberService
                 Storage::disk('spaces')->delete($originalPath);
             }
             $deleted = $this->repo->delete($team_member);
-            $this->log($user->id, 'delete', TeamMember::class, $team_member->id, $old, null);
+            $this->log($user->id, 'حذف', TeamMember::class, $team_member->id, $old, null);
             return $deleted;
         });
     }

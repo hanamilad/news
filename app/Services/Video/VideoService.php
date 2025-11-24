@@ -29,7 +29,7 @@ class VideoService
                 $input['video_path'] = $input['video_path'];
             }
             $video = $this->repo->create($input);
-            $this->log($user->id, 'create', Video::class, $video->id, null, $video->toArray());
+            $this->log($user->id, 'اضافة', Video::class, $video->id, null, $video->toArray());
             return $video;
         });
     }
@@ -64,7 +64,7 @@ class VideoService
             }
 
             $updated = $this->repo->update($model, $input);
-            $this->log($user->id, 'update', Video::class, $updated->id, $old, $updated->toArray());
+            $this->log($user->id, 'تعديل', Video::class, $updated->id, $old, $updated->toArray());
             return $updated;
         });
     }
@@ -80,7 +80,7 @@ class VideoService
                 Storage::disk('spaces')->delete($originalPath);
             }
             $deleted = $this->repo->delete($video);
-            $this->log($user->id, 'delete', Video::class, $video->id, $old, null);
+            $this->log($user->id, 'حذف', Video::class, $video->id, $old, null);
             return $deleted;
         });
     }

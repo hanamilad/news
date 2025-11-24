@@ -26,7 +26,7 @@ class ArticleService
             $input['author_name'] = $this->ensureEn($input['author_name'] ?? []);
             $input['author_image'] = $this->storeAuthorImage($file);
             $article = $this->repo->create($input);
-            $this->log($user->id, 'create', Article::class, $article->id, null, $article->toArray());
+            $this->log($user->id, 'اضافة', Article::class, $article->id, null, $article->toArray());
             return $article;
         });
     }
@@ -52,7 +52,7 @@ class ArticleService
                 }
             }
             $updated = $this->repo->update($article, $input);
-            $this->log($user->id, 'update', Article::class, $updated->id, $old, $updated->toArray());
+            $this->log($user->id, 'تعديل', Article::class, $updated->id, $old, $updated->toArray());
             return $updated;
         });
     }
@@ -68,7 +68,7 @@ class ArticleService
                 Storage::disk('spaces')->delete($originalPath);
             }
             $deleted = $this->repo->delete($article);
-            $this->log($user->id, 'delete', Article::class, $article->id, $old, null);
+            $this->log($user->id, 'حذف', Article::class, $article->id, $old, null);
             return $deleted;
         });
     }

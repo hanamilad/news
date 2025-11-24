@@ -26,7 +26,7 @@ class PodcastService
             $input['description'] = $this->ensureEn($input['description'] ?? []);
             $input['audio_path'] = $this->storeAudioPath($file);
             $podcast = $this->repo->create($input);
-            $this->log($user->id, 'create', Podcast::class, $podcast->id, null, $podcast->toArray());
+            $this->log($user->id, 'اضافة', Podcast::class, $podcast->id, null, $podcast->toArray());
             return $podcast;
         });
     }
@@ -53,7 +53,7 @@ class PodcastService
                 }
             }
             $updated = $this->repo->update($podcast, $input);
-            $this->log($user->id, 'update', Podcast::class, $updated->id, $old, $updated->toArray());
+            $this->log($user->id, 'تعديل', Podcast::class, $updated->id, $old, $updated->toArray());
             return $updated;
         });
     }
@@ -69,7 +69,7 @@ class PodcastService
                 Storage::disk('spaces')->delete($originalPath);
             }
             $deleted = $this->repo->delete($podcast);
-            $this->log($user->id, 'delete', Podcast::class, $podcast->id, $old, null);
+            $this->log($user->id, 'حذف', Podcast::class, $podcast->id, $old, null);
             return $deleted;
         });
     }

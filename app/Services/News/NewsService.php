@@ -33,7 +33,7 @@ class NewsService
             }
             $input['images'] = $this->storeFilesAndBuildImages($files);
             $news = $this->repo->create($input);
-            $this->log($user->id, 'create', News::class, $news->id, null, $news->toArray());
+            $this->log($user->id, 'اضافة', News::class, $news->id, null, $news->toArray());
             return $news;
         });
     }
@@ -56,7 +56,7 @@ class NewsService
                 $input['images'] = $uploaded;
             }
             $updated = $this->repo->update($news, $input);
-            $this->log($user->id, 'update', News::class, $updated->id, $old, $updated->toArray());
+            $this->log($user->id, 'تعديل', News::class, $updated->id, $old, $updated->toArray());
             return $updated;
         });
     }
@@ -74,7 +74,7 @@ class NewsService
                 }
             }
             $deleted = $this->repo->delete($news);
-            $this->log($user->id, 'delete', News::class, $news->id, $old, null);
+            $this->log($user->id, 'حذف', News::class, $news->id, $old, null);
             return $deleted;
         });
     }

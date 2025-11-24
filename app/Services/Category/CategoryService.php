@@ -22,7 +22,7 @@ class CategoryService
         $this->ensureEn($input, 'name');
         $this->ensureEn($input, 'description');
         $category = $this->repo->create($input);
-        $this->log($user->id, 'create', Category::class, $category->id, null, $category->toArray());
+        $this->log($user->id, 'اضافة', Category::class, $category->id, null, $category->toArray());
         return $category;
     }
 
@@ -40,7 +40,7 @@ class CategoryService
                 $this->ensureEn($input, 'description');
             }
             $updated = $this->repo->update($category, $input);
-            $this->log($user->id, 'update', Category::class, $updated->id, $old, $updated->toArray());
+            $this->log($user->id, 'تعديل', Category::class, $updated->id, $old, $updated->toArray());
             return $updated;
         });
     }
@@ -52,7 +52,7 @@ class CategoryService
             $category = $this->repo->findById($id);
             $old = $category->toArray();
             $deleted = $this->repo->delete($category);
-            $this->log($user->id, 'delete', Category::class, $category->id, $old, null);
+            $this->log($user->id, 'حذف', Category::class, $category->id, $old, null);
             return $deleted;
         });
     }

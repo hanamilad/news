@@ -11,9 +11,11 @@ use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
+use App\Traits\LogActivity;
 
 class AuthService
 {
+    use LogActivity;
     protected AuthRepository $repo;
     protected int $otpValidityMinutes = 15;
 
@@ -31,9 +33,9 @@ class AuthService
 
             $user = $this->repo->createUser($data);
             $tokenRow = $this->repo->createPasswordResetToken($user->email, $this->otpValidityMinutes);
+            $this->log($user->id, 'طلب انشاء حساب', User::class, $user->id, null, $user->toArray());
 
             Mail::to($user->email)->queue(new OTPMail($tokenRow->token, 'تأكيد البريد الإلكتروني'));
-
             return array_merge($user->toArray(), [
                 'message' => 'تم إنشاء الحساب بنجاح. تم إرسال رمز التحقق إلى بريدك الإلكتروني.'
             ]);
@@ -52,6 +54,9 @@ class AuthService
             if (!$user) {
                 throw new Error('المستخدم غير موجود.');
             }
+            $this->log($user->id, 'تأكيد البريد الإلكتروني', User::class, $user->id, null, ['email' => $email]);
+
+
 
             $this->repo->markEmailVerified($user);
             $this->repo->deletePasswordResetToken($email);
@@ -72,9 +77,8 @@ class AuthService
             if (is_null($user->email_verified_at)) {
                 throw new Error('يجب تأكيد البريد الإلكتروني أولاً.');
             }
-
+            $this->log($user->id, 'تسجيل دخول', User::class, $user->id, $user->toArray(), null);
             $this->repo->deleteUserTokens($user);
-
             return $this->generateTokensResponse($user);
         });
     }
@@ -127,7 +131,7 @@ class AuthService
             $tokenRow = $this->repo->createPasswordResetToken($email, $this->otpValidityMinutes);
 
             Mail::to($email)->queue(new OTPMail($tokenRow->token, 'إعادة تعيين كلمة المرور'));
-
+            $this->log($user->id, 'طلب إعادة تعيين كلمة المرور', User::class, $user->id, null, ['email' => $email]);
             return 'تم إرسال رمز إعادة التعيين إلى بريدك الإلكتروني.';
         });
     }
@@ -147,6 +151,7 @@ class AuthService
 
             $this->repo->updatePassword($user, $password);
             $this->repo->deletePasswordResetToken($email);
+            $this->log($user->id, 'تغيير كلمة المرور', User::class, $user->id, null, ['email' => $email]);
 
             event(new PasswordReset($user));
 
@@ -164,6 +169,7 @@ class AuthService
             }
 
             $this->repo->deleteUserTokens($user);
+            $this->log($user->id, 'تسجيل خروج', User::class, $user->id, null, null);
 
             return 'تم تسجيل الخروج بنجاح.';
         });
@@ -179,6 +185,7 @@ class AuthService
             if (!Hash::check($currentPassword, $user->password)) {
                 throw new Error('كلمة المرور الحالية غير صحيحة.');
             }
+            $this->log($user->id, 'تغيير كلمة المرور', User::class, $user->id, null, ['email' => $user->email]);
             $this->repo->updatePassword($user, $newPassword);
             return [
                 'message'        => 'تم تغيير كلمة المرور بنجاح.',

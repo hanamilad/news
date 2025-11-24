@@ -2,6 +2,7 @@
 
 namespace App\Services\User;
 
+use App\Models\User;
 use App\Repositories\User\UserRepository;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\UploadedFile;
@@ -9,46 +10,63 @@ use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Traits\LogActivity;
 
 
 class UserService
 {
+    use LogActivity;
     public function __construct(protected UserRepository $repo) {}
 
     public function create(array $input, $logo = null)
     {
+        $user = auth('api')->user();
         $input['password'] = Hash::make($input['password']);
         $input['email_verified_at'] = now();
         $input['logo'] = $this->storeLogo($logo);
-        return $this->repo->create($input);
+        $new_user = $this->repo->create($input);
+        $this->log($user->id, 'اضافة', User::class, $new_user->id, null, $new_user->toArray());
+        return $new_user;
     }
 
     public function update(int $id, array $input, $logo = null)
     {
+        $user_auth = auth('api')->user();
         $user = $this->repo->findOrFail($id);
         $this->maybeHashPassword($input);
         $this->applyLogoChange($user, $input, $logo);
-        return $this->repo->update($id, $input);
+        $updated_user = $this->repo->update($id, $input);
+        $this->log($user_auth->id, 'تعديل', User::class, $updated_user->id, $user->toArray(), $updated_user->toArray());
+        return $updated_user;
     }
 
     public function deactivate(int $id)
     {
-        return $this->repo->softDelete($id);
+        $user_auth = auth('api')->user();
+        $user = $this->repo->softDelete($id);
+        $this->log($user_auth->id, 'تعطيل  ', User::class, $id, null, $user->toArray());
+        return  $user;
     }
 
     public function restore(int $id)
     {
-        return $this->repo->restore($id);
+        $user_auth = auth('api')->user();
+        $user = $this->repo->restore($id);
+        $this->log($user_auth->id, 'استعادة', User::class, $id, null, $user->toArray());
+        return $user;
     }
 
     public function delete(int $id)
     {
+        $user_auth = auth('api')->user();
         $user = $this->repo->findOrFail($id);
         $oldRaw = $user->getRawOriginal('logo');
         if ($oldRaw) {
             $this->deleteLogoByRaw($oldRaw);
         }
-        return $this->repo->forceDelete($id);
+        $user_deleted = $this->repo->forceDelete($id);
+        $this->log($user_auth->id, 'حذف', User::class, $id, $user->toArray(), null);
+        return $user_deleted;
     }
     public function assignAccess(int $userId, string $type, int $accessId)
     {

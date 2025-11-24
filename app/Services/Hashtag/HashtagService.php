@@ -15,7 +15,7 @@ class HashtagService
     {
         $user = auth('api')->user();
         $hashtag = $this->repo->create($input);
-        $this->log($user->id, 'create', Hashtag::class, $hashtag->id, null, $hashtag->toArray());
+        $this->log($user->id, 'اضافة', Hashtag::class, $hashtag->id, null, $hashtag->toArray());
         return $hashtag;
     }
 
@@ -26,7 +26,7 @@ class HashtagService
             $hashtag = $this->repo->findById($id);
             $old = $hashtag->toArray();
             $updated = $this->repo->update($hashtag, $input);
-            $this->log($user->id, 'update', Hashtag::class, $updated->id, $old, $updated->toArray());
+            $this->log($user->id, 'تعديل', Hashtag::class, $updated->id, $old, $updated->toArray());
             return $updated;
         });
     }
@@ -38,7 +38,7 @@ class HashtagService
             $hashtag = $this->repo->findById($id);
             $old = $hashtag->toArray();
             $deleted = $this->repo->delete($hashtag);
-            $this->log($user->id, 'delete', Hashtag::class, $hashtag->id, $old, null);
+            $this->log($user->id, 'حذف', Hashtag::class, $hashtag->id, $old, null);
             return $deleted;
         });
     }

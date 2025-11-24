@@ -31,7 +31,7 @@ class ReelGroupService
                     $this->createReel($group->id, $reelData, $index, $user->id);
                 }
             }
-            $this->log($user->id, 'create', ReelGroup::class, $group->id, null, $group->toArray());
+            $this->log($user->id, 'اضافة', ReelGroup::class, $group->id, null, $group->toArray());
 
             return $group->fresh()->load('reels');
         });
@@ -60,7 +60,7 @@ class ReelGroupService
                     $this->deleteReelWithFile($reel, $user->id);
                 }
             }
-            $this->log($user->id, 'update', ReelGroup::class, $updated->id, $old, $updated->toArray());
+            $this->log($user->id, 'تعديل', ReelGroup::class, $updated->id, $old, $updated->toArray());
             return $updated->fresh()->load('reels');
         });
     }
@@ -75,7 +75,7 @@ class ReelGroupService
                 $this->deleteReelFile($reel);
             }
             $deleted = $this->repo->delete($group);
-            $this->log($user->id, 'delete', ReelGroup::class, $group->id, $old, null);
+            $this->log($user->id, 'حذف', ReelGroup::class, $group->id, $old, null);
             return $deleted;
         });
     }
@@ -87,7 +87,7 @@ class ReelGroupService
         $data['sort_order'] = $data['sort_order'] ?? $index;
         $data['path'] = $this->handlePath($data);
         $reel = $this->reelRepo->create($data);
-        $this->log($userId, 'create', Reel::class, $reel->id, null, $reel->toArray());
+        $this->log($userId, 'اضافة', Reel::class, $reel->id, null, $reel->toArray());
         return $reel;
     }
 
@@ -105,7 +105,7 @@ class ReelGroupService
             $data['path'] = $newPath;
         }
         $updated = $this->reelRepo->update($reel, $data);
-        $this->log($userId, 'update', Reel::class, $updated->id, $old, $updated->toArray());
+        $this->log($userId, 'تعديل', Reel::class, $updated->id, $old, $updated->toArray());
         return $updated;
     }
 
@@ -114,7 +114,7 @@ class ReelGroupService
         $old = $reel->toArray();
         $this->deleteReelFile($reel);
         $deleted = $this->reelRepo->delete($reel);
-        $this->log($userId, 'delete', Reel::class, $reel->id, $old, null);
+        $this->log($userId, 'حذف', Reel::class, $reel->id, $old, null);
         return $deleted;
     }
 

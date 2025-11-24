@@ -16,7 +16,7 @@ class TemplateService
     {
         $user = auth('api')->user();
         $template = $this->repo->create($input);
-        $this->log($user->id, 'create', Template::class, $template->id, null, $template->toArray());
+        $this->log($user->id, 'اضافة', Template::class, $template->id, null, $template->toArray());
         return $template;
     }
 
@@ -27,7 +27,7 @@ class TemplateService
             $template = $this->repo->findById($id);
             $old = $template->toArray();
             $updated = $this->repo->update($template, $input);
-            $this->log($user->id, 'update', Template::class, $updated->id, $old, $updated->toArray());
+            $this->log($user->id, 'تعديل', Template::class, $updated->id, $old, $updated->toArray());
             return $updated;
         });
     }
@@ -39,7 +39,7 @@ class TemplateService
             $template = $this->repo->findById($id);
             $old = $template->toArray();
             $deleted = $this->repo->delete($template);
-            $this->log($user->id, 'delete', Template::class, $template->id, $old, null);
+            $this->log($user->id, 'حذف', Template::class, $template->id, $old, null);
             return $deleted;
         });
     }
