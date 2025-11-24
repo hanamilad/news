@@ -17,8 +17,8 @@ class AdRequest extends FormRequest
             'title' => 'required|array',
             'title.*' => 'nullable|string|max:255',
             'category_id' => 'required|integer|exists:categories,id',
-            'start_date' => 'required|date_format:Y-m-d H:i:s',
-            'expiry_date' => 'required|date_format:Y-m-d H:i:s|after:start_date',
+            'start_date' => 'required|date',
+            'expiry_date' => 'required|date|after:start_date',
             'is_active' => 'nullable|boolean',
         ];
     }
@@ -34,9 +34,9 @@ class AdRequest extends FormRequest
             'category_id.integer' => 'رقم التصنيف يجب أن يكون عدداً صحيحاً.',
             'category_id.exists' => 'التصنيف المحدد غير موجود.',
             'start_date.required' => 'تاريخ البداية مطلوب.',
-            'start_date.date_format' => 'صيغة تاريخ البداية يجب أن تكون Y-m-d H:i:s.',
+            'start_date.date' => 'صيغة تاريخ البداية يجب أن تكون Y-m-d.',
             'expiry_date.required' => 'تاريخ الانتهاء مطلوب.',
-            'expiry_date.date_format' => 'صيغة تاريخ الانتهاء يجب أن تكون Y-m-d H:i:s.',
+            'expiry_date.date' => 'صيغة تاريخ الانتهاء يجب أن تكون Y-m-d.',
             'expiry_date.after' => 'تاريخ الانتهاء يجب أن يكون بعد تاريخ البداية.',
             'is_active.boolean' => 'قيمة الحالة يجب أن تكون صحيحة أو خاطئة.',
         ];
