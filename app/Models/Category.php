@@ -64,4 +64,26 @@ class Category extends Model
     {
         return $query->where('show_in_homepage', true);
     }
+
+    public function subCategories()
+    {
+        return $this->belongsToMany(Category::class, 'category_category', 'category_id', 'sub_category_id');
+    }
+
+    public function parentCategories()
+    {
+        return $this->belongsToMany(Category::class, 'category_category', 'sub_category_id', 'category_id');
+    }
+
+    public function mergedNews($limit = 10)
+    {
+        $allNews = collect($this->news);
+        foreach ($this->subCategories as $sub) {
+            $allNews = $allNews->merge($sub->news);
+        }
+        return $allNews
+            ->sortByDesc('publish_date')
+            ->take($limit)
+            ->values();
+    }
 }

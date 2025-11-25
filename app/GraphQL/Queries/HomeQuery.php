@@ -7,6 +7,8 @@ use App\Models\Category;
 use App\Models\Video;
 use App\Models\Podcast;
 use App\Models\Article;
+use App\Support\HomeCache;
+use Illuminate\Support\Facades\Log;
 
 class HomeQuery
 {
@@ -14,43 +16,47 @@ class HomeQuery
 
     public function home($_, array $args)
     {
-        $limits = [
-            'main_news' => min($args['main_news_limit'] ?? 6, 20),
-            'urgent_news' => min($args['urgent_limit'] ?? 5, 10),
-            'category' => min($args['category_limit'] ?? 5, 15),
-            'video' => min($args['video_limit'] ?? 5, 10),
-            'podcast' => min($args['podcast_limit'] ?? 5, 10),
-            'article' => min($args['article_limit'] ?? 5, 10),
-        ];
-
-        $cacheKey = 'home_page:' . md5(json_encode($limits));
-        
-        if (function_exists('tenant')) {
-            $cacheKey = 'tenant_' . tenant('id') . ':' . $cacheKey;
-        }
-
-        \App\Support\HomeCache::registerKey($cacheKey);
-        return cache()->store('file')->remember($cacheKey, self::CACHE_TTL, function () use ($limits) {
-            return [
-                'mainNews' => News::forPublic(null, false, true)->take($limits['main_news'])->get(),
-                
-                'urgentNewsByCategory' => Category::whereHas('news', fn($q) => $q->forPublic(null, true))
-                    ->with(['news' => fn($q) => $q->forPublic(null, true)->take($limits['urgent_news'])])
-                    ->get()
-                    ->map(fn($cat) => ['category' => $cat, 'news' => $cat->news]),
-                
-                'categoryNews' => $this->formatGridCategories(
-                    Category::showInHomepage()
-                        ->whereHas('news', fn($q) => $q->forPublic())
-                        ->with(['news' => fn($q) => $q->forPublic()->take($limits['category']), 'template'])
-                        ->get()
-                ),
-                
-                'videos' => Video::forPublic()->take($limits['video'])->get(),
-                'podcasts' => Podcast::forPublic()->take($limits['podcast'])->get(),
-                'articles' => Article::forPublic()->take($limits['article'])->get(),
+        try {
+            $limits = [
+                'main_news' => min($args['main_news_limit'] ?? 6, 20),
+                'category' => min($args['category_limit'] ?? 5, 15),
+                'video' => min($args['video_limit'] ?? 5, 10),
+                'podcast' => min($args['podcast_limit'] ?? 5, 10),
+                'article' => min($args['article_limit'] ?? 5, 10),
             ];
-        });
+
+            $cacheKey = 'home_page:' . md5(json_encode($limits));
+
+            if (function_exists('tenant') && tenant('id')) {
+                $cacheKey = 'tenant_' . tenant('id') . ':' . $cacheKey;
+            }
+
+            HomeCache::registerKey($cacheKey);
+            return cache()->store('file')->remember($cacheKey, self::CACHE_TTL, function () use ($limits) {
+                return [
+                    'mainNews' => News::forPublic(null, false, true)->take($limits['main_news'])->get() ?? collect([]),
+                    'categoryNews' => $this->formatGridCategories(
+                        Category::showInHomepage()
+                            ->with([
+                                'template',
+                                'news' => fn($q) => $q->forPublic()->take($limits['category']),
+                                'subCategories.news' => fn($q) => $q->forPublic()->take($limits['category'])
+                            ])
+                            ->get()
+                            ->map(function ($cat) use ($limits) {
+                                $cat->merged_news = $cat->mergedNews($limits['category']);
+                                return $cat;
+                            })
+                    ),
+                    'videos' => Video::forPublic()->take($limits['video'])->get(),
+                    'podcasts' => Podcast::forPublic()->take($limits['podcast'])->get(),
+                    'articles' => Article::forPublic()->take($limits['article'])->get(),
+                ];
+            });
+        } catch (\Exception $e) {
+            Log::error('Home query failed: ' . $e->getMessage());
+            return $this->getDefaultResponse();
+        }
     }
 
     private function formatGridCategories($categories): array
@@ -67,7 +73,7 @@ class HomeQuery
 
             if ($cat->show_in_grid) {
                 $currentRow[] = $categoryData;
-                
+
                 if (count($currentRow) === 2) {
                     $rows[] = $currentRow;
                     $currentRow = [];
@@ -86,5 +92,15 @@ class HomeQuery
         }
 
         return $rows;
+    }
+    private function getDefaultResponse(): array
+    {
+        return [
+            'mainNews' => collect([]),
+            'categoryNews' => [],
+            'videos' => collect([]),
+            'podcasts' => collect([]),
+            'articles' => collect([]),
+        ];
     }
 }

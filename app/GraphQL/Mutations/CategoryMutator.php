@@ -19,12 +19,10 @@ class CategoryMutator
         DB::beginTransaction();
         try {
             foreach ($inputs as $input) {
-                // Validate each category separately
                 $validator = validator($input, (new CategoryRequest())->rules());
                 if ($validator->fails()) {
                     throw new ValidationException($validator);
                 }
-
                 $results[] = $this->service->create($input);
             }
             DB::commit();
@@ -48,15 +46,12 @@ class CategoryMutator
                 if (!isset($item['id']) || !isset($item['data'])) {
                     throw new \Exception("id and data fields are required for each update item");
                 }
-
                 $id = (int) $item['id'];
                 $data = $item['data'];
-
                 $validator = validator($data, (new CategoryRequest())->rules());
                 if ($validator->fails()) {
                     throw new ValidationException($validator);
                 }
-
                 $updated[] = $this->service->update($id, $data);
             }
 

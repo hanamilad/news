@@ -1,8 +1,9 @@
 <?php
 
 namespace App\Support;
-
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
+
 
 class HomeCache
 {
@@ -28,22 +29,30 @@ class HomeCache
         $store = Cache::store('file');
         $regKey = self::registryKey();
         $existing = $store->get($regKey, []);
+        if (!is_array($existing)) {
+            $existing = [];
+        }
         if (!in_array($key, $existing, true)) {
             $existing[] = $key;
-            // store forever so the registry outlives individual entries
-            $store->forever($regKey, $existing);
+            $store->put($regKey, $existing, 86400);
         }
     }
 
     public static function forgetAll(): void
     {
-        $store = Cache::store('file');
-        $regKey = self::registryKey();
-        $keys = $store->get($regKey, []);
-        foreach ($keys as $key) {
-            $store->forget($key);
+        try {
+            $store = Cache::store('file');
+            $regKey = self::registryKey();
+            $keys = $store->get($regKey, []);
+
+            if (is_array($keys)) {
+                foreach ($keys as $key) {
+                    $store->forget($key);
+                }
+            }
+            $store->forget($regKey);
+        } catch (\Exception $e) {
+            Log::error('HomeCache forgetAll failed: ' . $e->getMessage());
         }
-        // reset the registry
-        $store->forget($regKey);
     }
 }

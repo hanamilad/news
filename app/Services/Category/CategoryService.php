@@ -21,7 +21,13 @@ class CategoryService
         $user = auth('api')->user();
         $this->ensureEn($input, 'name');
         $this->ensureEn($input, 'description');
+        $sub = $input['sub_category_ids'] ?? [];
+        unset($input['sub_category_ids']);
+
         $category = $this->repo->create($input);
+        if (!empty($sub)) {
+            $category->subCategories()->sync($sub);
+        }
         $this->log($user->id, 'اضافة', Category::class, $category->id, null, $category->toArray());
         return $category;
     }
@@ -32,14 +38,18 @@ class CategoryService
             $user = auth('api')->user();
             $category = $this->repo->findById($id);
             $old = $category->toArray();
-            // Only ensure translation for fields provided in input
             if (array_key_exists('name', $input)) {
                 $this->ensureEn($input, 'name');
             }
             if (array_key_exists('description', $input)) {
                 $this->ensureEn($input, 'description');
             }
+            $sub = $input['sub_category_ids'] ?? null;
+            unset($input['sub_category_ids']);
             $updated = $this->repo->update($category, $input);
+            if (!is_null($sub)) {
+                $updated->subCategories()->sync($sub);
+            }
             $this->log($user->id, 'تعديل', Category::class, $updated->id, $old, $updated->toArray());
             return $updated;
         });
