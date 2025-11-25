@@ -13,6 +13,7 @@ trait NotifiesAdminsForApproval
     {
         static::created(function (Model $model) {
             $value = $model->getAttribute('is_admin_approved');
+            $u = $model->user()->first();
             if ($value === false) {
                 $ids = User::role('super_admin', 'api')->pluck('id');
                 if ($ids->isNotEmpty()) {
@@ -20,11 +21,11 @@ trait NotifiesAdminsForApproval
                         'model' => class_basename($model),
                         'id' => $model->getKey(),
                         'title' => $model->getAttribute('title') ?? $model->getAttribute('description') ?? null,
+                        'description' => 'طلب موافقة من الموظف ' . ($u->name ?? '')
                     ];
 
                     $creator = null;
                     if (method_exists($model, 'user') && $model->getAttribute('user_id')) {
-                        $u = $model->user()->first();
                         if ($u) {
                             $creator = [
                                 'id' => $u->id,

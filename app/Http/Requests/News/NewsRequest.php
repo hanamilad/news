@@ -23,7 +23,7 @@ class NewsRequest extends FormRequest
             'is_urgent' => 'nullable|boolean',
             'is_active' => 'nullable|boolean',
             'is_main' => 'nullable|boolean',
-            'publish_date' => 'nullable|date_format:Y-m-d H:i:s',
+            'publish_date' => 'nullable|date',
             'category_id' => 'required|exists:categories,id',
             'hashtag_ids' => 'nullable|array',
             'hashtag_ids.*' => 'exists:hashtags,id',

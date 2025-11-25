@@ -4,6 +4,7 @@ type Video {
   video_path: String
   type: String
   is_active: Boolean
+  is_admin_approved: Boolean
   user: User
   publish_date: DateTime
   created_at: String
@@ -21,6 +22,7 @@ input VideoInput {
   video_path: String
   type: VideoType!
   is_active: Boolean
+  is_admin_approved: Boolean
   publish_date: DateTime
 }   
 

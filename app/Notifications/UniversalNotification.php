@@ -3,11 +3,11 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Notification;
 
-class UniversalNotification extends Notification implements ShouldQueue
+class UniversalNotification extends Notification implements ShouldBroadcastNow
 {
     use Queueable;
 
@@ -15,9 +15,7 @@ class UniversalNotification extends Notification implements ShouldQueue
         protected string $type,
         protected array $data,
         protected ?array $creator = null
-    ) {
-        $this->onQueue('notifications');
-    }
+    ) {}
 
     public function via($notifiable): array
     {
