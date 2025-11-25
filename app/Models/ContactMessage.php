@@ -7,7 +7,8 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 class ContactMessage extends Model
 {
-    use  BelongsToTenant;
+    use BelongsToTenant;
+
     protected $fillable = [
         'name',
         'email',
@@ -16,7 +17,8 @@ class ContactMessage extends Model
         'message',
         'is_read',
     ];
-    protected $casts =[
+
+    protected $casts = [
         'is_read' => 'boolean',
     ];
 }

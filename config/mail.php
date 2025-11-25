@@ -101,7 +101,6 @@ return [
 
     'admin_email' => env('MAIL_ADMIN_EMAIL', 'admin@example.com'),
 
-
     /*
     |--------------------------------------------------------------------------
     | Global "From" Address

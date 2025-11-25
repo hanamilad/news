@@ -16,6 +16,7 @@ class ReelGroupRepository
     {
         return DB::transaction(function () use ($data) {
             $data['sort_order'] = $this->resolveSortOrder($data['sort_order'] ?? null);
+
             return ReelGroup::create([
                 'title' => $data['title'],
                 'is_active' => $data['is_active'] ?? true,
@@ -57,17 +58,17 @@ class ReelGroupRepository
         });
     }
 
-
     protected function resolveSortOrder(?int $sortOrder): int
     {
         if ($sortOrder === null) {
             $maxOrder = ReelGroup::max('sort_order');
+
             return ($maxOrder ?? 0) + 1;
         }
         $this->shiftSortOrders($sortOrder, null, 1);
+
         return $sortOrder;
     }
-
 
     protected function reorderOnUpdate(ReelGroup $group, int $newSortOrder): void
     {
@@ -79,7 +80,6 @@ class ReelGroupRepository
             $this->shiftSortOrders($newSortOrder, $oldSortOrder - 1, 1);
         }
     }
-
 
     protected function shiftSortOrders(int $from, ?int $to = null, int $step = 1): void
     {

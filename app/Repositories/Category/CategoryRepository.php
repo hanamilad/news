@@ -24,6 +24,7 @@ class CategoryRepository
             'grid_order' => $gridOrder,
             'template_id' => $data['template_id'],
         ]);
+
         return $category;
     }
 
@@ -44,6 +45,7 @@ class CategoryRepository
             'grid_order' => $gridOrder,
             'template_id' => $data['template_id'] ?? $category->template_id,
         ]);
+
         return $category;
     }
 
@@ -51,15 +53,16 @@ class CategoryRepository
     {
         return (bool) $category->delete();
     }
+
     protected function validateGridOrder(?int $gridOrder, ?int $excludeId = null): int
     {
-        if (!$gridOrder) {
+        if (! $gridOrder) {
             return (Category::max('grid_order') ?? 0) + 1;
         }
 
         return DB::transaction(function () use ($gridOrder, $excludeId) {
             $categories = Category::where('grid_order', '>=', $gridOrder)
-                ->when($excludeId, fn($q) => $q->where('id', '!=', $excludeId))
+                ->when($excludeId, fn ($q) => $q->where('id', '!=', $excludeId))
                 ->orderBy('grid_order', 'desc')
                 ->lockForUpdate()
                 ->get();
@@ -67,6 +70,7 @@ class CategoryRepository
                 $category->grid_order = $category->grid_order + 1;
                 $category->save();
             }
+
             return $gridOrder;
         });
     }

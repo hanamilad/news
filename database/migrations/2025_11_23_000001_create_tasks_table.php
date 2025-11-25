@@ -15,7 +15,7 @@ return new class extends Migration
             $table->dateTime('start_date')->nullable();
             $table->dateTime('delivery_date')->nullable();
             $table->boolean('is_priority')->default(false);
-            $table->enum('status',['pending','in_progress','done','canceled'])->default('pending');
+            $table->enum('status', ['pending', 'in_progress', 'done', 'canceled'])->default('pending');
             $table->string('tenant_id');
             $table->foreign('tenant_id')->references('id')->on('tenants')->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();

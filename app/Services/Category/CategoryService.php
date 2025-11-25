@@ -2,8 +2,8 @@
 
 namespace App\Services\Category;
 
-use App\Repositories\Category\CategoryRepository;
 use App\Models\Category;
+use App\Repositories\Category\CategoryRepository;
 use App\Services\Localization\TranslationService;
 use App\Traits\LogActivity;
 use Illuminate\Support\Facades\DB;
@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 class CategoryService
 {
     use LogActivity;
+
     public function __construct(
         protected CategoryRepository $repo,
         protected TranslationService $translator,
@@ -25,10 +26,11 @@ class CategoryService
         unset($input['sub_category_ids']);
 
         $category = $this->repo->create($input);
-        if (!empty($sub)) {
+        if (! empty($sub)) {
             $category->subCategories()->sync($sub);
         }
         $this->log($user->id, 'اضافة', Category::class, $category->id, null, $category->toArray());
+
         return $category;
     }
 
@@ -47,10 +49,11 @@ class CategoryService
             $sub = $input['sub_category_ids'] ?? null;
             unset($input['sub_category_ids']);
             $updated = $this->repo->update($category, $input);
-            if (!is_null($sub)) {
+            if (! is_null($sub)) {
                 $updated->subCategories()->sync($sub);
             }
             $this->log($user->id, 'تعديل', Category::class, $updated->id, $old, $updated->toArray());
+
             return $updated;
         });
     }
@@ -63,13 +66,14 @@ class CategoryService
             $old = $category->toArray();
             $deleted = $this->repo->delete($category);
             $this->log($user->id, 'حذف', Category::class, $category->id, $old, null);
+
             return $deleted;
         });
     }
 
     private function ensureEn(array &$input, string $field): void
     {
-        if (!isset($input[$field]) || !is_array($input[$field])) {
+        if (! isset($input[$field]) || ! is_array($input[$field])) {
             return;
         }
 
@@ -77,8 +81,8 @@ class CategoryService
         $en = $translations['en'] ?? null;
         $ar = $translations['ar'] ?? null;
 
-        if ((is_null($en) || trim((string)$en) === '') && !is_null($ar) && trim((string)$ar) !== '') {
-            $input[$field]['en'] = $this->translator->translateOrFallback((string)$ar, 'ar', 'en');
+        if ((is_null($en) || trim((string) $en) === '') && ! is_null($ar) && trim((string) $ar) !== '') {
+            $input[$field]['en'] = $this->translator->translateOrFallback((string) $ar, 'ar', 'en');
         }
     }
 }

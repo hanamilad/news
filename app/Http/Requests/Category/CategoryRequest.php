@@ -3,7 +3,6 @@
 namespace App\Http\Requests\Category;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class CategoryRequest extends FormRequest
 {
@@ -23,7 +22,7 @@ class CategoryRequest extends FormRequest
             'show_in_homepage' => 'nullable|boolean',
             'show_in_grid' => 'nullable|boolean',
             'grid_order' => 'nullable|integer',
-            'template_id' =>'required|exists:templates,id'
+            'template_id' => 'required|exists:templates,id',
         ];
     }
 

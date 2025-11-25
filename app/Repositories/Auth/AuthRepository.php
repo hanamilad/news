@@ -2,12 +2,12 @@
 
 namespace App\Repositories\Auth;
 
-use App\Models\User;
-use App\Models\RefreshToken;
 use App\Models\PasswordResetToken;
+use App\Models\RefreshToken;
+use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
-use Carbon\Carbon;
 
 class AuthRepository
 {
@@ -19,8 +19,8 @@ class AuthRepository
     public function createUser(array $data): User
     {
         return User::create([
-            'name'     => $data['name'],
-            'email'    => $data['email'],
+            'name' => $data['name'],
+            'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
     }
@@ -35,8 +35,8 @@ class AuthRepository
         $token = Str::random(64);
 
         return RefreshToken::create([
-            'user_id'    => $user->id,
-            'token'      => $token,
+            'user_id' => $user->id,
+            'token' => $token,
             'expires_at' => Carbon::now()->addDays($daysValid),
         ]);
     }
@@ -61,11 +61,10 @@ class AuthRepository
         ]);
     }
 
-
     public function createPasswordResetToken(string $email, int $minutes = 15): PasswordResetToken
     {
         $code = mt_rand(100000, 999999);
-        $token = (string)$code;
+        $token = (string) $code;
 
         return PasswordResetToken::makeToken($email, $token, $minutes);
     }
@@ -73,8 +72,13 @@ class AuthRepository
     public function findPasswordResetToken(string $email, string $token): ?PasswordResetToken
     {
         $row = PasswordResetToken::where('email', $email)->where('token', $token)->first();
-        if (! $row) return null;
-        if ($row->isExpired()) return null;
+        if (! $row) {
+            return null;
+        }
+        if ($row->isExpired()) {
+            return null;
+        }
+
         return $row;
     }
 

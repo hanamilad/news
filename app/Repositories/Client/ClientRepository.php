@@ -3,8 +3,8 @@
 namespace App\Repositories\Client;
 
 use App\Models\Client;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Hash;
 
 class ClientRepository
 {
@@ -21,21 +21,30 @@ class ClientRepository
             ]
         );
         $row->increment('attempts');
+
         return $row;
     }
 
     public function findActiveByPhone(string $phone): ?Client
     {
         $row = Client::where('phone', $phone)->first();
-        if (! $row) return null;
-        if ($row->isVerified()) return null;
-        if ($row->isExpired()) return null;
+        if (! $row) {
+            return null;
+        }
+        if ($row->isVerified()) {
+            return null;
+        }
+        if ($row->isExpired()) {
+            return null;
+        }
+
         return $row;
     }
 
     public function markVerified(Client $row): Client
     {
         $row->update(['verified_at' => Carbon::now()]);
+
         return $row;
     }
 }

@@ -8,6 +8,7 @@ trait AutoTranslatableAttributes
     {
         if (in_array($key, $this->translatable ?? [])) {
             $locale = app()->getLocale();
+
             return $this->getTranslation($key, $locale);
         }
 

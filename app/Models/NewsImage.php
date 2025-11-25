@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 
-
 class NewsImage extends Model
 {
     protected $fillable = [
@@ -15,7 +14,7 @@ class NewsImage extends Model
     ];
 
     protected $casts = [
-        'is_main' => 'boolean'
+        'is_main' => 'boolean',
     ];
 
     public function news()
@@ -23,11 +22,11 @@ class NewsImage extends Model
         return $this->belongsTo(News::class);
     }
 
-
     public function getImagePathAttribute($value)
     {
         /** @var \Illuminate\Filesystem\FilesystemAdapter $disk */
         $disk = Storage::disk('spaces');
+
         return $value ? $disk->url($value) : null;
     }
 }

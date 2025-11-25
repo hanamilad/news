@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Repositories\Reel;
 
 use App\Models\Reel;
@@ -25,6 +26,7 @@ class ReelRepository
                 'user_id' => $data['user_id'],
                 'sort_order' => $data['sort_order'],
             ]);
+
             return $reel;
         });
     }
@@ -47,6 +49,7 @@ class ReelRepository
                 'news_id' => $data['news_id'] ?? $reel->news_id,
                 'sort_order' => $newSortOrder,
             ]);
+
             return $reel->fresh();
         });
     }
@@ -60,22 +63,23 @@ class ReelRepository
             if ($deleted) {
                 $this->shiftSortOrders($groupId, $sortOrder + 1, null, -1);
             }
+
             return $deleted;
         });
     }
-
 
     protected function resolveSortOrder(?int $groupId, ?int $sortOrder): int
     {
         if ($sortOrder === null) {
             $maxOrder = Reel::where('reel_group_id', $groupId)->max('sort_order');
+
             return ($maxOrder ?? 0) + 1;
         }
 
         $this->shiftSortOrders($groupId, $sortOrder, null, 1);
+
         return $sortOrder;
     }
-
 
     protected function reorderOnUpdate(Reel $reel, int $newGroupId, int $newSortOrder): void
     {
@@ -93,7 +97,6 @@ class ReelRepository
             }
         }
     }
-
 
     protected function shiftSortOrders(?int $groupId, int $from, ?int $to = null, int $step = 1): void
     {

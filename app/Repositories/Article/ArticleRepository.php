@@ -23,6 +23,7 @@ class ArticleRepository
             'publish_date' => $data['publish_date'] ?? now(),
             'user_id' => $data['user_id'],
         ]);
+
         return $article;
     }
 

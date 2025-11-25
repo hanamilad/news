@@ -39,7 +39,7 @@ trait NotifiesAdminsForApproval
                         creator: $creator
                     );
 
-                    (new NotificationService())->sendNotification($notification, $ids);
+                    (new NotificationService)->sendNotification($notification, $ids);
                 }
             }
         });

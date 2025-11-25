@@ -23,6 +23,7 @@ trait LogActivity
         'App\Models\Client' => 'زائر',
 
     ];
+
     protected function log($userId, string $action, string $modelType, $modelId, $old = null, $new = null): void
     {
         ActivityLog::create([
@@ -30,7 +31,7 @@ trait LogActivity
             'action' => $action,
             'model_type' => $modelType,
             'model_id' => $modelId,
-            'description' => ucfirst($action) . ' ' . self::MODEL_NAME[$modelType],
+            'description' => ucfirst($action).' '.self::MODEL_NAME[$modelType],
             'ip_address' => request()->ip(),
             'user_agent' => request()->userAgent(),
             'old_values' => $old,

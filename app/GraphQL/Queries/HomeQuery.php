@@ -2,11 +2,11 @@
 
 namespace App\GraphQL\Queries;
 
-use App\Models\News;
-use App\Models\Category;
-use App\Models\Video;
-use App\Models\Podcast;
 use App\Models\Article;
+use App\Models\Category;
+use App\Models\News;
+use App\Models\Podcast;
+use App\Models\Video;
 use App\Support\HomeCache;
 use Illuminate\Support\Facades\Log;
 
@@ -25,13 +25,14 @@ class HomeQuery
                 'article' => min($args['article_limit'] ?? 5, 10),
             ];
 
-            $cacheKey = 'home_page:' . md5(json_encode($limits));
+            $cacheKey = 'home_page:'.md5(json_encode($limits));
 
             if (function_exists('tenant') && tenant('id')) {
-                $cacheKey = 'tenant_' . tenant('id') . ':' . $cacheKey;
+                $cacheKey = 'tenant_'.tenant('id').':'.$cacheKey;
             }
 
             HomeCache::registerKey($cacheKey);
+
             return cache()->store('file')->remember($cacheKey, self::CACHE_TTL, function () use ($limits) {
                 return [
                     'mainNews' => News::forPublic(null, false, true)->take($limits['main_news'])->get() ?? collect([]),
@@ -39,12 +40,13 @@ class HomeQuery
                         Category::showInHomepage()
                             ->with([
                                 'template',
-                                'news' => fn($q) => $q->forPublic()->take($limits['category']),
-                                'subCategories.news' => fn($q) => $q->forPublic()->take($limits['category'])
+                                'news' => fn ($q) => $q->forPublic()->take($limits['category']),
+                                'subCategories.news' => fn ($q) => $q->forPublic()->take($limits['category']),
                             ])
                             ->get()
                             ->map(function ($cat) use ($limits) {
                                 $cat->merged_news = $cat->mergedNews($limits['category']);
+
                                 return $cat;
                             })
                     ),
@@ -54,7 +56,8 @@ class HomeQuery
                 ];
             });
         } catch (\Exception $e) {
-            Log::error('Home query failed: ' . $e->getMessage());
+            Log::error('Home query failed: '.$e->getMessage());
+
             return $this->getDefaultResponse();
         }
     }
@@ -65,7 +68,7 @@ class HomeQuery
         $currentRow = [];
 
         foreach ($categories as $cat) {
-            if (!$cat->news || $cat->news->isEmpty()) {
+            if (! $cat->news || $cat->news->isEmpty()) {
                 continue;
             }
 
@@ -79,7 +82,7 @@ class HomeQuery
                     $currentRow = [];
                 }
             } else {
-                if (!empty($currentRow)) {
+                if (! empty($currentRow)) {
                     $rows[] = $currentRow;
                     $currentRow = [];
                 }
@@ -87,12 +90,13 @@ class HomeQuery
             }
         }
 
-        if (!empty($currentRow)) {
+        if (! empty($currentRow)) {
             $rows[] = $currentRow;
         }
 
         return $rows;
     }
+
     private function getDefaultResponse(): array
     {
         return [

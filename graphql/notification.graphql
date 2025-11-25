@@ -1,0 +1,30 @@
+type Notification @model(class: "Illuminate\\Notifications\\DatabaseNotification") {
+  id: ID!
+  type: String!
+  data: JSON!
+  read_at: DateTime
+  created_at: DateTime
+  updated_at: DateTime
+}
+
+extend type Query {
+  myNotifications(
+    first: Int! = 10,
+    page: Int = 1
+  ): Notification!
+    @guard(with: ["api"])
+    @paginate(
+      type: "PAGINATOR",
+      builder: "App\\GraphQL\\Queries\\NotificationQuery@myNotificationsBuilder"
+    )
+}
+
+extend type Mutation {
+  markNotificationsRead(ids: [ID!]): Boolean
+    @guard(with: ["api"])
+    @field(resolver: "App\\GraphQL\\Mutations\\NotificationMutator@markRead")
+
+  deleteNotification(id: ID!): Boolean
+    @guard(with: ["api"])
+    @field(resolver: "App\\GraphQL\\Mutations\\NotificationMutator@delete")
+}

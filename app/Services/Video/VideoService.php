@@ -2,20 +2,22 @@
 
 namespace App\Services\Video;
 
-use App\Repositories\Video\VideoRepository;
 use App\Models\Video;
+use App\Repositories\Video\VideoRepository;
 use App\Traits\LogActivity;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class VideoService
 {
     use LogActivity;
+
     public function __construct(
         protected VideoRepository $repo,
         protected \App\Services\Localization\TranslationService $translator
     ) {}
+
     public function create(array $input, $file): Video
     {
         return DB::transaction(function () use ($input, $file) {
@@ -23,13 +25,14 @@ class VideoService
             $input['user_id'] = $user->id;
             $input['description'] = $this->ensureEnTranslation($input['description'] ?? []);
             $pathFromFile = $this->storeVideo($file);
-            if (!empty($pathFromFile)) {
+            if (! empty($pathFromFile)) {
                 $input['video_path'] = $pathFromFile;
             } elseif (isset($input['video_path']) && is_string($input['video_path'])) {
                 $input['video_path'] = $input['video_path'];
             }
             $video = $this->repo->create($input);
             $this->log($user->id, 'اضافة', Video::class, $video->id, null, $video->toArray());
+
             return $video;
         });
     }
@@ -46,7 +49,7 @@ class VideoService
             $old = $model->toArray();
 
             $uploaded = $this->storeVideo($file);
-            if (!empty($uploaded)) {
+            if (! empty($uploaded)) {
                 $originalPath = ltrim($model->getRawOriginal('video_path'), '/');
                 if ($model->video_path && Storage::disk('spaces')->exists($originalPath)) {
                     Storage::disk('spaces')->delete($originalPath);
@@ -65,6 +68,7 @@ class VideoService
 
             $updated = $this->repo->update($model, $input);
             $this->log($user->id, 'تعديل', Video::class, $updated->id, $old, $updated->toArray());
+
             return $updated;
         });
     }
@@ -81,15 +85,18 @@ class VideoService
             }
             $deleted = $this->repo->delete($video);
             $this->log($user->id, 'حذف', Video::class, $video->id, $old, null);
+
             return $deleted;
         });
     }
+
     protected function storeVideo($file)
     {
-        $path = "";
+        $path = '';
         if ($file instanceof UploadedFile && $file->isValid()) {
             $path = $file->store('videos', ['disk' => 'spaces']);
         }
+
         return $path;
     }
 
@@ -97,9 +104,10 @@ class VideoService
     {
         $ar = $trans['ar'] ?? null;
         $en = $trans['en'] ?? null;
-        if (!$en && $ar) {
+        if (! $en && $ar) {
             $trans['en'] = $this->translator->translateOrFallback($ar, 'ar', 'en');
         }
+
         return $trans;
     }
 }

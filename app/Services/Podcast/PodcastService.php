@@ -2,21 +2,23 @@
 
 namespace App\Services\Podcast;
 
-use App\Repositories\Podcast\PodcastRepository;
 use App\Models\Podcast;
+use App\Repositories\Podcast\PodcastRepository;
 use App\Traits\LogActivity;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class PodcastService
 {
     use LogActivity;
+
     public function __construct(
         protected PodcastRepository $repo,
         protected \App\Services\Localization\TranslationService $translator
     ) {}
-    public function create(array $input,  $file): Podcast
+
+    public function create(array $input, $file): Podcast
     {
         return DB::transaction(function () use ($input, $file) {
             $user = auth('api')->user();
@@ -27,6 +29,7 @@ class PodcastService
             $input['audio_path'] = $this->storeAudioPath($file);
             $podcast = $this->repo->create($input);
             $this->log($user->id, 'اضافة', Podcast::class, $podcast->id, null, $podcast->toArray());
+
             return $podcast;
         });
     }
@@ -39,7 +42,7 @@ class PodcastService
             $podcast = $this->repo->findById($id);
             $old = $podcast->toArray();
             $uploaded = $this->storeAudioPath($file);
-            if (!empty($uploaded)) {
+            if (! empty($uploaded)) {
                 $originalPath = ltrim($podcast->getRawOriginal('audio_path'), '/');
                 if ($podcast->audio_path && Storage::disk('spaces')->exists($originalPath)) {
                     Storage::disk('spaces')->delete($originalPath);
@@ -54,6 +57,7 @@ class PodcastService
             }
             $updated = $this->repo->update($podcast, $input);
             $this->log($user->id, 'تعديل', Podcast::class, $updated->id, $old, $updated->toArray());
+
             return $updated;
         });
     }
@@ -70,16 +74,18 @@ class PodcastService
             }
             $deleted = $this->repo->delete($podcast);
             $this->log($user->id, 'حذف', Podcast::class, $podcast->id, $old, null);
+
             return $deleted;
         });
     }
 
     protected function storeAudioPath($file)
     {
-        $path = "";
+        $path = '';
         if ($file instanceof UploadedFile && $file->isValid()) {
             $path = $file->store('podcast', ['disk' => 'spaces']);
         }
+
         return $path;
     }
 
@@ -87,9 +93,10 @@ class PodcastService
     {
         $ar = $trans['ar'] ?? null;
         $en = $trans['en'] ?? null;
-        if (!$en && $ar) {
+        if (! $en && $ar) {
             $trans['en'] = $this->translator->translateOrFallback($ar, 'ar', 'en');
         }
+
         return $trans;
     }
 }

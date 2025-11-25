@@ -3,7 +3,6 @@
 namespace App\Http\Requests\Podcast;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class PodcastRequest extends FormRequest
 {
@@ -11,9 +10,9 @@ class PodcastRequest extends FormRequest
     {
         return true;
     }
+
     public function rules(): array
     {
-
 
         return [
             'title' => 'required|array',

@@ -8,14 +8,14 @@ use App\Traits\HasHumanCreatedAt;
 use App\Traits\NotifiesAdminsForApproval;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Storage;
 use Spatie\Translatable\HasTranslations;
 use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
-use Illuminate\Support\Facades\Storage;
-
 
 class Article extends Model
 {
-    use SoftDeletes, BelongsToTenant, HasTranslations, AutoTranslatableAttributes ,HasHumanCreatedAt,ClearsHomeCache, NotifiesAdminsForApproval;
+    use AutoTranslatableAttributes, BelongsToTenant, ClearsHomeCache, HasHumanCreatedAt ,HasTranslations,NotifiesAdminsForApproval, SoftDeletes;
+
     protected $fillable = [
         'title',
         'content',
@@ -26,6 +26,7 @@ class Article extends Model
         'publish_date',
         'user_id',
     ];
+
     public $translatable = ['title', 'content', 'author_name'];
 
     protected $casts = [
@@ -42,6 +43,7 @@ class Article extends Model
     {
         /** @var \Illuminate\Filesystem\FilesystemAdapter $disk */
         $disk = Storage::disk('spaces');
+
         return $value ? $disk->url($value) : null;
     }
 

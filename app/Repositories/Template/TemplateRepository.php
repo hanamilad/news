@@ -17,6 +17,7 @@ class TemplateRepository
             'name' => $data['name'],
             'value' => $data['value'],
         ]);
+
         return $template;
     }
 
@@ -26,6 +27,7 @@ class TemplateRepository
             'name' => $data['name'] ?? $template->name,
             'value' => $data['value'] ?? $template->value,
         ]);
+
         return $template;
     }
 

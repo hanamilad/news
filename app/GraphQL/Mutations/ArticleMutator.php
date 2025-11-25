@@ -2,8 +2,8 @@
 
 namespace App\GraphQL\Mutations;
 
-use App\Services\Article\ArticleService;
 use App\Http\Requests\Article\ArticleRequest;
+use App\Services\Article\ArticleService;
 use Illuminate\Validation\ValidationException;
 
 class ArticleMutator
@@ -13,7 +13,7 @@ class ArticleMutator
     public function create($_, array $args)
     {
         $input = $args['input'] ?? [];
-        $validator = validator($input, (new ArticleRequest())->rules());
+        $validator = validator($input, (new ArticleRequest)->rules());
         if ($validator->fails()) {
             throw new ValidationException($validator);
         }
@@ -23,10 +23,10 @@ class ArticleMutator
 
     public function update($_, array $args)
     {
-        $id = (int)$args['id'];
+        $id = (int) $args['id'];
         $input = $args['input'] ?? [];
 
-        $validator = validator($input, (new ArticleRequest())->rules());
+        $validator = validator($input, (new ArticleRequest)->rules());
         if ($validator->fails()) {
             throw new ValidationException($validator);
         }
@@ -36,13 +36,15 @@ class ArticleMutator
 
     public function delete($_, array $args)
     {
-        $id = (int)$args['id'];
+        $id = (int) $args['id'];
+
         return $this->service->delete($id);
     }
 
     public function searchByAuthor($_, array $args)
     {
-        $name = (string)($args['name'] ?? '');
+        $name = (string) ($args['name'] ?? '');
+
         return $this->service->searchByAuthor($name);
     }
 }

@@ -19,6 +19,7 @@ class AdRepository
     public function update(Ad $ad, array $data): Ad
     {
         $ad->update($data);
+
         return $ad;
     }
 

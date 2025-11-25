@@ -13,7 +13,7 @@ class TeamMemberMutator
     public function create($_, array $args)
     {
         $input = $args['input'] ?? [];
-        $validator = validator($input, (new TeamMemberRequest())->rules());
+        $validator = validator($input, (new TeamMemberRequest)->rules());
         if ($validator->fails()) {
             throw new ValidationException($validator);
         }
@@ -23,10 +23,10 @@ class TeamMemberMutator
 
     public function update($_, array $args)
     {
-        $id = (int)$args['id'];
+        $id = (int) $args['id'];
         $input = $args['input'] ?? [];
 
-        $validator = validator($input, (new TeamMemberRequest())->rules());
+        $validator = validator($input, (new TeamMemberRequest)->rules());
         if ($validator->fails()) {
             throw new ValidationException($validator);
         }
@@ -36,7 +36,8 @@ class TeamMemberMutator
 
     public function delete($_, array $args)
     {
-        $id = (int)$args['id'];
+        $id = (int) $args['id'];
+
         return $this->service->delete($id);
     }
 }

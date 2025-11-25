@@ -23,7 +23,7 @@ class TaskRepository
             'status' => 'pending',
         ]);
 
-        if (!empty($data['assign_to'])) {
+        if (! empty($data['assign_to'])) {
             $task->users()->sync($data['assign_to']);
         }
 
@@ -51,18 +51,21 @@ class TaskRepository
     public function setStatus(Task $task, string $status): Task
     {
         $task->update(['status' => $status]);
+
         return $task;
     }
 
     public function assignUsers(Task $task, array $userIds): Task
     {
         $task->users()->syncWithoutDetaching($userIds);
+
         return $task->fresh(['users']);
     }
 
     public function unassignUsers(Task $task, array $userIds): Task
     {
         $task->users()->detach($userIds);
+
         return $task->fresh(['users']);
     }
 

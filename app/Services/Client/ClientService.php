@@ -2,13 +2,13 @@
 
 namespace App\Services\Client;
 
+use App\Models\Client;
 use App\Repositories\Client\ClientRepository;
 use App\Services\RateLimiter\OtpRateLimiterService;
-use App\Models\Client;
 use App\Traits\LogActivity;
+use GraphQL\Error\Error;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use GraphQL\Error\Error;
 
 class ClientService
 {
@@ -22,15 +22,20 @@ class ClientService
     {
         return DB::transaction(function () use ($phone) {
             $row = Client::where('phone', $phone)->first();
-            if ($row->isVerified()) return ['message' => 'هذا الهاتف مسجل بالفعل .',];
+            if ($row->isVerified()) {
+                return ['message' => 'هذا الهاتف مسجل بالفعل .'];
+            }
 
             $result = $this->limit->check($phone);
-            if ($result) {return ['message' => $result['message']];}
+            if ($result) {
+                return ['message' => $result['message']];
+            }
 
             $code = (string) random_int(100000, 999999);
-            $row = $this->repo->createOrUpdate($phone, $code, $this->otpValidityMinutes, request()->ip(), (string) request()->userAgent(),);
+            $row = $this->repo->createOrUpdate($phone, $code, $this->otpValidityMinutes, request()->ip(), (string) request()->userAgent());
             $this->log(null, 'طلب رمز تحقق لهاتف ', Client::class, $row->id, null, ['phone' => $phone]);
-            return ['message' => 'تم إرسال رمز التحقق إلى رقم هاتفك.',];
+
+            return ['message' => 'تم إرسال رمز التحقق إلى رقم هاتفك.'];
         });
     }
 
@@ -48,6 +53,7 @@ class ClientService
 
             $this->repo->markVerified($row);
             $this->log(null, 'تأكيد رقم هاتف', Client::class, $row->id, null, ['phone' => $phone]);
+
             return 'تم تأكيد رقم الهاتف وتسجيل بياناتك.';
         });
     }

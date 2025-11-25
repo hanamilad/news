@@ -3,8 +3,8 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Mail\Mailable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
 class OTPMail extends Mailable implements ShouldQueue
@@ -12,6 +12,7 @@ class OTPMail extends Mailable implements ShouldQueue
     use Queueable, SerializesModels;
 
     public string $code;
+
     public string $purpose; // e.g. "Verify your email" or "Reset password"
 
     public function __construct(string $code, string $purpose = 'Verification')

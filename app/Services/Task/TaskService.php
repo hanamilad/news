@@ -2,8 +2,8 @@
 
 namespace App\Services\Task;
 
-use App\Repositories\Task\TaskRepository;
 use App\Models\Task;
+use App\Repositories\Task\TaskRepository;
 use App\Services\Notification\NotificationService;
 use App\Traits\LogActivity;
 use Illuminate\Support\Facades\DB;
@@ -28,7 +28,7 @@ class TaskService
             $user = auth('api')->user();
             $task = $this->repo->create($input);
             $this->log($user?->id, 'اضافة', Task::class, $task->id, null, $task->toArray());
-            if (!empty($input['assign_to'])) {
+            if (! empty($input['assign_to'])) {
                 $this->notifier->notifyUsersAboutEvent(
                     type: 'task',
                     data: [
@@ -46,6 +46,7 @@ class TaskService
                     ]
                 );
             }
+
             return $task;
         });
     }
@@ -58,6 +59,7 @@ class TaskService
             $old = $task->toArray();
             $updated = $this->repo->update($task, $input);
             $this->log($user?->id, 'تعديل', Task::class, $updated->id, $old, $updated->toArray());
+
             return $updated;
         });
     }
@@ -70,6 +72,7 @@ class TaskService
             $old = $task->toArray();
             $updated = $this->repo->setStatus($task, $status);
             $this->log($user?->id, 'تغيير حالة', Task::class, $updated->id, $old, $updated->toArray());
+
             return $updated;
         });
     }
@@ -82,7 +85,7 @@ class TaskService
             $oldAssigned = $task->users()->pluck('users.id')->all();
             $updated = $this->repo->assignUsers($task, $userIds);
             $newAssigned = array_values(array_diff($updated->users->pluck('id')->all(), $oldAssigned));
-            if (!empty($newAssigned)) {
+            if (! empty($newAssigned)) {
                 $this->notifier->notifyUsersAboutEvent(
                     type: 'task_assigned',
                     data: [
@@ -98,6 +101,7 @@ class TaskService
             }
 
             $this->log($user?->id, 'تعيين مهمة لموظفين', Task::class, $updated->id, $oldAssigned, $updated->toArray());
+
             return $updated;
         });
     }
@@ -110,6 +114,7 @@ class TaskService
             $old = $task->toArray();
             $updated = $this->repo->unassignUsers($task, $userIds);
             $this->log($user?->id, 'إلغاء تعيين مهمة لموظفين', Task::class, $updated->id, $old, $updated->toArray());
+
             return $updated;
         });
     }
@@ -122,6 +127,7 @@ class TaskService
             $old = $task->toArray();
             $deleted = $this->repo->delete($task);
             $this->log($user?->id, 'حذف', Task::class, $task->id, $old, null);
+
             return $deleted;
         });
     }
@@ -133,7 +139,7 @@ class TaskService
             $updatedTasks = [];
             foreach ($items as $item) {
                 $id = (int) ($item['id'] ?? 0);
-                if (!$id) {
+                if (! $id) {
                     continue;
                 }
                 $task = $this->repo->findById($id);
@@ -145,6 +151,7 @@ class TaskService
                 $this->log($user?->id, 'انهاء مهمة', Task::class, $task->id, $old, $task->toArray());
                 $updatedTasks[] = $task;
             }
+
             return $updatedTasks;
         });
     }

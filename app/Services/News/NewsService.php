@@ -2,16 +2,17 @@
 
 namespace App\Services\News;
 
-use App\Repositories\News\NewsRepository;
 use App\Models\News;
+use App\Repositories\News\NewsRepository;
 use App\Traits\LogActivity;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class NewsService
 {
     use LogActivity;
+
     public function __construct(
         protected NewsRepository $repo,
         protected \App\Services\Localization\TranslationService $translator
@@ -34,6 +35,7 @@ class NewsService
             $input['images'] = $this->storeFilesAndBuildImages($files);
             $news = $this->repo->create($input);
             $this->log($user->id, 'اضافة', News::class, $news->id, null, $news->toArray());
+
             return $news;
         });
     }
@@ -52,11 +54,12 @@ class NewsService
                 $input['styled_description'] = $this->ensureEn($input['styled_description']);
             }
             $uploaded = $this->storeFilesAndBuildImages($files);
-            if (!empty($uploaded)) {
+            if (! empty($uploaded)) {
                 $input['images'] = $uploaded;
             }
             $updated = $this->repo->update($news, $input);
             $this->log($user->id, 'تعديل', News::class, $updated->id, $old, $updated->toArray());
+
             return $updated;
         });
     }
@@ -75,6 +78,7 @@ class NewsService
             }
             $deleted = $this->repo->delete($news);
             $this->log($user->id, 'حذف', News::class, $news->id, $old, null);
+
             return $deleted;
         });
     }
@@ -91,6 +95,7 @@ class NewsService
                 ];
             }
         }
+
         return $out;
     }
 
@@ -98,9 +103,10 @@ class NewsService
     {
         $ar = $trans['ar'] ?? null;
         $en = $trans['en'] ?? null;
-        if (!$en && $ar) {
+        if (! $en && $ar) {
             $trans['en'] = $this->translator->translateOrFallback($ar, 'ar', 'en');
         }
+
         return $trans;
     }
 }

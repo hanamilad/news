@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 
 class PasswordResetToken extends Model
@@ -19,7 +19,9 @@ class PasswordResetToken extends Model
      * Primary key configuration.
      */
     protected $primaryKey = 'email';
+
     public $incrementing = false;
+
     public $timestamps = false;
 
     /**
@@ -31,11 +33,9 @@ class PasswordResetToken extends Model
         'created_at',
     ];
 
-
     protected $casts = [
         'created_at' => 'datetime',
     ];
-
 
     public static function makeToken(string $email, string $token, int $minutes = 15): self
     {
@@ -48,12 +48,10 @@ class PasswordResetToken extends Model
         );
     }
 
-
     public function isExpired(int $minutes = 15): bool
     {
         return ! $this->created_at instanceof Carbon || $this->created_at->addMinutes($minutes)->isPast();
     }
-
 
     public function scopeByEmailAndToken($query, string $email, string $token)
     {

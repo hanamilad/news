@@ -8,7 +8,8 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 class ActivityLog extends Model
 {
-    use SoftDeletes,BelongsToTenant;
+    use BelongsToTenant,SoftDeletes;
+
     protected $fillable = [
         'user_id',
         'action',

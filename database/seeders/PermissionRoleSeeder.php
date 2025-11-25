@@ -2,10 +2,11 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
-use App\Models\User; 
+use Spatie\Permission\Models\Role;
+
 class PermissionRoleSeeder extends Seeder
 {
     public function run()
@@ -88,8 +89,7 @@ class PermissionRoleSeeder extends Seeder
 
         $super_admin->givePermissionTo(Permission::all());
 
-
-        $super_adminUser = User::first(); 
+        $super_adminUser = User::first();
         if ($super_adminUser) {
             $super_adminUser->assignRole('super_admin');
         }

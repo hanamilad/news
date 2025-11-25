@@ -2,8 +2,8 @@
 
 namespace App\GraphQL\Mutations;
 
-use App\Services\ReelGroup\ReelGroupService;
 use App\Http\Requests\ReelGroup\ReelGroupRequest;
+use App\Services\ReelGroup\ReelGroupService;
 use Illuminate\Validation\ValidationException;
 
 class ReelGroupMutator
@@ -14,7 +14,7 @@ class ReelGroupMutator
     {
         $input = $args['input'] ?? [];
 
-        $validator = validator($input, (new ReelGroupRequest())->rules());
+        $validator = validator($input, (new ReelGroupRequest)->rules());
 
         if ($validator->fails()) {
             throw new ValidationException($validator);
@@ -25,10 +25,10 @@ class ReelGroupMutator
 
     public function update($_, array $args)
     {
-        $id = (int)$args['id'];
+        $id = (int) $args['id'];
         $input = $args['input'] ?? [];
 
-        $validator = validator($input, (new ReelGroupRequest())->rules());
+        $validator = validator($input, (new ReelGroupRequest)->rules());
 
         if ($validator->fails()) {
             throw new ValidationException($validator);
@@ -39,7 +39,8 @@ class ReelGroupMutator
 
     public function delete($_, array $args)
     {
-        $id = (int)$args['id'];
+        $id = (int) $args['id'];
+
         return $this->service->delete($id);
     }
 }

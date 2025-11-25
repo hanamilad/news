@@ -10,6 +10,7 @@ class ArticleRequest extends FormRequest
     {
         return true;
     }
+
     public function rules(): array
     {
         return [
@@ -35,8 +36,8 @@ class ArticleRequest extends FormRequest
             'content.*.string' => 'كل ترجمة يجب أن تكون نص.',
             'author_name.required' => 'اسم المؤلف مطلوب.',
             'author_name.array' => 'يجب إرسال أسم المؤلف كمجموعة من الترجمات (مثلاً ar, en).',
-            'author_name.*.string'   => 'كل ترجمة يجب أن تكون نص.',
-            'author_name.max'      => 'كل ترجمة يجب ألا تتجاوز 255 حرف.',
+            'author_name.*.string' => 'كل ترجمة يجب أن تكون نص.',
+            'author_name.max' => 'كل ترجمة يجب ألا تتجاوز 255 حرف.',
             'is_active.boolean' => 'The active flag must be true or false.',
         ];
     }

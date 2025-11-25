@@ -15,6 +15,7 @@ class ContactMessageRepository
     {
         $message = ContactMessage::findOrFail($id);
         $message->update($data);
+
         return $message;
     }
 

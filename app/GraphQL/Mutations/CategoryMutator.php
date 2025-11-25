@@ -2,11 +2,10 @@
 
 namespace App\GraphQL\Mutations;
 
-use App\Services\Category\CategoryService;
 use App\Http\Requests\Category\CategoryRequest;
-use Illuminate\Validation\ValidationException;
+use App\Services\Category\CategoryService;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Validation\ValidationException;
 
 class CategoryMutator
 {
@@ -19,20 +18,20 @@ class CategoryMutator
         DB::beginTransaction();
         try {
             foreach ($inputs as $input) {
-                $validator = validator($input, (new CategoryRequest())->rules());
+                $validator = validator($input, (new CategoryRequest)->rules());
                 if ($validator->fails()) {
                     throw new ValidationException($validator);
                 }
                 $results[] = $this->service->create($input);
             }
             DB::commit();
+
             return $results;
         } catch (\Exception $e) {
             DB::rollBack();
             throw $e;
         }
     }
-
 
     public function update($_, array $args)
     {
@@ -43,12 +42,12 @@ class CategoryMutator
 
         try {
             foreach ($inputs as $item) {
-                if (!isset($item['id']) || !isset($item['data'])) {
-                    throw new \Exception("id and data fields are required for each update item");
+                if (! isset($item['id']) || ! isset($item['data'])) {
+                    throw new \Exception('id and data fields are required for each update item');
                 }
                 $id = (int) $item['id'];
                 $data = $item['data'];
-                $validator = validator($data, (new CategoryRequest())->rules());
+                $validator = validator($data, (new CategoryRequest)->rules());
                 if ($validator->fails()) {
                     throw new ValidationException($validator);
                 }
@@ -56,6 +55,7 @@ class CategoryMutator
             }
 
             DB::commit();
+
             return $updated;
         } catch (\Exception $e) {
             DB::rollBack();
@@ -63,10 +63,10 @@ class CategoryMutator
         }
     }
 
-
     public function delete($_, array $args)
     {
-        $id = (int)$args['id'];
+        $id = (int) $args['id'];
+
         return $this->service->delete($id);
     }
 }

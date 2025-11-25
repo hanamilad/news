@@ -3,11 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Carbon\Carbon;
 
 class RefreshToken extends Model
 {
-    protected $fillable = ['user_id', 'token','revoked','expires_at'];
+    protected $fillable = ['user_id', 'token', 'revoked', 'expires_at'];
 
     protected $dates = ['expires_at'];
 
@@ -15,7 +14,8 @@ class RefreshToken extends Model
     {
         return $this->belongsTo(User::class);
     }
-        public function isExpired(): bool
+
+    public function isExpired(): bool
     {
         return $this->expires_at->isPast();
     }

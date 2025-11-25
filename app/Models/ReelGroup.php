@@ -10,7 +10,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 class ReelGroup extends Model
 {
-    use SoftDeletes, BelongsToTenant, HasTranslations, AutoTranslatableAttributes;
+    use AutoTranslatableAttributes, BelongsToTenant, HasTranslations, SoftDeletes;
 
     protected $fillable = [
         'user_id',
@@ -21,6 +21,7 @@ class ReelGroup extends Model
     ];
 
     public $translatable = ['title'];
+
     protected $appends = ['cover_image'];
 
     public function reels()
@@ -44,6 +45,7 @@ class ReelGroup extends Model
     public function getCoverImageAttribute()
     {
         $reel = $this->relationLoaded('coverReel') ? $this->getRelation('coverReel') : $this->coverReel()->first();
+
         return $reel ? $reel->path : null;
     }
 }

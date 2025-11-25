@@ -2,14 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 class Client extends Model
 {
-    use HasFactory, BelongsToTenant;
+    use BelongsToTenant, HasFactory;
 
     protected $fillable = [
         'phone',
@@ -29,7 +29,10 @@ class Client extends Model
 
     public function isExpired(): bool
     {
-        if (! $this->otp_expires_at instanceof Carbon) return true;
+        if (! $this->otp_expires_at instanceof Carbon) {
+            return true;
+        }
+
         return $this->otp_expires_at->isPast();
     }
 

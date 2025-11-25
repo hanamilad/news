@@ -13,7 +13,8 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 class News extends Model
 {
-    use SoftDeletes, BelongsToTenant, HasTranslations, AutoTranslatableAttributes,HasHumanCreatedAt,ClearsHomeCache, NotifiesAdminsForApproval;
+    use AutoTranslatableAttributes, BelongsToTenant, ClearsHomeCache, HasHumanCreatedAt,HasTranslations,NotifiesAdminsForApproval, SoftDeletes;
+
     protected $fillable = [
         'title',
         'styled_description',
@@ -23,13 +24,14 @@ class News extends Model
         'is_main',
         'user_id',
         'category_id',
-        'publish_date'
+        'publish_date',
     ];
+
     public $translatable = ['title', 'styled_description'];
 
     protected $casts = [
         'is_urgent' => 'boolean',
-        'is_active'   => 'boolean',
+        'is_active' => 'boolean',
         'is_admin_approved' => 'boolean',
         'is_main' => 'boolean',
         'publish_date' => 'datetime',
@@ -60,13 +62,12 @@ class News extends Model
         return $this->hasMany(NewsLink::class);
     }
 
-
     public function scopePublishDate($query)
     {
         return $query->where('publish_date', '<=', now());
     }
 
-    public function scopeForPublic($query, $categoryId = null,$filterUrgent = false,$filterMain = false)
+    public function scopeForPublic($query, $categoryId = null, $filterUrgent = false, $filterMain = false)
     {
         $query->where('is_active', true)
             ->where('is_admin_approved', true)
@@ -83,6 +84,7 @@ class News extends Model
         if ($filterMain) {
             $query->where('is_main', true);
         }
+
         return $query->orderBy('created_at', 'desc');
     }
 }

@@ -21,6 +21,7 @@ class TeamMemberRepository
             'is_active' => $data['is_active'] ?? true,
             'user_id' => $data['user_id'],
         ]);
+
         return $team_member;
     }
 

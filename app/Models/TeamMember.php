@@ -4,14 +4,14 @@ namespace App\Models;
 
 use App\Traits\AutoTranslatableAttributes;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 use Spatie\Translatable\HasTranslations;
 use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
-use Illuminate\Support\Facades\Storage;
-
 
 class TeamMember extends Model
 {
-    use BelongsToTenant, HasTranslations, AutoTranslatableAttributes;
+    use AutoTranslatableAttributes, BelongsToTenant, HasTranslations;
+
     protected $fillable = [
         'name',
         'position',
@@ -19,14 +19,18 @@ class TeamMember extends Model
         'image',
         'is_active',
     ];
+
     public $translatable = ['name', 'position', 'bio'];
+
     protected $casts = [
         'is_read' => 'boolean',
     ];
+
     public function getImageAttribute($value)
     {
         /** @var \Illuminate\Filesystem\FilesystemAdapter $disk */
         $disk = Storage::disk('spaces');
+
         return $value ? $disk->url($value) : null;
     }
 }

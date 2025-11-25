@@ -2,12 +2,12 @@
 
 namespace App\Services\Ad;
 
-use App\Repositories\Ad\AdRepository;
 use App\Models\Ad;
+use App\Repositories\Ad\AdRepository;
 use App\Traits\LogActivity;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class AdService
 {
@@ -27,6 +27,7 @@ class AdService
             $input['image'] = $this->storeImage($file);
             $ad = $this->repo->create($input);
             $this->log($user->id, 'اضافة', Ad::class, $ad->id, null, $ad->toArray());
+
             return $ad;
         });
     }
@@ -39,7 +40,7 @@ class AdService
             $ad = $this->repo->findById($id);
             $old = $ad->toArray();
             $uploaded = $this->storeImage($file);
-            if (!empty($uploaded)) {
+            if (! empty($uploaded)) {
                 $originalPath = ltrim($ad->getRawOriginal('image'), '/');
                 if ($ad->image && Storage::disk('spaces')->exists($originalPath)) {
                     Storage::disk('spaces')->delete($originalPath);
@@ -51,6 +52,7 @@ class AdService
             }
             $updated = $this->repo->update($ad, $input);
             $this->log($user->id, 'تعديل', Ad::class, $updated->id, $old, $updated->toArray());
+
             return $updated;
         });
     }
@@ -67,6 +69,7 @@ class AdService
             }
             $deleted = $this->repo->delete($ad);
             $this->log($user->id, 'حذف', Ad::class, $ad->id, $old, null);
+
             return $deleted;
         });
     }
@@ -79,16 +82,18 @@ class AdService
             $old = $ad->toArray();
             $updated = $this->repo->update($ad, ['is_active' => $isActive]);
             $this->log($user->id, 'تغيير حالة', Ad::class, $updated->id, $old, $updated->toArray());
+
             return $updated;
         });
     }
 
     protected function storeImage($file)
     {
-        $path = "";
+        $path = '';
         if ($file instanceof UploadedFile && $file->isValid()) {
             $path = $file->store('ads_images', ['disk' => 'spaces']);
         }
+
         return $path;
     }
 
@@ -96,9 +101,10 @@ class AdService
     {
         $ar = $trans['ar'] ?? null;
         $en = $trans['en'] ?? null;
-        if (!$en && $ar) {
+        if (! $en && $ar) {
             $trans['en'] = $this->translator->translateOrFallback($ar, 'ar', 'en');
         }
+
         return $trans;
     }
 }

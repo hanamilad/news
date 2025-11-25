@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->json('description')->nullable();
             $table->string('path')->nullable();
-            $table->enum('type', ['video', 'image', 'news'])->default('video'); 
+            $table->enum('type', ['video', 'image', 'news'])->default('video');
             $table->boolean('is_active')->default(true);
             $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
             $table->string('tenant_id');

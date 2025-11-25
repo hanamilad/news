@@ -3,7 +3,6 @@
 namespace App\Http\Requests\Video;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class VideoRequest extends FormRequest
 {
@@ -11,6 +10,7 @@ class VideoRequest extends FormRequest
     {
         return true;
     }
+
     public function rules(): array
     {
         return [
@@ -30,8 +30,8 @@ class VideoRequest extends FormRequest
             'description.required' => 'وصف الفيديو  مطلوب.',
             'description.array' => 'يجب إرسال الاسم كمجموعة من الترجمات (مثلاً ar, en).',
             'description.*.string' => 'كل ترجمة يجب أن تكون نص.',
-            'video_path.string'   => 'مسار الفيديو يجب ان يكون نصا.',
-            'video_path.max'      => 'مسار الفيديو طويل جدا .',
+            'video_path.string' => 'مسار الفيديو يجب ان يكون نصا.',
+            'video_path.max' => 'مسار الفيديو طويل جدا .',
         ];
     }
 }

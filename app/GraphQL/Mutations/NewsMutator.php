@@ -2,10 +2,10 @@
 
 namespace App\GraphQL\Mutations;
 
-use App\Services\News\NewsService;
 use App\Http\Requests\News\NewsRequest;
-use Illuminate\Validation\ValidationException;
+use App\Services\News\NewsService;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Validation\ValidationException;
 
 class NewsMutator
 {
@@ -16,7 +16,7 @@ class NewsMutator
         $input = $args['input'] ?? [];
         $files = $this->extractFiles($args);
 
-        $validator = validator($input, (new NewsRequest())->rules());
+        $validator = validator($input, (new NewsRequest)->rules());
         if ($validator->fails()) {
             throw new ValidationException($validator);
         }
@@ -26,7 +26,7 @@ class NewsMutator
 
     public function update($_, array $args)
     {
-        $id = (int)$args['id'];
+        $id = (int) $args['id'];
         $input = $args['input'] ?? [];
         $files = $this->extractFiles($args);
 
@@ -34,7 +34,7 @@ class NewsMutator
             request()->route()->setParameter('id', $id);
         }
 
-        $validator = validator($input, (new NewsRequest())->rules());
+        $validator = validator($input, (new NewsRequest)->rules());
         if ($validator->fails()) {
             throw new ValidationException($validator);
         }
@@ -44,18 +44,19 @@ class NewsMutator
 
     public function delete($_, array $args)
     {
-        $id = (int)$args['id'];
+        $id = (int) $args['id'];
+
         return $this->service->delete($id);
     }
 
     public function search($_, array $args) {}
 
-
     protected function extractFiles(array $args): array
     {
-        if (!empty($args['images']) && is_array($args['images'])) {
-            return array_filter($args['images'], fn($f) => $f instanceof UploadedFile);
+        if (! empty($args['images']) && is_array($args['images'])) {
+            return array_filter($args['images'], fn ($f) => $f instanceof UploadedFile);
         }
+
         return [];
     }
 }

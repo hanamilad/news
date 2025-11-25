@@ -12,12 +12,13 @@ class ClientMutator
     {
         $phone = $args['phone'] ?? null;
         $validator = validator(['phone' => $phone], [
-            'phone' => ['required', 'phone:EG,JO,SA,AE']
+            'phone' => ['required', 'phone:EG,JO,SA,AE'],
         ]);
 
         if ($validator->fails()) {
             throw new \Illuminate\Validation\ValidationException($validator);
         }
+
         return $this->service->requestOtp($phone);
     }
 
@@ -27,11 +28,12 @@ class ClientMutator
         $otp = $args['otp'] ?? null;
         $validator = validator(['phone' => $phone, 'otp' => $otp], [
             'phone' => ['required', 'phone:EG,JO,SA,AE'],
-            'otp' => ['required', 'string', 'size:6']
+            'otp' => ['required', 'string', 'size:6'],
         ]);
         if ($validator->fails()) {
             throw new \Illuminate\Validation\ValidationException($validator);
         }
+
         return $this->service->verifyOtp($phone, $otp);
     }
 }

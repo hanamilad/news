@@ -6,13 +6,13 @@ use App\Traits\AutoTranslatableAttributes;
 use App\Traits\HasHumanCreatedAt;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Storage;
 use Spatie\Translatable\HasTranslations;
 use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
-use Illuminate\Support\Facades\Storage;
 
 class Ad extends Model
 {
-    use SoftDeletes, BelongsToTenant, HasTranslations, AutoTranslatableAttributes, HasHumanCreatedAt;
+    use AutoTranslatableAttributes, BelongsToTenant, HasHumanCreatedAt, HasTranslations, SoftDeletes;
 
     protected $fillable = [
         'title',
@@ -46,6 +46,7 @@ class Ad extends Model
     {
         /** @var \Illuminate\Filesystem\FilesystemAdapter $disk */
         $disk = Storage::disk('spaces');
+
         return $value ? $disk->url($value) : null;
     }
 

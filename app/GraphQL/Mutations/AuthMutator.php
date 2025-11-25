@@ -59,6 +59,7 @@ class AuthMutator
         if ($validator->fails()) {
             throw new ValidationException($validator);
         }
+
         return $this->service->changePassword($input['current_password'], $input['new_password']);
     }
 }

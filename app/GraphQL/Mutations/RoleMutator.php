@@ -2,10 +2,10 @@
 
 namespace App\GraphQL\Mutations;
 
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use InvalidArgumentException;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class RoleMutator
 {
@@ -25,14 +25,14 @@ class RoleMutator
     {
         $role = Role::find($args['role_id']);
 
-        if (!$role) {
+        if (! $role) {
             throw new ModelNotFoundException("Role with ID '{$args['role_id']}' not found");
         }
 
         $permissions = Permission::whereIn('id', $args['permission_ids'])->get();
 
         if ($permissions->count() !== count($args['permission_ids'])) {
-            throw new InvalidArgumentException("One or more permission IDs not found");
+            throw new InvalidArgumentException('One or more permission IDs not found');
         }
 
         match (strtolower($args['action'])) {

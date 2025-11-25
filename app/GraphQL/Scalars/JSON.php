@@ -2,23 +2,23 @@
 
 namespace App\GraphQL\Scalars;
 
-use GraphQL\Language\AST\ListValueNode;
-use GraphQL\Language\AST\ObjectValueNode;
-use GraphQL\Language\AST\ObjectFieldNode;
-use GraphQL\Language\AST\IntValueNode;
-use GraphQL\Language\AST\FloatValueNode;
-use GraphQL\Language\AST\StringValueNode;
 use GraphQL\Language\AST\BooleanValueNode;
-use GraphQL\Language\AST\NullValueNode;
 use GraphQL\Language\AST\EnumValueNode;
+use GraphQL\Language\AST\FloatValueNode;
+use GraphQL\Language\AST\IntValueNode;
+use GraphQL\Language\AST\ListValueNode;
+use GraphQL\Language\AST\NullValueNode;
+use GraphQL\Language\AST\ObjectFieldNode;
+use GraphQL\Language\AST\ObjectValueNode;
+use GraphQL\Language\AST\StringValueNode;
 use GraphQL\Language\AST\VariableNode;
 use GraphQL\Type\Definition\ScalarType;
 
 class JSON extends ScalarType
 {
-public string $name = 'JSON';
-public ?string $description = 'The `JSON` scalar type represents JSON values (objects, arrays, strings, numbers, booleans and null).';
+    public string $name = 'JSON';
 
+    public ?string $description = 'The `JSON` scalar type represents JSON values (objects, arrays, strings, numbers, booleans and null).';
 
     public function serialize($value)
     {
@@ -53,6 +53,7 @@ public ?string $description = 'The `JSON` scalar type represents JSON values (ob
                 foreach ($valueNode->values as $v) {
                     $values[] = $this->parseLiteral($v, $variables);
                 }
+
                 return $values;
             case $valueNode instanceof ObjectValueNode:
                 $obj = [];
@@ -60,9 +61,11 @@ public ?string $description = 'The `JSON` scalar type represents JSON values (ob
                 foreach ($valueNode->fields as $field) {
                     $obj[$field->name->value] = $this->parseLiteral($field->value, $variables);
                 }
+
                 return $obj;
             case $valueNode instanceof VariableNode:
                 $varName = $valueNode->name->value;
+
                 return $variables[$varName] ?? null;
             default:
                 return null;

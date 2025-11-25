@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class NewsLink extends Model
 {
-        protected $fillable = [
+    protected $fillable = [
         'video_link',
         'news_id',
     ];
@@ -15,5 +15,4 @@ class NewsLink extends Model
     {
         return $this->belongsTo(News::class);
     }
-
 }

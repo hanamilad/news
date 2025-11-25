@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('team_members', function (Blueprint $table) {
             $table->id();
-            $table->json('name'); 
+            $table->json('name');
             $table->json('position');
-            $table->json('bio')->nullable(); 
+            $table->json('bio')->nullable();
             $table->string('image')->nullable();
             $table->boolean('is_active')->default(true);
             $table->string('tenant_id');

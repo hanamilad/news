@@ -2,9 +2,9 @@
 
 namespace App\Services\ContactMessage;
 
+use App\Mail\ContactMessageMail;
 use App\Repositories\ContactMessage\ContactMessageRepository;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\ContactMessageMail;
 
 class ContactMessageService
 {

@@ -25,12 +25,11 @@ class NewsRepository
             'category_id' => $data['category_id'],
         ]);
 
-        if (!empty($data['hashtag_ids'])) {
+        if (! empty($data['hashtag_ids'])) {
             $news->hashtags()->sync($data['hashtag_ids']);
         }
 
-
-        if (!empty($data['images'])) {
+        if (! empty($data['images'])) {
             foreach ($data['images'] as $img) {
                 $news->images()->create([
                     'image_path' => $img['image_path'],
@@ -39,7 +38,7 @@ class NewsRepository
             }
         }
 
-        if (!empty($data['links'])) {
+        if (! empty($data['links'])) {
             foreach ($data['links'] as $ln) {
                 $news->links()->create([
                     'video_link' => $ln['video_link'] ?? null,
@@ -67,7 +66,6 @@ class NewsRepository
         if (array_key_exists('hashtag_ids', $data)) {
             $news->hashtags()->sync($data['hashtag_ids'] ?: []);
         }
-
 
         if (array_key_exists('images', $data)) {
             $news->images()->delete();

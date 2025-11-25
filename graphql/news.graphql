@@ -49,17 +49,15 @@ input NewsInput {
 extend type Query {
   news_for_admin(
     category_id: ID @where(operator: "=")
-    first: Int! = 10
-    page: Int = 1
-  ): News! 
+  ): [News!]! 
     @guard(with: ["api"])
     @can(ability: "news.view")
-    @paginate(type: "PAGINATOR", model: "App\\Models\\News")
+    @all(model: "App\\Models\\News")
 
   urgent_news(
     first: Int! = 10
     page: Int = 1
-  ): News! 
+  ): [News!]! 
     @paginate(type: "PAGINATOR", model: "App\\Models\\News")
     @where(key: "is_urgent", operator: "=", value: true)
 

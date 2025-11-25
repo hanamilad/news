@@ -2,16 +2,16 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use App\Models\User;
 use App\Models\Tenant;
+use App\Models\User;
+use Illuminate\Database\Seeder;
 
 class TenantSeeder extends Seeder
 {
     public function run()
     {
         $tenant = Tenant::create([
-            'id' => 'site1', 
+            'id' => 'site1',
             'name' => 'site1',
         ]);
 

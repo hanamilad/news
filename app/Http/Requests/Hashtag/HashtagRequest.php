@@ -3,7 +3,6 @@
 namespace App\Http\Requests\Hashtag;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class HashtagRequest extends FormRequest
 {
@@ -19,6 +18,7 @@ class HashtagRequest extends FormRequest
             'name.*' => 'nullable|string|max:255',
         ];
     }
+
     public function messages()
     {
         return [

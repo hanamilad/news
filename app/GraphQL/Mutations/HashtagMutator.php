@@ -2,8 +2,8 @@
 
 namespace App\GraphQL\Mutations;
 
-use App\Services\Hashtag\HashtagService;
 use App\Http\Requests\Hashtag\HashtagRequest;
+use App\Services\Hashtag\HashtagService;
 use Illuminate\Validation\ValidationException;
 
 class HashtagMutator
@@ -13,18 +13,19 @@ class HashtagMutator
     public function create($_, array $args)
     {
         $input = $args['input'] ?? [];
-        $validator = validator($input, (new HashtagRequest())->rules());
+        $validator = validator($input, (new HashtagRequest)->rules());
         if ($validator->fails()) {
             throw new ValidationException($validator);
         }
+
         return $this->service->create($input);
     }
 
     public function update($_, array $args)
     {
-        $id = (int)$args['id'];
+        $id = (int) $args['id'];
         $input = $args['input'] ?? [];
-        $validator = validator($input, (new HashtagRequest())->rules());
+        $validator = validator($input, (new HashtagRequest)->rules());
         if ($validator->fails()) {
             throw new ValidationException($validator);
         }
@@ -34,7 +35,8 @@ class HashtagMutator
 
     public function delete($_, array $args)
     {
-        $id = (int)$args['id'];
+        $id = (int) $args['id'];
+
         return $this->service->delete($id);
     }
 }

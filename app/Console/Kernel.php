@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
@@ -10,6 +11,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('reels:cleanup')->daily();
     }
+
     protected function commands(): void
     {
         $this->load(__DIR__.'/Commands');

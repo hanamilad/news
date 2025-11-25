@@ -2,14 +2,14 @@
 
 namespace App\Services\ReelGroup;
 
-use App\Repositories\ReelGroup\ReelGroupRepository;
-use App\Repositories\Reel\ReelRepository;
-use App\Models\ReelGroup;
 use App\Models\Reel;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Http\UploadedFile;
+use App\Models\ReelGroup;
+use App\Repositories\Reel\ReelRepository;
+use App\Repositories\ReelGroup\ReelGroupRepository;
 use App\Traits\LogActivity;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class ReelGroupService
 {
@@ -47,12 +47,12 @@ class ReelGroupService
             if (isset($input['reels']) && is_array($input['reels'])) {
                 $sentReelIds = [];
                 foreach ($input['reels'] as $index => $reelData) {
-                    if (isset($reelData['id']) && !empty($reelData['id'])) {
+                    if (isset($reelData['id']) && ! empty($reelData['id'])) {
                         $reel = $this->updateReel($reelData['id'], $reelData, $index, $user->id);
-                        $sentReelIds[] = (int)$reel->id;
+                        $sentReelIds[] = (int) $reel->id;
                     } else {
                         $reel = $this->createReel($group->id, $reelData, $index, $user->id);
-                        $sentReelIds[] = (int)$reel->id;
+                        $sentReelIds[] = (int) $reel->id;
                     }
                 }
                 $reelsToDelete = $group->reels()->whereNotIn('id', $sentReelIds)->get();
@@ -61,6 +61,7 @@ class ReelGroupService
                 }
             }
             $this->log($user->id, 'تعديل', ReelGroup::class, $updated->id, $old, $updated->toArray());
+
             return $updated->fresh()->load('reels');
         });
     }
@@ -76,6 +77,7 @@ class ReelGroupService
             }
             $deleted = $this->repo->delete($group);
             $this->log($user->id, 'حذف', ReelGroup::class, $group->id, $old, null);
+
             return $deleted;
         });
     }
@@ -88,6 +90,7 @@ class ReelGroupService
         $data['path'] = $this->handlePath($data);
         $reel = $this->reelRepo->create($data);
         $this->log($userId, 'اضافة', Reel::class, $reel->id, null, $reel->toArray());
+
         return $reel;
     }
 
@@ -106,6 +109,7 @@ class ReelGroupService
         }
         $updated = $this->reelRepo->update($reel, $data);
         $this->log($userId, 'تعديل', Reel::class, $updated->id, $old, $updated->toArray());
+
         return $updated;
     }
 
@@ -115,22 +119,25 @@ class ReelGroupService
         $this->deleteReelFile($reel);
         $deleted = $this->reelRepo->delete($reel);
         $this->log($userId, 'حذف', Reel::class, $reel->id, $old, null);
+
         return $deleted;
     }
 
     protected function handlePath(array $input, ?string $oldPath = null, ?string $oldType = null): ?string
     {
-        if (!isset($input['path'])) {
+        if (! isset($input['path'])) {
             return $oldPath;
         }
         if ($input['path'] instanceof UploadedFile) {
             $folderName = $input['type'] === 'image' ? 'reel_images' : 'reel_videos';
+
             return $input['path']->store($folderName, ['disk' => 'spaces']);
         }
         if (is_string($input['path'])) {
             if ($oldPath && $input['path'] === $oldPath) {
                 return $oldPath;
             }
+
             return $input['path'];
         }
 
@@ -153,6 +160,7 @@ class ReelGroupService
         if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
             return false;
         }
+
         return str_contains($path, 'reel_images') || str_contains($path, 'reel_videos');
     }
 }

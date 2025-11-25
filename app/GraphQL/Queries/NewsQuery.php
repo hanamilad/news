@@ -33,23 +33,23 @@ class NewsQuery
             'styled_description->ar', 'styled_description->en',
         ];
 
-        if (!empty($args['search'])) {
+        if (! empty($args['search'])) {
             $this->addSearchCondition($query, $fields, $args['search'], 'LIKE', 'or');
         }
 
-        if (!empty($args['exclude'])) {
+        if (! empty($args['exclude'])) {
             $this->addSearchCondition($query, $fields, $args['exclude'], 'NOT LIKE', 'and');
         }
 
-        if (!empty($args['include'])) {
+        if (! empty($args['include'])) {
             $this->addSearchCondition($query, $fields, $args['include'], 'LIKE', 'or');
         }
 
-        $perPage = isset($args['first']) && is_numeric($args['first']) ? (int)$args['first'] : 10;
-        $page = isset($args['page']) && is_numeric($args['page']) ? (int)$args['page'] : 1;
+        $perPage = isset($args['first']) && is_numeric($args['first']) ? (int) $args['first'] : 10;
+        $page = isset($args['page']) && is_numeric($args['page']) ? (int) $args['page'] : 1;
 
         return $query->orderByDesc('created_at')
-                     ->paginate($perPage, ['*'], 'page', $page);
+            ->paginate($perPage, ['*'], 'page', $page);
     }
 
     public function newsForPublicBuilder($_, array $args): Builder

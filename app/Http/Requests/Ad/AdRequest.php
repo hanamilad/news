@@ -24,7 +24,6 @@ class AdRequest extends FormRequest
     }
 
     public function messages(): array
-
     {
         return [
             'title.required' => 'عنوان الإعلان مطلوب.',

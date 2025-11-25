@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class HashtagNews extends Model
 {
-
     protected $fillable = [
         'hashtag_id',
         'news_id',

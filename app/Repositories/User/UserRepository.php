@@ -14,12 +14,13 @@ class UserRepository
     {
         $user = User::find($id);
 
-        if (!$user) {
+        if (! $user) {
             throw new ModelNotFoundException("User with ID $id not found");
         }
 
         return $user;
     }
+
     public function create(array $data): User
     {
         return User::create($data);
@@ -29,6 +30,7 @@ class UserRepository
     {
         $user = User::findOrFail($id);
         $user->update($data);
+
         return $user;
     }
 
@@ -37,6 +39,7 @@ class UserRepository
         $user = User::findOrFail($id);
         $this->authRepo->deleteUserTokens($user);
         $user->delete();
+
         return $user;
     }
 
@@ -44,12 +47,14 @@ class UserRepository
     {
         $user = User::onlyTrashed()->findOrFail($id);
         $user->restore();
+
         return $user;
     }
 
     public function forceDelete(int $id): bool
     {
         $user = User::withTrashed()->findOrFail($id);
+
         return (bool) $user->forceDelete();
     }
 }

@@ -2,21 +2,23 @@
 
 namespace App\Services\Article;
 
-use App\Repositories\Article\ArticleRepository;
 use App\Models\Article;
+use App\Repositories\Article\ArticleRepository;
 use App\Traits\LogActivity;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class ArticleService
 {
     use LogActivity;
+
     public function __construct(
         protected ArticleRepository $repo,
         protected \App\Services\Localization\TranslationService $translator
     ) {}
-    public function create(array $input,  $file): Article
+
+    public function create(array $input, $file): Article
     {
         return DB::transaction(function () use ($input, $file) {
             $user = auth('api')->user();
@@ -27,6 +29,7 @@ class ArticleService
             $input['author_image'] = $this->storeAuthorImage($file);
             $article = $this->repo->create($input);
             $this->log($user->id, 'اضافة', Article::class, $article->id, null, $article->toArray());
+
             return $article;
         });
     }
@@ -39,7 +42,7 @@ class ArticleService
             $article = $this->repo->findById($id);
             $old = $article->toArray();
             $uploaded = $this->storeAuthorImage($file);
-            if (!empty($uploaded)) {
+            if (! empty($uploaded)) {
                 $originalPath = ltrim($article->getRawOriginal('author_image'), '/');
                 if ($article->author_image && Storage::disk('spaces')->exists($originalPath)) {
                     Storage::disk('spaces')->delete($originalPath);
@@ -53,6 +56,7 @@ class ArticleService
             }
             $updated = $this->repo->update($article, $input);
             $this->log($user->id, 'تعديل', Article::class, $updated->id, $old, $updated->toArray());
+
             return $updated;
         });
     }
@@ -69,16 +73,18 @@ class ArticleService
             }
             $deleted = $this->repo->delete($article);
             $this->log($user->id, 'حذف', Article::class, $article->id, $old, null);
+
             return $deleted;
         });
     }
 
     protected function storeAuthorImage($file)
     {
-        $path = "";
+        $path = '';
         if ($file instanceof UploadedFile && $file->isValid()) {
             $path = $file->store('article_images', ['disk' => 'spaces']);
         }
+
         return $path;
     }
 
@@ -86,9 +92,10 @@ class ArticleService
     {
         $ar = $trans['ar'] ?? null;
         $en = $trans['en'] ?? null;
-        if (!$en && $ar) {
+        if (! $en && $ar) {
             $trans['en'] = $this->translator->translateOrFallback($ar, 'ar', 'en');
         }
+
         return $trans;
     }
 
@@ -97,7 +104,7 @@ class ArticleService
         return Article::forPublic()
             ->where(function ($q) use ($name) {
                 $q->where('author_name->ar', 'LIKE', "%$name%")
-                  ->orWhere('author_name->en', 'LIKE', "%$name%");
+                    ->orWhere('author_name->en', 'LIKE', "%$name%");
             })
             ->orderByDesc('created_at')
             ->get();

@@ -6,14 +6,14 @@ use App\Traits\AutoTranslatableAttributes;
 use App\Traits\HasHumanCreatedAt;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Storage;
 use Spatie\Translatable\HasTranslations;
 use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
-use Illuminate\Support\Facades\Storage;
-
 
 class Reel extends Model
 {
-    use SoftDeletes, BelongsToTenant, HasTranslations, AutoTranslatableAttributes,HasHumanCreatedAt;
+    use AutoTranslatableAttributes, BelongsToTenant, HasHumanCreatedAt, HasTranslations,SoftDeletes;
+
     protected $fillable = [
         'reel_group_id',
         'description',
@@ -24,15 +24,18 @@ class Reel extends Model
         'news_id',
         'sort_order',
     ];
+
     public $translatable = ['description'];
+
     protected $casts = [
         'is_active' => 'boolean',
     ];
+
     public function user()
     {
         return $this->belongsTo(User::class);
     }
-    
+
     public function news()
     {
         return $this->belongsTo(News::class);
@@ -42,9 +45,10 @@ class Reel extends Model
     {
         return $this->belongsTo(ReelGroup::class, 'reel_group_id');
     }
+
     public function getPathAttribute($value)
     {
-        if (!$value) {
+        if (! $value) {
             return null;
         }
 
@@ -55,6 +59,7 @@ class Reel extends Model
         if (str_contains($value, 'reel_images') || str_contains($value, 'reel_videos')) {
             /** @var \Illuminate\Filesystem\FilesystemAdapter $storage */
             $storage = Storage::disk('spaces');
+
             return $storage->url($value);
         }
 

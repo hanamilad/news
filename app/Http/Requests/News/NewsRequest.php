@@ -3,7 +3,6 @@
 namespace App\Http\Requests\News;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class NewsRequest extends FormRequest
 {
@@ -47,7 +46,7 @@ class NewsRequest extends FormRequest
             'is_urgent.boolean' => 'The urgent flag must be true or false.',
             'is_active.boolean' => 'The active flag must be true or false.',
             'category_id.required' => 'Please select a category.',
-            'category_id.exists'   => 'The selected category does not exist.',
+            'category_id.exists' => 'The selected category does not exist.',
             'hashtag_ids.array' => 'Hashtags must be provided as an array.',
             'hashtag_ids.*.exists' => 'One or more selected hashtags are invalid.',
             'links.array' => 'Links must be provided as an array.',

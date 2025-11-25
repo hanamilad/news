@@ -20,7 +20,7 @@ class UserMutator
 
     public function update($_, array $args)
     {
-        return $this->service->update((int)$args['id'], $args['input'], $args['logo'] ?? null);
+        return $this->service->update((int) $args['id'], $args['input'], $args['logo'] ?? null);
     }
 
     public function deactivate($_, array $args)
@@ -37,6 +37,7 @@ class UserMutator
     {
         return $this->service->delete($args['id']);
     }
+
     public function manageAccess($_, array $args)
     {
         return $this->service->assignAccess($args['user_id'], $args['type'], $args['access_id']);

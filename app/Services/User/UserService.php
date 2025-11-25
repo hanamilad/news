@@ -4,18 +4,18 @@ namespace App\Services\User;
 
 use App\Models\User;
 use App\Repositories\User\UserRepository;
-use Illuminate\Support\Facades\Storage;
+use App\Traits\LogActivity;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use App\Traits\LogActivity;
-
 
 class UserService
 {
     use LogActivity;
+
     public function __construct(protected UserRepository $repo) {}
 
     public function create(array $input, $logo = null)
@@ -26,6 +26,7 @@ class UserService
         $input['logo'] = $this->storeLogo($logo);
         $new_user = $this->repo->create($input);
         $this->log($user->id, 'اضافة', User::class, $new_user->id, null, $new_user->toArray());
+
         return $new_user;
     }
 
@@ -37,6 +38,7 @@ class UserService
         $this->applyLogoChange($user, $input, $logo);
         $updated_user = $this->repo->update($id, $input);
         $this->log($user_auth->id, 'تعديل', User::class, $updated_user->id, $user->toArray(), $updated_user->toArray());
+
         return $updated_user;
     }
 
@@ -45,7 +47,8 @@ class UserService
         $user_auth = auth('api')->user();
         $user = $this->repo->softDelete($id);
         $this->log($user_auth->id, 'تعطيل  ', User::class, $id, null, $user->toArray());
-        return  $user;
+
+        return $user;
     }
 
     public function restore(int $id)
@@ -53,6 +56,7 @@ class UserService
         $user_auth = auth('api')->user();
         $user = $this->repo->restore($id);
         $this->log($user_auth->id, 'استعادة', User::class, $id, null, $user->toArray());
+
         return $user;
     }
 
@@ -66,8 +70,10 @@ class UserService
         }
         $user_deleted = $this->repo->forceDelete($id);
         $this->log($user_auth->id, 'حذف', User::class, $id, $user->toArray(), null);
+
         return $user_deleted;
     }
+
     public function assignAccess(int $userId, string $type, int $accessId)
     {
         $user = $this->repo->findOrFail($userId);
@@ -76,6 +82,7 @@ class UserService
             'permission' => $this->assignPermission($user, $accessId),
             default => throw new ModelNotFoundException("Invalid access type: $type"),
         };
+
         return $user->load('roles', 'permissions');
     }
 
@@ -87,9 +94,9 @@ class UserService
             'permission' => $this->removePermission($user, $accessId),
             default => throw new ModelNotFoundException("Invalid access type: $type"),
         };
+
         return $user->load('roles', 'permissions');
     }
-
 
     protected function assignRole($user, int $id)
     {
@@ -117,16 +124,17 @@ class UserService
 
     protected function storeLogo($file)
     {
-        $path = "";
+        $path = '';
         if ($file instanceof UploadedFile && $file->isValid()) {
             $path = $file->store('user_logos', ['disk' => 'spaces']);
         }
+
         return $path;
     }
 
     private function maybeHashPassword(array &$input): void
     {
-        if (!empty($input['password'])) {
+        if (! empty($input['password'])) {
             $input['password'] = Hash::make($input['password']);
         } else {
             unset($input['password']);
@@ -139,16 +147,17 @@ class UserService
 
         // Case 1: new upload provided
         $uploaded = $this->storeLogo($logo);
-        if (!empty($uploaded)) {
+        if (! empty($uploaded)) {
             if ($oldRaw) {
                 $this->deleteLogoByRaw($oldRaw);
             }
             $input['logo'] = $uploaded;
+
             return;
         }
 
         // Case 2: no upload; check input['logo'] semantics
-        if (!array_key_exists('logo', $input)) {
+        if (! array_key_exists('logo', $input)) {
             return; // nothing to do
         }
 
@@ -158,12 +167,14 @@ class UserService
             $oldUrl = Storage::disk('spaces')->url($oldRaw);
             if ($new === $oldUrl || $new === $oldRaw) {
                 unset($input['logo']);
+
                 return;
             }
             // different string; if old is a stored file, clean it up
             if (str_contains($oldRaw, 'user_logos')) {
                 $this->deleteLogoByRaw($oldRaw);
             }
+
             return; // keep the provided string as-is
         }
 
@@ -178,7 +189,9 @@ class UserService
 
     private function deleteLogoByRaw(?string $raw): void
     {
-        if (!$raw) return;
+        if (! $raw) {
+            return;
+        }
         $originalPath = ltrim($raw, '/');
         if (Storage::disk('spaces')->exists($originalPath)) {
             Storage::disk('spaces')->delete($originalPath);

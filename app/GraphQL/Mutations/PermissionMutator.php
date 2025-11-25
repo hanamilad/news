@@ -2,8 +2,8 @@
 
 namespace App\GraphQL\Mutations;
 
-use Spatie\Permission\Models\Permission;
 use InvalidArgumentException;
+use Spatie\Permission\Models\Permission;
 
 class PermissionMutator
 {
@@ -12,7 +12,7 @@ class PermissionMutator
         $name = trim($args['name']);
 
         if ($name === '') {
-            throw new InvalidArgumentException("Permission name cannot be empty");
+            throw new InvalidArgumentException('Permission name cannot be empty');
         }
 
         $existing = Permission::where('name', $name)->first();

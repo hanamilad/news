@@ -6,15 +6,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
-use Illuminate\Support\Facades\Storage;
-
 
 class User extends Authenticatable
 {
-    use HasFactory, SoftDeletes, HasApiTokens, Notifiable, HasRoles, BelongsToTenant;
+    use BelongsToTenant, HasApiTokens, HasFactory, HasRoles, Notifiable, SoftDeletes ;
 
     protected $fillable = [
         'name',
@@ -39,18 +38,18 @@ class User extends Authenticatable
         ];
     }
 
-    public function activity_logs() {
+    public function activity_logs()
+    {
         return $this->hasMany(ActivityLog::class);
     }
 
-
     public function scopeApplyTrashedFilter($query, $args)
     {
-        if (!empty($args['onlyTrashed']) && $args['onlyTrashed']) {
+        if (! empty($args['onlyTrashed']) && $args['onlyTrashed']) {
             return $query->onlyTrashed();
         }
 
-        if (!empty($args['withTrashed']) && $args['withTrashed']) {
+        if (! empty($args['withTrashed']) && $args['withTrashed']) {
             return $query->withTrashed();
         }
 
@@ -61,6 +60,7 @@ class User extends Authenticatable
     {
         /** @var \Illuminate\Filesystem\FilesystemAdapter $disk */
         $disk = Storage::disk('spaces');
+
         return $value ? $disk->url($value) : null;
     }
 }

@@ -2,8 +2,8 @@
 
 namespace App\GraphQL\Mutations;
 
-use App\Services\Podcast\PodcastService;
 use App\Http\Requests\Podcast\PodcastRequest;
+use App\Services\Podcast\PodcastService;
 use Illuminate\Validation\ValidationException;
 
 class PodcastMutator
@@ -13,7 +13,7 @@ class PodcastMutator
     public function create($_, array $args)
     {
         $input = $args['input'] ?? [];
-        $validator = validator($input, (new PodcastRequest())->rules());
+        $validator = validator($input, (new PodcastRequest)->rules());
         if ($validator->fails()) {
             throw new ValidationException($validator);
         }
@@ -23,10 +23,10 @@ class PodcastMutator
 
     public function update($_, array $args)
     {
-        $id = (int)$args['id'];
+        $id = (int) $args['id'];
         $input = $args['input'] ?? [];
 
-        $validator = validator($input, (new PodcastRequest())->rules());
+        $validator = validator($input, (new PodcastRequest)->rules());
         if ($validator->fails()) {
             throw new ValidationException($validator);
         }
@@ -36,7 +36,8 @@ class PodcastMutator
 
     public function delete($_, array $args)
     {
-        $id = (int)$args['id'];
+        $id = (int) $args['id'];
+
         return $this->service->delete($id);
     }
 }

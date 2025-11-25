@@ -16,6 +16,7 @@ class HashtagRepository
         $hashtag = Hashtag::create([
             'name' => $data['name'],
         ]);
+
         return $hashtag;
     }
 
@@ -24,6 +25,7 @@ class HashtagRepository
         $hashtag->update([
             'name' => $data['name'] ?? $hashtag->getTranslations('name'),
         ]);
+
         return $hashtag;
     }
 
