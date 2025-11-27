@@ -23,9 +23,20 @@ input CategoryInput {
    sub_category_ids: [ID!]
 }
 
+input UpdateInput {
+  name: TranslatableInput
+  description:TranslatableInput
+  show_in_navbar : Boolean
+  show_in_homepage: Boolean
+  show_in_grid: Boolean
+  grid_order:Int
+  template_id:ID
+  sub_category_ids: [ID!]
+}
+
 input UpdateCategoryInput {
   id: ID!
-  data: CategoryInput!
+  data: UpdateInput!
 }
 
 
