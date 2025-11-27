@@ -13,8 +13,9 @@ class CategoryRequest extends FormRequest
 
     public function rules(): array
     {
+        $catId = $this->route('id') ?? null;
         return [
-            'name' => 'required|array',
+            'name' => [$catId ? 'sometimes':'required','|array' ],
             'name.*' => 'nullable|string|max:255',
             'description' => 'nullable|array',
             'description.*' => 'nullable|string|max:255',
@@ -22,7 +23,7 @@ class CategoryRequest extends FormRequest
             'show_in_homepage' => 'nullable|boolean',
             'show_in_grid' => 'nullable|boolean',
             'grid_order' => 'nullable|integer',
-            'template_id' => 'required|exists:templates,id',
+            'template_id' =>[$catId ? 'sometimes':'required','|exists:templates,id' ],
         ];
     }
 
