@@ -15,17 +15,21 @@ class CategoryMutator
     {
         $inputs = $args['input'] ?? [];
         $results = [];
+
         DB::beginTransaction();
+
         try {
             foreach ($inputs as $input) {
-                $validator = validator($input, (new CategoryRequest)->rules());
+                $validator = validator($input, CategoryRequest::creationRules(), (new CategoryRequest)->messages());
+
                 if ($validator->fails()) {
                     throw new ValidationException($validator);
                 }
+
                 $results[] = $this->service->create($input);
             }
-            DB::commit();
 
+            DB::commit();
             return $results;
         } catch (\Exception $e) {
             DB::rollBack();
@@ -42,20 +46,24 @@ class CategoryMutator
 
         try {
             foreach ($inputs as $item) {
-                if (! isset($item['id']) || ! isset($item['data'])) {
+
+                if (!isset($item['id']) || !isset($item['data'])) {
                     throw new \Exception('id and data fields are required for each update item');
                 }
+
                 $id = (int) $item['id'];
                 $data = $item['data'];
-                $validator = validator($data, (new CategoryRequest)->rules());
+
+                $validator = validator($data, CategoryRequest::updateRules(), (new CategoryRequest)->messages());
+
                 if ($validator->fails()) {
                     throw new ValidationException($validator);
                 }
+
                 $updated[] = $this->service->update($id, $data);
             }
 
             DB::commit();
-
             return $updated;
         } catch (\Exception $e) {
             DB::rollBack();
@@ -66,7 +74,6 @@ class CategoryMutator
     public function delete($_, array $args)
     {
         $id = (int) $args['id'];
-
         return $this->service->delete($id);
     }
 }
