@@ -39,7 +39,7 @@ input NewsInput {
   is_urgent: Boolean
   is_active: Boolean
   is_main: Boolean
-  publish_date: DateTime
+  publish_date: ISODateTime
   category_id: ID!
   hashtag_ids: [ID!]
   links: [NewsLinkInput!]

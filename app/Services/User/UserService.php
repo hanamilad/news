@@ -21,10 +21,22 @@ class UserService
     public function create(array $input, $logo = null)
     {
         $user = auth('api')->user();
+        $roleIds = $input['role_ids'] ?? [];
+        $permIds = $input['permission_ids'] ?? [];
+        unset($input['role_ids'], $input['permission_ids']);
         $input['password'] = Hash::make($input['password']);
         $input['email_verified_at'] = now();
         $input['logo'] = $this->storeLogo($logo);
         $new_user = $this->repo->create($input);
+
+        if (!empty($roleIds)) {
+            $new_user->syncRoles($roleIds);
+        }
+
+        if (!empty($permIds)) {
+            $new_user->syncPermissions($permIds);
+        }
+
         $this->log($user->id, 'اضافة', User::class, $new_user->id, null, $new_user->toArray());
 
         return $new_user;
@@ -34,9 +46,19 @@ class UserService
     {
         $user_auth = auth('api')->user();
         $user = $this->repo->findOrFail($id);
+        $roleIds = $input['role_ids'] ?? [];
+        $permIds = $input['permission_ids'] ?? [];
+        unset($input['role_ids'], $input['permission_ids']);
         $this->maybeHashPassword($input);
         $this->applyLogoChange($user, $input, $logo);
         $updated_user = $this->repo->update($id, $input);
+        if (!empty($roleIds)) {
+            $user->syncRoles($roleIds);
+        }
+
+        if (!empty($permIds)) {
+            $user->syncPermissions($permIds);
+        }
         $this->log($user_auth->id, 'تعديل', User::class, $updated_user->id, $user->toArray(), $updated_user->toArray());
 
         return $updated_user;

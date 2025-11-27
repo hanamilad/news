@@ -23,7 +23,7 @@ input VideoInput {
   type: VideoType!
   is_active: Boolean
   is_admin_approved: Boolean
-  publish_date: DateTime
+  publish_date: ISODateTime
 }   
 
 extend type Query {

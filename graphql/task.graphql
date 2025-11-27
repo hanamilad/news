@@ -24,8 +24,8 @@ input TaskInput {
   description: String
   note: String
   assign_to: [ID!]
-  start_date: DateTime
-  delivery_date: DateTime
+  start_date: ISODateTime
+  delivery_date: ISODateTime
   is_priority: Boolean
 }
 
@@ -34,8 +34,8 @@ input TaskUpdateInput {
   description: String
   note: String
   assign_to: [ID!]
-  start_date: DateTime
-  delivery_date: DateTime
+  start_date: ISODateTime
+  delivery_date: ISODateTime
   is_priority: Boolean
 }
 

@@ -18,7 +18,7 @@ input PodcastInput {
   description: TranslatableInput
   is_active: Boolean
   is_admin_approved: Boolean
-  publish_date: DateTime
+  publish_date: ISODateTime
   user_id: ID!
 }   
 

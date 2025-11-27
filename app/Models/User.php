@@ -43,6 +43,16 @@ class User extends Authenticatable
         return $this->hasMany(ActivityLog::class);
     }
 
+    public function scopeExcludeCurrent($query)
+    {
+        $user = auth('api')->user();
+        if ($user) {
+            $query->whereKeyNot($user->id);
+        }
+
+        return $query;
+    }
+
     public function scopeApplyTrashedFilter($query, $args)
     {
         if (! empty($args['onlyTrashed']) && $args['onlyTrashed']) {

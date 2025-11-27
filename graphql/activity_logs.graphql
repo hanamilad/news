@@ -1,6 +1,5 @@
-type ActivityLog {
+type ActivityLog @model(class: "App\\Models\\ActivityLog") {
   id: ID!
-  user_id: ID!
   action: String!
   model_type: String!
   model_id: ID!
@@ -9,4 +8,14 @@ type ActivityLog {
   user_agent: String!
   old_values: JSON
   new_values: JSON
+  user: User
+}
+
+
+
+extend type Query {
+activityLogs: [ActivityLog!]!
+  @guard(with: ["api"])
+  @can(ability: "activityLogs.view", model: "App\\Models\\ActivityLog")
+  @all(model: "App\\Models\\ActivityLog")
 }

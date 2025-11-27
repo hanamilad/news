@@ -7,8 +7,11 @@ type User {
     logo: String
     job_title: String
     roles: [Role!]! @belongsToMany
+    news:[News!]! @hasMany
     permissions: [Permission!]! @belongsToMany
     activity_logs: [ActivityLog!]! @hasMany
+    created_at: DateTime
+    updated_at: DateTime
 }
 
 input UserInput {
@@ -17,6 +20,8 @@ input UserInput {
     password: String!
     phone_number: String
     job_title: String
+    role_ids: [ID!]
+    permission_ids: [ID!]
 }
 
 input UserUpdateInput {
@@ -35,18 +40,12 @@ enum AccessType {
 
 extend type Query {
     users(
-        first: Int! = 10
-        page: Int = 1
         withTrashed: Boolean = false
         onlyTrashed: Boolean = false
-    ): User!
+    ): [User!]!
         @guard(with: ["api"])
         @can(ability: "user.viewAny")
-        @paginate(
-            type: "PAGINATOR"
-            model: "App\\Models\\User"
-            scopes: ["applyTrashedFilter"]
-        )
+        @all(model: "App\\Models\\User",scopes: ["applyTrashedFilter", "excludeCurrent"])
 
     user(id: ID! @eq): User
         @find

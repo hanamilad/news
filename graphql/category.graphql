@@ -9,7 +9,6 @@ type Category @model(class: "App\\Models\\Category") {
   template : Template
   ad : Ad
   news: [News!]! @hasMany 
-
   subCategories: [Category!]! @belongsToMany
 }
 
@@ -21,7 +20,6 @@ input CategoryInput {
   show_in_grid: Boolean
   grid_order:Int
   template_id:ID!
-
    sub_category_ids: [ID!]
 }
 

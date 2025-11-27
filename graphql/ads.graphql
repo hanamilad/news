@@ -14,16 +14,16 @@ type Ad {
 input AdInput {
   title: TranslatableInput!
   category_id: ID!
-  start_date: DateTime!
-  expiry_date: DateTime!
+  start_date: ISODateTime!
+  expiry_date: ISODateTime!
   is_active: Boolean
 }
 
 input AdUpdateInput {
   title: TranslatableInput
   category_id: ID
-  start_date: DateTime
-  expiry_date: DateTime
+  start_date: ISODateTime
+  expiry_date: ISODateTime
   is_active: Boolean
 }
 

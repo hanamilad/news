@@ -7,6 +7,7 @@ type Role {
 type Permission {
   id: ID!
   name: String!
+   display_name: String
 }
 
 
@@ -17,14 +18,14 @@ enum ActionRolePermissions {
 
 
 extend type Query {
-  roles: [Role!]!
+roles: [Role!]!
   @guard(with: ["api"])
-  @can(ability: "roles.view")
+  @can(ability: "roles.view", model: "Spatie\\Permission\\Models\\Role")
   @all(model: "Spatie\\Permission\\Models\\Role")
 
-  permissions: [Permission!]!
+permissions: [Permission!]!
   @guard(with: ["api"])
-  @can(ability: "permissions.view")
+  @can(ability: "permissions.view", model: "Spatie\\Permission\\Models\\Permission")
   @all(model: "Spatie\\Permission\\Models\\Permission")
 }
 
