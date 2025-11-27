@@ -9,6 +9,7 @@ type ActivityLog @model(class: "App\\Models\\ActivityLog") {
   old_values: JSON
   new_values: JSON
   user: User
+  created_at: String
 }
 
 
