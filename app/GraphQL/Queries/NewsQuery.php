@@ -29,8 +29,10 @@ class NewsQuery
         $query = News::forPublic();
 
         $fields = [
-            'title->ar', 'title->en',
-            'styled_description->ar', 'styled_description->en',
+            'title->ar',
+            'title->en',
+            'styled_description->ar',
+            'styled_description->en',
         ];
 
         if (! empty($args['search'])) {
@@ -44,7 +46,37 @@ class NewsQuery
         if (! empty($args['include'])) {
             $this->addSearchCondition($query, $fields, $args['include'], 'LIKE', 'or');
         }
+        if (! empty($args['time_range'])) {
+            $range = $args['time_range'];
+            $now = now();
 
+            switch ($range) {
+                case 'today':
+                    $query->whereDate('created_at', $now->toDateString());
+                    break;
+
+                case 'week':
+                    $query->whereBetween('created_at', [
+                        $now->startOfWeek(),
+                        $now->endOfWeek(),
+                    ]);
+                    break;
+
+                case 'month':
+                    $query->whereBetween('created_at', [
+                        $now->startOfMonth(),
+                        $now->endOfMonth(),
+                    ]);
+                    break;
+
+                case 'year':
+                    $query->whereBetween('created_at', [
+                        $now->startOfYear(),
+                        $now->endOfYear(),
+                    ]);
+                    break;
+            }
+        }
         $perPage = isset($args['first']) && is_numeric($args['first']) ? (int) $args['first'] : 10;
         $page = isset($args['page']) && is_numeric($args['page']) ? (int) $args['page'] : 1;
 

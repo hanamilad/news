@@ -78,6 +78,7 @@ extend type Query {
     search: String
     exclude: String
     include: String
+    time_range: String
     first: Int! = 10
     page: Int = 1
   ): [News!]!
