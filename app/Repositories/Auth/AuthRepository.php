@@ -63,7 +63,7 @@ class AuthRepository
 
     public function createPasswordResetToken(string $email, int $minutes = 15): PasswordResetToken
     {
-        $code = mt_rand(100000, 999999);
+        $code = mt_rand(1000, 9999);
         $token = (string) $code;
 
         return PasswordResetToken::makeToken($email, $token, $minutes);

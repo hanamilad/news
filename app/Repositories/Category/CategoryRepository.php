@@ -15,14 +15,13 @@ class CategoryRepository
     public function create(array $data): Category
     {
         return DB::transaction(function () use ($data) {
-            $showInGrid = $data['show_in_grid'] ?? false;
-            $gridOrder = $showInGrid ? $this->resolveGridOrderOnCreate($data['grid_order'] ?? null) : null;
+            $gridOrder = $this->resolveGridOrderOnCreate($data['grid_order']);
             $category = Category::create([
                 'name' => $data['name'],
                 'description' => $data['description'] ?? '',
                 'show_in_navbar' => $data['show_in_navbar'] ?? false,
                 'show_in_homepage' => $data['show_in_homepage'] ?? false,
-                'show_in_grid' => $showInGrid,
+                'show_in_grid' => $data['show_in_grid'],
                 'grid_order' => $gridOrder,
                 'template_id' => $data['template_id'],
             ]);
