@@ -161,6 +161,30 @@ class AuthService
             return 'تم تغيير كلمة المرور بنجاح.';
         });
     }
+    public function verifyOTP(string $token, string $email)
+    {
+        return DB::transaction(function () use ($token, $email) {
+            $row = $this->repo->findPasswordResetToken($email, $token);
+            if (! $row) {
+                return [
+                    'status' => false,
+                    'message' => 'رمز إعادة التعيين غير صحيح أو منتهي الصلاحية.',
+                ];
+            }
+
+            $user = $this->repo->findUserByEmail($email);
+            if (! $user) {
+                return [
+                    'status' => false,
+                    'message' => 'المستخدم غير موجود.',
+                ];
+            }
+            return [
+                'status' => true,
+                'message' => 'تم التحقق من الرمز بنجاح.',
+            ];
+        });
+    }
 
     public function logout()
     {
