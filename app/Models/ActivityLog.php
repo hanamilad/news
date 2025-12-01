@@ -32,4 +32,9 @@ class ActivityLog extends Model
         'old_values' => 'array',
         'new_values' => 'array',
     ];
+
+    public function scopeLatestFirst($query)
+    {
+        return $query->orderByDesc('created_at');
+    }
 }

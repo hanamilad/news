@@ -18,5 +18,5 @@ extend type Query {
 activityLogs: [ActivityLog!]!
   @guard(with: ["api"])
   @can(ability: "activityLogs.view", model: "App\\Models\\ActivityLog")
-  @all(model: "App\\Models\\ActivityLog")
+  @all(model: "App\\Models\\ActivityLog", scopes: ["latestFirst"])
 }
