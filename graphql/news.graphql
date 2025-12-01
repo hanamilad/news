@@ -5,6 +5,7 @@ type News {
   is_urgent: Boolean
   is_active: Boolean
   is_main: Boolean
+  is_admin_approved : Boolean
   user: User
   category: Category
   hashtags: [Hashtag!]
@@ -39,6 +40,7 @@ input NewsInput {
   is_urgent: Boolean
   is_active: Boolean
   is_main: Boolean
+  is_admin_approved : Boolean
   publish_date: ISODateTime
   category_id: ID!
   hashtag_ids: [ID!]
