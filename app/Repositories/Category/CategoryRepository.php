@@ -21,7 +21,7 @@ class CategoryRepository
                 'description' => $data['description'] ?? '',
                 'show_in_navbar' => $data['show_in_navbar'] ?? false,
                 'show_in_homepage' => $data['show_in_homepage'] ?? false,
-                'show_in_grid' => $data['show_in_grid'],
+                'show_in_grid' => $data['show_in_grid'] ?? false,
                 'grid_order' => $gridOrder,
                 'template_id' => $data['template_id'],
             ]);
@@ -33,9 +33,8 @@ class CategoryRepository
     public function update(Category $category, array $data): Category
     {
         return DB::transaction(function () use ($category, $data) {
-            $requestedOrder = array_key_exists('grid_order', $data) ? $data['grid_order'] : $category->grid_order;
             $oldOrder = $category->grid_order ?? 0;
-            $newOrder = $requestedOrder ?? $oldOrder;
+            $newOrder = $data['show_in_grid'] ?? $category->show_in_grid;
             if ($oldOrder && $newOrder && $newOrder !== $oldOrder) {
                 if ($newOrder > $oldOrder) {
                     $this->shiftGridOrders($oldOrder + 1, $newOrder, -1);
@@ -76,8 +75,7 @@ class CategoryRepository
         if ($gridOrder === null) {
             return (Category::where('show_in_grid', true)->max('grid_order') ?? 0) + 1;
         }
-        $categories = Category::where('show_in_grid', true)
-            ->where('grid_order', '>=', $gridOrder)
+        $categories = Category::where('grid_order', '>=', $gridOrder)
             ->orderBy('grid_order', 'desc')
             ->lockForUpdate()
             ->get();
@@ -85,14 +83,12 @@ class CategoryRepository
             $cat->grid_order = ($cat->grid_order ?? 0) + 1;
             $cat->save();
         }
-
         return $gridOrder;
     }
 
     protected function shiftGridOrders(int $from, ?int $to, int $step): void
     {
-        $query = Category::where('show_in_grid', true)
-            ->where('grid_order', '>=', $from);
+        $query = Category::where('grid_order', '>=', $from);
         if ($to !== null) {
             $query->where('grid_order', '<=', $to);
         }

@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::table('categories', function (Blueprint $table) {
             $table->boolean('show_in_grid')->default(false)->after('show_in_homepage');
             $table->unsignedInteger('grid_order')->nullable()->after('show_in_grid');
-            $table->unique(['tenant_id', 'grid_order']);
         });
     }
 

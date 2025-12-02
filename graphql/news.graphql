@@ -50,7 +50,7 @@ input NewsInput {
 
 extend type Query {
   news_for_admin(
-    category_id: ID @where(operator: "=")
+    category_id: ID @eq
   ): [News!]! 
     @guard(with: ["api"])
     @can(ability: "news.view")
