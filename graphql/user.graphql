@@ -78,7 +78,7 @@ extend type Mutation {
 
     deleteUser(id: ID!): Boolean
         @guard(with: ["api"])
-        @can(ability: "user.delete")
+        @can(ability: "user.delete", model: "App\\Models\\User")
         @field(resolver: "App\\GraphQL\\Mutations\\UserMutator@delete")
 
     manageUserAccess(user_id: ID!, type: AccessType!, access_id: ID!): User
