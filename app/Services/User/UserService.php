@@ -17,7 +17,7 @@ class UserService
     use LogActivity;
 
     public function __construct(protected UserRepository $repo) {}
-
+    
     public function create(array $input, $logo = null)
     {
         $user = auth('api')->user();
@@ -30,11 +30,13 @@ class UserService
         $new_user = $this->repo->create($input);
 
         if (!empty($roleIds)) {
-            $new_user->syncRoles($roleIds);
+            $roles = Role::whereIn('id', array_map('intval', $roleIds))->get();
+            $new_user->syncRoles($roles);
         }
 
         if (!empty($permIds)) {
-            $new_user->syncPermissions($permIds);
+            $perms = Permission::whereIn('id', array_map('intval', $permIds))->get();
+            $new_user->syncPermissions($perms);
         }
 
         $this->log($user->id, 'اضافة', User::class, $new_user->id, null, $new_user->toArray());
@@ -53,11 +55,13 @@ class UserService
         $this->applyLogoChange($user, $input, $logo);
         $updated_user = $this->repo->update($id, $input);
         if (!empty($roleIds)) {
-            $user->syncRoles($roleIds);
+            $roles = Role::whereIn('id', array_map('intval', $roleIds))->get();
+            $user->syncRoles($roles);
         }
 
         if (!empty($permIds)) {
-            $user->syncPermissions($permIds);
+            $perms = Permission::whereIn('id', array_map('intval', $permIds))->get();
+            $user->syncPermissions($perms);
         }
         $this->log($user_auth->id, 'تعديل', User::class, $updated_user->id, $user->toArray(), $updated_user->toArray());
 

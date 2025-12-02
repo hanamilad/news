@@ -33,6 +33,7 @@ class UserMutator
         $id = (int) $args['id'];
         $input = $args['input'] ?? [];
         $input['id'] = $id;
+        logger()->info('update user', $input);
         $request = new UserRequest();
         $request->merge($input);
         $validator = validator(
