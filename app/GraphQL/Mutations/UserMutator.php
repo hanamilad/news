@@ -33,7 +33,13 @@ class UserMutator
         $id = (int) $args['id'];
         $input = $args['input'] ?? [];
         $input['id'] = $id;
-        $validator = validator($input, (new UserRequest)->rules(), (new UserRequest)->messages());
+        $request = new UserRequest();
+        $request->merge($input);
+        $validator = validator(
+            $input,
+            $request->rules(), 
+            $request->messages()
+        );
         if ($validator->fails()) {
             throw new ValidationException($validator);
         }
