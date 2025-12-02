@@ -90,7 +90,9 @@ class News extends Model
     public function scopeFilterByCategory($query, $categoryId)
     {
         if ($categoryId) {
-            $query->where('category_id', $categoryId);
+            return $query->where('category_id', $categoryId);
         }
+
+        return $query;
     }
 }
