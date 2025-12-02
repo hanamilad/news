@@ -21,7 +21,7 @@ input UserInput {
     phone_number: String
     job_title: String
     role_ids: [ID!]
-    permission_ids: [ID!]
+    permissions: [ID!]
 }
 
 input UserUpdateInput {
@@ -32,7 +32,7 @@ input UserUpdateInput {
     logo: String
     job_title: String
     role_ids: [ID!]
-    permission_ids: [ID!]
+    permissions: [ID!]
 }
 
 enum AccessType {

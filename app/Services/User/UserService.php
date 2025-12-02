@@ -22,8 +22,8 @@ class UserService
     {
         $user = auth('api')->user();
         $roleIds = $input['role_ids'] ?? [];
-        $permIds = $input['permission_ids'] ?? [];
-        unset($input['role_ids'], $input['permission_ids']);
+        $permIds = $input['permissions'] ?? [];
+        unset($input['role_ids'], $input['permissions']);
         $input['password'] = Hash::make($input['password']);
         $input['email_verified_at'] = now();
         $input['logo'] = $this->storeLogo($logo);
@@ -47,8 +47,8 @@ class UserService
         $user_auth = auth('api')->user();
         $user = $this->repo->findOrFail($id);
         $roleIds = $input['role_ids'] ?? [];
-        $permIds = $input['permission_ids'] ?? [];
-        unset($input['role_ids'], $input['permission_ids']);
+        $permIds = $input['permissions'] ?? [];
+        unset($input['role_ids'], $input['permissions']);
         $this->maybeHashPassword($input);
         $this->applyLogoChange($user, $input, $logo);
         $updated_user = $this->repo->update($id, $input);

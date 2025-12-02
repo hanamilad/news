@@ -29,8 +29,8 @@ class UserRequest extends FormRequest
             'job_title' => ['nullable', 'string', 'max:255'],
             'role_ids' => ['nullable', 'array'],
             'role_ids.*' => ['integer', 'exists:roles,id'],
-            'permission_ids' => ['nullable', 'array'],
-            'permission_ids.*' => ['integer', 'exists:permissions,id'],
+            'permissions' => ['nullable', 'array'],
+            'permissions.*' => ['integer', 'exists:permissions,id'],
         ];
     }
 
@@ -59,9 +59,9 @@ class UserRequest extends FormRequest
             'role_ids.*.integer' => 'معرف الدور يجب أن يكون رقمًا صحيحًا.',
             'role_ids.*.exists' => 'الدور المحدد غير موجود.',
 
-            'permission_ids.array' => 'يجب إرسال الصلاحيات كمصفوفة.',
-            'permission_ids.*.integer' => 'معرف الصلاحية يجب أن يكون رقمًا صحيحًا.',
-            'permission_ids.*.exists' => 'الصلاحية المحددة غير موجودة.',
+            'permissions.array' => 'يجب إرسال الصلاحيات كمصفوفة.',
+            'permissions.*.integer' => 'معرف الصلاحية يجب أن يكون رقمًا صحيحًا.',
+            'permissions.*.exists' => 'الصلاحية المحددة غير موجودة.',
         ];
     }
 }
