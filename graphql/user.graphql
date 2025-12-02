@@ -31,6 +31,8 @@ input UserUpdateInput {
     phone_number: String
     logo: String
     job_title: String
+    role_ids: [ID!]
+    permission_ids: [ID!]
 }
 
 enum AccessType {
