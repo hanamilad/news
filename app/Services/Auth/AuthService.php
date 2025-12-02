@@ -75,7 +75,7 @@ class AuthService
                 throw new Error('يجب تأكيد البريد الإلكتروني أولاً.');
             }
             $this->log($user->id, 'تسجيل دخول', User::class, $user->id, $user->toArray(), null);
-            $this->repo->deleteUserTokens($user);
+            // $this->repo->deleteUserTokens($user);
 
             return $this->generateTokensResponse($user);
         });
