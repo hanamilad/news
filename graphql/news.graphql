@@ -54,10 +54,7 @@ extend type Query {
   ): [News!]! 
     @guard(with: ["api"])
     @can(ability: "news.view")
-    @all(
-    model: "App\\Models\\News",
-    scopes: ["filterByCategory"]
-  )
+    @all(builder: "App\\GraphQL\\Queries\\NewsQuery@newsForAdminBuilder")
 
   urgent_news(
     first: Int! = 10
