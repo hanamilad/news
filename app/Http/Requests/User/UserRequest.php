@@ -14,8 +14,7 @@ class UserRequest extends FormRequest
 
     public function rules(): array
     {
-        $userId = $this->route('id');
-
+        $userId = $this->input('id');
         return [
             'name' => [$userId ? 'nullable' : 'required', 'string', 'max:255'],
             'email' => [
@@ -66,4 +65,3 @@ class UserRequest extends FormRequest
         ];
     }
 }
-

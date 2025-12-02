@@ -32,15 +32,11 @@ class UserMutator
     {
         $id = (int) $args['id'];
         $input = $args['input'] ?? [];
-        if ($id) {
-            request()->route()->setParameter('id', $id);
-        }
-
+        $input['id'] = $id;
         $validator = validator($input, (new UserRequest)->rules(), (new UserRequest)->messages());
         if ($validator->fails()) {
             throw new ValidationException($validator);
         }
-
         return $this->service->update($id, $input, $args['logo'] ?? null);
     }
 

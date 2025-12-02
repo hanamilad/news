@@ -66,17 +66,14 @@ class AuthService
     {
         return DB::transaction(function () use ($data) {
             $user = $this->repo->findUserByEmail($data['email']);
-
             if (! $user || ! Hash::check($data['password'], $user->password)) {
                 throw new Error('بيانات الدخول غير صحيحة.');
             }
-
             if (is_null($user->email_verified_at)) {
                 throw new Error('يجب تأكيد البريد الإلكتروني أولاً.');
             }
             $this->log($user->id, 'تسجيل دخول', User::class, $user->id, $user->toArray(), null);
-            // $this->repo->deleteUserTokens($user);
-
+            $this->repo->deleteUserTokens($user);
             return $this->generateTokensResponse($user);
         });
     }
