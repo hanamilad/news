@@ -15,7 +15,7 @@ class CategoryRepository
     public function create(array $data): Category
     {
         return DB::transaction(function () use ($data) {
-            $gridOrder = $this->resolveGridOrderOnCreate($data['grid_order']);
+            $gridOrder = $this->resolveGridOrderOnCreate($data['grid_order'] ?? null);
             $category = Category::create([
                 'name' => $data['name'],
                 'description' => $data['description'] ?? '',
@@ -34,8 +34,8 @@ class CategoryRepository
     {
         return DB::transaction(function () use ($category, $data) {
             $oldOrder = $category->grid_order ?? 0;
-            $newOrder = $data['show_in_grid'] ?? $category->show_in_grid;
-            if ($oldOrder && $newOrder && $newOrder !== $oldOrder) {
+            $newOrder = $data['grid_order'] ?? $oldOrder;
+            if ($newOrder !== $oldOrder) {
                 if ($newOrder > $oldOrder) {
                     $this->shiftGridOrders($oldOrder + 1, $newOrder, -1);
                 } else {
@@ -60,10 +60,10 @@ class CategoryRepository
     {
         return DB::transaction(function () use ($category) {
             $order = $category->grid_order;
-            $inGrid = $category->show_in_grid;
             $deleted = (bool) $category->delete();
-            if ($deleted && $inGrid && $order) {
-                $this->shiftGridOrders(($order ?? 0) + 1, null, -1);
+            if ($deleted  && $order) {
+                $max = Category::max('grid_order');
+                $this->shiftGridOrders(($order ?? 0) + 1, $max, -1);
             }
 
             return $deleted;
@@ -75,14 +75,13 @@ class CategoryRepository
         if ($gridOrder === null) {
             return (Category::where('show_in_grid', true)->max('grid_order') ?? 0) + 1;
         }
-        $categories = Category::where('grid_order', '>=', $gridOrder)
+        Category::where('grid_order', '>=', $gridOrder)
             ->orderBy('grid_order', 'desc')
             ->lockForUpdate()
-            ->get();
-        foreach ($categories as $cat) {
-            $cat->grid_order = ($cat->grid_order ?? 0) + 1;
-            $cat->save();
-        }
+            ->each(function ($cat) {
+                $cat->update(['grid_order' => $cat->grid_order + 1]);
+            });
+
         return $gridOrder;
     }
 

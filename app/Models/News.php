@@ -13,7 +13,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 class News extends Model
 {
-    use AutoTranslatableAttributes, BelongsToTenant, ClearsHomeCache, HasHumanCreatedAt,HasTranslations,NotifiesAdminsForApproval, SoftDeletes;
+    use AutoTranslatableAttributes, BelongsToTenant, ClearsHomeCache, HasHumanCreatedAt, HasTranslations, NotifiesAdminsForApproval, SoftDeletes;
 
     protected $fillable = [
         'title',
@@ -86,5 +86,11 @@ class News extends Model
         }
 
         return $query->orderBy('created_at', 'desc');
+    }
+    public function scopeFilterByCategory($query, $categoryId)
+    {
+        if ($categoryId) {
+            $query->where('category_id', $categoryId);
+        }
     }
 }
