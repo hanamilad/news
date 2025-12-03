@@ -17,7 +17,7 @@ class NewsRepository
             'title' => $data['title'],
             'styled_description' => $data['styled_description'] ?? null,
             'is_urgent' => $data['is_urgent'] ?? false,
-            'is_active' => $data['is_active'] ?? false,
+            'is_active' => $data['is_active'] ?? true,
             'is_admin_approved' => $data['is_admin_approved'] ?? false,
             'is_main' => $data['is_main'] ?? false,
             'publish_date' => $data['publish_date'] ?? now(),
