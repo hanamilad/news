@@ -7,7 +7,7 @@ type ReelGroup {
   is_active: Boolean
   is_admin_approved: Boolean
   sort_order: Int
-  created_at: DateTime
+  created_at: String
   updated_at: DateTime
 }
 
@@ -22,7 +22,7 @@ type Reel {
   user: User @belongsTo
   news: News @belongsTo
   group: ReelGroup @belongsTo
-  created_at: DateTime
+  created_at: String
   updated_at: DateTime
 }
 
