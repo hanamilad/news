@@ -25,10 +25,10 @@ class TaskMutator
     {
         $id = (int) $args['id'];
         $input = $args['input'] ?? [];
-        if ($id) {
-            request()->route()->setParameter('id', $id);
-        }
-        $validator = validator($input, (new TaskRequest)->rules());
+        $input['id'] = $id;
+        $request = new TaskRequest();
+        $request->merge($input);
+        $validator = validator($input, $request->rules(), $request->messages());
         if ($validator->fails()) {
             throw new ValidationException($validator);
         }

@@ -13,18 +13,17 @@ class NewsRequest extends FormRequest
 
     public function rules(): array
     {
-        $newsId = $this->route('id') ?? null;
-
+        $id = $this->input('id');
         return [
-            'title' => 'required|array',
+            'title' => [$id ? 'nullable' : 'required', 'array'],
             'title.*' => 'nullable|string|max:255',
-            'styled_description' => 'required|array',
+            'styled_description' => [$id ? 'nullable' : 'required', 'array'],
             'styled_description.*' => 'nullable|string',
             'is_urgent' => 'nullable|boolean',
             'is_active' => 'nullable|boolean',
             'is_main' => 'nullable|boolean',
             'publish_date' => 'nullable|date',
-            'category_id' => 'required|exists:categories,id',
+            'category_id' => [$id ? 'nullable' : 'required', 'exists:categories,id'],
             'hashtag_ids' => 'nullable|array',
             'hashtag_ids.*' => 'exists:hashtags,id',
             'links' => 'nullable|array',
