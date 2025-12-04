@@ -65,7 +65,7 @@ extend type Query {
 
 
   news_for_public(
-    category_id: ID!
+    category_id: ID
     first: Int! = 10
     page: Int = 1
   ): [News!]!
