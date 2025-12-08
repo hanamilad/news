@@ -86,7 +86,7 @@ class Category extends Model
         }
 
         return $allNews
-            ->sortByDesc('publish_date')
+            ->sortByDesc('created_at')
             ->take($limit)
             ->values();
     }

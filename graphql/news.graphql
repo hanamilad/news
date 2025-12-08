@@ -60,8 +60,10 @@ extend type Query {
     first: Int! = 10
     page: Int = 1
   ): [News!]! 
-    @paginate(type: "PAGINATOR", model: "App\\Models\\News")
-    @where(key: "is_urgent", operator: "=", value: true)
+      @paginate(
+      defaultCount: 10
+      builder: "App\\GraphQL\\Queries\\NewsQuery@urgent_news"
+  )
 
 
   news_for_public(

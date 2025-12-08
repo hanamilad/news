@@ -88,6 +88,10 @@ class NewsQuery
     {
         return News::forPublic($args['category_id'] ?? null);
     }
+    public function urgent_news($_): Builder
+    {
+        return News::forPublic(null, true, false);
+    }
 
     public function newsForAdminBuilder($_, array $args): Builder
     {
