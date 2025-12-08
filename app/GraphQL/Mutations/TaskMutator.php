@@ -26,7 +26,7 @@ class TaskMutator
         $id = (int) $args['id'];
         $input = $args['input'] ?? [];
         $input['id'] = $id;
-        $request = new TaskRequest();
+        $request = new TaskRequest;
         $request->merge($input);
         $validator = validator($input, $request->rules(), $request->messages());
         if ($validator->fails()) {

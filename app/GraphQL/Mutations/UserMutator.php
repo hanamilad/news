@@ -33,12 +33,13 @@ class UserMutator
         $id = (int) $args['id'];
         $input = $args['input'] ?? [];
         $input['id'] = $id;
-        $request = new UserRequest();
+        $request = new UserRequest;
         $request->merge($input);
-        $validator = validator($input,$request->rules(), $request->messages());
+        $validator = validator($input, $request->rules(), $request->messages());
         if ($validator->fails()) {
             throw new ValidationException($validator);
         }
+
         return $this->service->update($id, $input, $args['logo'] ?? null);
     }
 

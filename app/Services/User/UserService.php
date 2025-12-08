@@ -17,7 +17,7 @@ class UserService
     use LogActivity;
 
     public function __construct(protected UserRepository $repo) {}
-    
+
     public function create(array $input, $logo = null)
     {
         $user = auth('api')->user();
@@ -29,12 +29,12 @@ class UserService
         $input['logo'] = $this->storeLogo($logo);
         $new_user = $this->repo->create($input);
 
-        if (!empty($roleIds)) {
+        if (! empty($roleIds)) {
             $roles = Role::whereIn('id', array_map('intval', $roleIds))->get();
             $new_user->syncRoles($roles);
         }
 
-        if (!empty($permIds)) {
+        if (! empty($permIds)) {
             $perms = Permission::whereIn('id', array_map('intval', $permIds))->get();
             $new_user->syncPermissions($perms);
         }
@@ -54,12 +54,12 @@ class UserService
         $this->maybeHashPassword($input);
         $this->applyLogoChange($user, $input, $logo);
         $updated_user = $this->repo->update($id, $input);
-        if (!empty($roleIds)) {
+        if (! empty($roleIds)) {
             $roles = Role::whereIn('id', array_map('intval', $roleIds))->get();
             $user->syncRoles($roles);
         }
 
-        if (!empty($permIds)) {
+        if (! empty($permIds)) {
             $perms = Permission::whereIn('id', array_map('intval', $permIds))->get();
             $user->syncPermissions($perms);
         }

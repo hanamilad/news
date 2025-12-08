@@ -87,6 +87,7 @@ class News extends Model
 
         return $query->orderBy('created_at', 'desc');
     }
+
     public function scopeFilterByCategory($query, $categoryId)
     {
         if ($categoryId) {

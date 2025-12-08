@@ -30,6 +30,7 @@ class CategoryMutator
             }
 
             DB::commit();
+
             return $results;
         } catch (\Exception $e) {
             DB::rollBack();
@@ -47,7 +48,7 @@ class CategoryMutator
         try {
             foreach ($inputs as $item) {
 
-                if (!isset($item['id']) || !isset($item['data'])) {
+                if (! isset($item['id']) || ! isset($item['data'])) {
                     throw new \Exception('id and data fields are required for each update item');
                 }
 
@@ -64,6 +65,7 @@ class CategoryMutator
             }
 
             DB::commit();
+
             return $updated;
         } catch (\Exception $e) {
             DB::rollBack();
@@ -74,6 +76,7 @@ class CategoryMutator
     public function delete($_, array $args)
     {
         $id = (int) $args['id'];
+
         return $this->service->delete($id);
     }
 }

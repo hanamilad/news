@@ -88,6 +88,7 @@ class NewsQuery
     {
         return News::forPublic($args['category_id'] ?? null);
     }
+
     public function newsForAdminBuilder($_, array $args): Builder
     {
         return News::filterByCategory($args['category_id'] ?? null);

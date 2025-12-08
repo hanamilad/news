@@ -61,7 +61,7 @@ class CategoryRepository
         return DB::transaction(function () use ($category) {
             $order = $category->grid_order;
             $deleted = (bool) $category->delete();
-            if ($deleted  && $order) {
+            if ($deleted && $order) {
                 $max = Category::max('grid_order');
                 $this->shiftGridOrders(($order ?? 0) + 1, $max, -1);
             }

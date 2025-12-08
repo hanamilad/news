@@ -30,7 +30,7 @@ class NewsMutator
         $input = $args['input'] ?? [];
         $files = $this->extractFiles($args);
         $input['id'] = $id;
-        $request = new NewsRequest();
+        $request = new NewsRequest;
         $request->merge($input);
         $validator = validator($input, $request->rules(), $request->messages());
         if ($validator->fails()) {
@@ -52,7 +52,7 @@ class NewsMutator
     protected function extractFiles(array $args): array
     {
         if (! empty($args['images']) && is_array($args['images'])) {
-            return array_filter($args['images'], fn($f) => $f instanceof UploadedFile);
+            return array_filter($args['images'], fn ($f) => $f instanceof UploadedFile);
         }
 
         return [];

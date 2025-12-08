@@ -14,6 +14,7 @@ class TaskRequest extends FormRequest
     public function rules(): array
     {
         $id = $this->input('id');
+
         return [
             'title' => [$id ? 'nullable' : 'required', 'string', 'max:255'],
             'description' => 'nullable|string',

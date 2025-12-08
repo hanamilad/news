@@ -38,6 +38,7 @@ class AuthMutator
     {
         return $this->service->resetPassword($args['token'], $args['email'], $args['password']);
     }
+
     public function verifyOTP($_, array $args)
     {
         return $this->service->verifyOTP($args['token'], $args['email']);

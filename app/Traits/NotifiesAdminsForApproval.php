@@ -21,7 +21,7 @@ trait NotifiesAdminsForApproval
                         'model' => class_basename($model),
                         'id' => $model->getKey(),
                         'title' => $model->getAttribute('title') ?? $model->getAttribute('description') ?? null,
-                        'description' => 'طلب موافقة من الموظف ' . ($u->name ?? '')
+                        'description' => 'طلب موافقة من الموظف '.($u->name ?? ''),
                     ];
 
                     $creator = null;

@@ -43,7 +43,12 @@ class AuthRepository
 
     public function findRefreshToken(string $token): ?RefreshToken
     {
-        return RefreshToken::where('token', $token)->where('expires_at', '>', now())->first();
+        return RefreshToken::where('token', $token)->where('revoked', false)->where('expires_at', '>', now())->first();
+    }
+
+    public function revokeRefreshToken(RefreshToken $refreshToken): void
+    {
+        $refreshToken->update(['revoked' => true]);
     }
 
     public function deleteUserTokens(User $user): void

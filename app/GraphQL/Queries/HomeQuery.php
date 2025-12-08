@@ -68,11 +68,11 @@ class HomeQuery
         $currentRow = [];
 
         foreach ($categories as $cat) {
-            if (! $cat->news || $cat->news->isEmpty()) {
+            if (! isset($cat->merged_news) || $cat->merged_news->isEmpty()) {
                 continue;
             }
 
-            $categoryData = ['category' => $cat, 'news' => $cat->news];
+            $categoryData = ['category' => $cat, 'news' => $cat->merged_news];
 
             if ($cat->show_in_grid) {
                 $currentRow[] = $categoryData;

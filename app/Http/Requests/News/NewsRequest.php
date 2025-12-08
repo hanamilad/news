@@ -14,6 +14,7 @@ class NewsRequest extends FormRequest
     public function rules(): array
     {
         $id = $this->input('id');
+
         return [
             'title' => [$id ? 'nullable' : 'required', 'array'],
             'title.*' => 'nullable|string|max:255',

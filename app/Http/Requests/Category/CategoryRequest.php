@@ -30,7 +30,6 @@ class CategoryRequest extends FormRequest
         ];
     }
 
-
     public static function updateRules(): array
     {
         return [

@@ -52,6 +52,7 @@ class ISODateTime extends ScalarType
         if ($valueNode instanceof VariableNode) {
             $varName = $valueNode->name->value;
             $raw = $variables[$varName] ?? null;
+
             return is_string($raw) ? Carbon::parse($raw) : $raw;
         }
 

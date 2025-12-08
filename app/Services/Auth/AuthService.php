@@ -73,7 +73,7 @@ class AuthService
                 throw new Error('يجب تأكيد البريد الإلكتروني أولاً.');
             }
             $this->log($user->id, 'تسجيل دخول', User::class, $user->id, $user->toArray(), null);
-            $this->repo->deleteUserTokens($user);
+
             return $this->generateTokensResponse($user);
         });
     }
@@ -103,7 +103,7 @@ class AuthService
 
             $user = $refresh->user;
 
-            $this->repo->deleteUserTokens($user);
+            $this->repo->revokeRefreshToken($refresh);
 
             return [
                 'message' => 'تم تجديد الجلسة بنجاح.',
@@ -158,6 +158,7 @@ class AuthService
             return 'تم تغيير كلمة المرور بنجاح.';
         });
     }
+
     public function verifyOTP(string $token, string $email)
     {
         return DB::transaction(function () use ($token, $email) {
@@ -176,6 +177,7 @@ class AuthService
                     'message' => 'المستخدم غير موجود.',
                 ];
             }
+
             return [
                 'status' => true,
                 'message' => 'تم التحقق من الرمز بنجاح.',
@@ -192,7 +194,10 @@ class AuthService
                 throw new Error('لم يتم تسجيل الدخول.');
             }
 
-            $this->repo->deleteUserTokens($user);
+            $token = method_exists($user, 'currentAccessToken') ? $user->currentAccessToken() : null;
+            if ($token) {
+                $token->delete();
+            }
             $this->log($user->id, 'تسجيل خروج', User::class, $user->id, null, null);
 
             return 'تم تسجيل الخروج بنجاح.';

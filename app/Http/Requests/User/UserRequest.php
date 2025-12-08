@@ -15,6 +15,7 @@ class UserRequest extends FormRequest
     public function rules(): array
     {
         $userId = $this->input('id');
+
         return [
             'name' => [$userId ? 'nullable' : 'required', 'string', 'max:255'],
             'email' => [
