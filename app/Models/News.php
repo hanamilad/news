@@ -37,6 +37,15 @@ class News extends Model
         'publish_date' => 'datetime',
     ];
 
+
+
+    protected static function booted()
+    {
+        static::addGlobalScope('orderByCreatedAt', function ($query) {
+            $query->orderBy('created_at', 'desc');
+        });
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -67,33 +76,22 @@ class News extends Model
         return $query->where('publish_date', '<=', now());
     }
 
+
     public function scopeForPublic($query, $categoryId = null, $filterUrgent = false, $filterMain = false)
     {
-        $query->where('is_active', true)
+        return $query->where('is_active', true)
             ->where('is_admin_approved', true)
-            ->where('publish_date', '<=', now());
-
-        if ($categoryId !== null) {
-            $query->where('category_id', $categoryId);
-        }
-
-        if ($filterUrgent) {
-            $query->where('is_urgent', true);
-        }
-
-        if ($filterMain) {
-            $query->where('is_main', true);
-        }
-
-        return $query->orderBy('created_at', 'desc');
+            ->publishDate()
+            ->when($categoryId !== null, fn($q) => $q->where('category_id', $categoryId))
+            ->when($filterUrgent, fn($q) => $q->where('is_urgent', true))
+            ->when($filterMain, fn($q) => $q->where('is_main', true));
     }
+
 
     public function scopeFilterByCategory($query, $categoryId)
     {
-        if ($categoryId) {
-            return $query->where('category_id', $categoryId);
-        }
-
-        return $query;
+        return $query->when($categoryId, function ($q, $categoryId) {
+            $q->where('category_id', $categoryId);
+        });
     }
 }
