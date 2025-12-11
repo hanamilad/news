@@ -40,7 +40,7 @@ class Video extends Model
 
     public function getVideoPathAttribute($value)
     {
-        if (str_contains($value, 'videos')) {
+        if (str_contains($value, 'https')) {
             /** @var \Illuminate\Filesystem\FilesystemAdapter $disk */
             $disk = Storage::disk('spaces');
 
