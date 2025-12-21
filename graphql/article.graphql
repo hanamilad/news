@@ -33,11 +33,11 @@ extend type Query {
       @paginate(type: "PAGINATOR", model: "App\\Models\\Article")
 
   articles_for_public(
+    name: String,
     first: Int! = 10,
     page: Int = 1
   ): Article!
-    @paginate(type: "PAGINATOR", model: "App\\Models\\Article")
-    @scope(name: "forPublic")
+    @paginate(type: "PAGINATOR", builder: "App\\GraphQL\\Queries\\ArticleQuery@articlesForPublicBuilder")
 
   article(id: ID! @eq): Article @find
 }
@@ -57,7 +57,4 @@ extend type Mutation {
     @guard(with: ["api"])
     @can(ability: "article.delete", model: "App\\Models\\Article")
     @field(resolver: "App\\GraphQL\\Mutations\\ArticleMutator@delete")
-
-  SearchArticlesByAuthor(name: String!): [Article!]!
-    @field(resolver: "App\\GraphQL\\Mutations\\ArticleMutator@searchByAuthor")
 }

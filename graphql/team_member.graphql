@@ -16,19 +16,13 @@ input TeamMemberInput {
 }   
 
 extend type Query {
-  team_member_for_admin(
-    first: Int! = 10,
-    page: Int = 1
-  ): TeamMember!
+  team_member_for_admin: [TeamMember!]!
     @guard(with: ["api"])
     @can(ability: "team_member.view")
-    @paginate(type: "PAGINATOR", model: "App\\Models\\TeamMember")
+    @all(model: "App\\Models\\TeamMember")
 
-  team_member_for_public(
-    first: Int! = 10,
-    page: Int = 1
-  ): TeamMember!
-    @paginate(type: "PAGINATOR", model: "App\\Models\\TeamMember")
+  team_member_for_public: [TeamMember!]!
+    @all(model: "App\\Models\\TeamMember")
     @where(key: "is_active", operator: "=", value: true)
 }
 
