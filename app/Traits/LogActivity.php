@@ -16,7 +16,6 @@ trait LogActivity
         'App\Models\ReelGroup' => 'مجموعة حالات',
         'App\Models\Reel' => 'حالة',
         'App\Models\Task' => ' مهمة',
-        'App\Models\TeamMember' => 'عضو فريق',
         'App\Models\Video' => 'فيديو',
         'App\Models\Template' => 'قالب',
         'App\Models\User' => 'مستخدم',

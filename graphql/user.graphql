@@ -46,7 +46,6 @@ extend type Query {
         onlyTrashed: Boolean = false
     ): [User!]!
         @guard(with: ["api"])
-        @can(ability: "user.viewAny")
         @all(model: "App\\Models\\User",scopes: ["applyTrashedFilter", "excludeCurrent"])
 
     user(id: ID! @eq): User

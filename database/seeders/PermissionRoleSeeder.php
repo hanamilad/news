@@ -26,7 +26,6 @@ class PermissionRoleSeeder extends Seeder
             // Users
             'user.manageUserAccess' => 'إدارة وصول المستخدمين',
             'user.removeUserAccess' => 'إزالة وصول المستخدمين',
-            'user.viewAny' => 'عرض جميع المستخدمين',
             'user.view' => 'عرض بيانات المستخدم',
             'user.create' => 'إنشاء مستخدم جديد',
             'user.update' => 'تعديل بيانات المستخدم',
@@ -92,12 +91,6 @@ class PermissionRoleSeeder extends Seeder
 
             // Tenant
             'tenant.update' => 'تعديل إعدادات المنصة',
-
-            // Team Members
-            'team_member.view' => 'عرض أعضاء الفريق',
-            'team_member.create' => 'إضافة عضو فريق',
-            'team_member.update' => 'تعديل عضو الفريق',
-            'team_member.delete' => 'حذف عضو الفريق',
 
             // Tasks
             'task.view' => 'عرض المهام',

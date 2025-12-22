@@ -13,7 +13,6 @@
 #import video.graphql
 #import reel.graphql
 #import contact_message.graphql
-#import team_member.graphql
 #import home.graphql
 #import task.graphql
 #import ads.graphql
