@@ -3,7 +3,7 @@ id: ID!
 name: String!
 position: String!
 bio: String
-image: String!
+image: String
 is_active: Boolean
 }
 
