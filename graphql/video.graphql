@@ -39,16 +39,14 @@ extend type Query {
     first: Int! = 10,
     page: Int = 1
   ): Video!
-    @paginate(type: "PAGINATOR", model: "App\\Models\\Video")
-    @scope(name: "forPublic")
+    @paginate(type: "PAGINATOR", model: "App\\Models\\Video", scopes: ["forPublic"])
     @where(key: "type", operator: "=", value: "short")
 
-    long_videos_for_public(
+  long_videos_for_public(
     first: Int! = 10,
     page: Int = 1
   ): Video!
-    @paginate(type: "PAGINATOR", model: "App\\Models\\Video")
-    @scope(name: "forPublic")
+    @paginate(type: "PAGINATOR", model: "App\\Models\\Video", scopes: ["forPublic"])
     @where(key: "type", operator: "=", value: "long")
 
   video(id: ID! @eq): Video @find
