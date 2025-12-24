@@ -86,7 +86,7 @@ class Category extends Model
         }
 
         return $allNews
-            ->sortByDesc('created_at')
+            ->sortByDesc(fn ($news) => $news->getRawOriginal('created_at'))
             ->take($limit)
             ->values();
     }
