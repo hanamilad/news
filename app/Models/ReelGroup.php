@@ -31,9 +31,10 @@ class ReelGroup extends Model
 
     public function coverReel()
     {
-        return $this->hasOne(Reel::class)
+        return $this->hasOne(Reel::class, 'reel_group_id')
             ->whereNotNull('path')
-            ->latestOfMany('sort_order');
+            ->where('is_active', true)
+            ->ofMany('sort_order', 'min');
     }
 
     public function user()
