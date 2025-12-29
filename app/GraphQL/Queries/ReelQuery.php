@@ -16,9 +16,10 @@ class ReelQuery
             'reels' => function ($query) use ($twentyFourHoursAgo) {
                 $query->where('is_active', true)
                     ->where('created_at', '>=', $twentyFourHoursAgo)
-                    ->orderBy('sort_order', 'asc');
+                    ->orderBy('sort_order', 'asc')
+                    ->with('news.images');
             },
-            'coverReel'
+            'coverReel.news.images'
         ])
             ->where('is_active', true)
             ->whereHas('reels', function ($query) use ($twentyFourHoursAgo) {
@@ -50,9 +51,10 @@ class ReelQuery
 
         $paginator = ReelGroup::with([
             'reels' => function ($query) {
-                $query->orderBy('sort_order', 'asc');
+                $query->orderBy('sort_order', 'asc')
+                    ->with('news.images');
             },
-            'coverReel'
+            'coverReel.news.images'
         ])
             ->orderBy('sort_order', 'asc')
             ->paginate($first, ['*'], 'page', $page);

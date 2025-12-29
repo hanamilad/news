@@ -46,23 +46,70 @@ class Reel extends Model
         return $this->belongsTo(ReelGroup::class, 'reel_group_id');
     }
 
+    /**
+     * Get the path attribute.
+     * Handles both direct paths and news-based paths.
+     */
     public function getPathAttribute($value)
     {
-        if (! $value) {
+        // Case 1: Reel linked to news (fetch path from news main image)
+        if ($this->isNewsBasedReel($value)) {
+            return $this->getNewsMainImagePath();
+        }
+
+        // Case 2: No path available
+        if (!$value) {
             return null;
         }
 
-        if (str_starts_with($value, 'http://') || str_starts_with($value, 'https://')) {
-            return $value;
+        // Case 3: Format and return the path
+        return $this->formatPath($value);
+    }
+
+    /**
+     * Check if this is a news-based reel (has news_id but no direct path).
+     */
+    protected function isNewsBasedReel($pathValue): bool
+    {
+        return !$pathValue && $this->news_id;
+    }
+
+    /**
+     * Get the main image path from the related news.
+     */
+    protected function getNewsMainImagePath(): ?string
+    {
+        $news = $this->relationLoaded('news') 
+            ? $this->getRelation('news') 
+            : $this->news;
+
+        if (!$news) {
+            return null;
         }
 
-        if (str_contains($value, 'reel_images') || str_contains($value, 'reel_videos')) {
-            /** @var \Illuminate\Filesystem\FilesystemAdapter $storage */
-            $storage = Storage::disk('spaces');
+        $mainImage = $news->relationLoaded('images')
+            ? $news->images->where('is_main', true)->first()
+            : $news->images()->where('is_main', true)->first();
 
-            return $storage->url($value);
+        return $mainImage?->image_path;
+    }
+
+    /**
+     * Format the path (add full URL if needed).
+     */
+    protected function formatPath(string $path): string
+    {
+        // Already a full URL
+        if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
+            return $path;
         }
 
-        return $value;
+        // Reel images/videos stored in cloud storage
+        if (str_contains($path, 'reel_images') || str_contains($path, 'reel_videos')) {
+            return Storage::disk('spaces')->url($path);
+        }
+
+        // Return as-is
+        return $path;
     }
 }

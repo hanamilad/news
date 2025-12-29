@@ -29,10 +29,12 @@ class ReelGroup extends Model
         return $this->hasMany(Reel::class);
     }
 
+    /**
+     * Get the cover reel (first active reel with a path, ordered by sort_order).
+     */
     public function coverReel()
     {
         return $this->hasOne(Reel::class, 'reel_group_id')
-            ->whereNotNull('path')
             ->where('is_active', true)
             ->ofMany('sort_order', 'min');
     }
@@ -42,10 +44,16 @@ class ReelGroup extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function getCoverImageAttribute()
+    /**
+     * Get the cover image URL for this reel group.
+     * Returns the path from the first active reel.
+     */
+    public function getCoverImageAttribute(): ?string
     {
-        $reel = $this->relationLoaded('coverReel') ? $this->getRelation('coverReel') : $this->coverReel()->first();
+        $reel = $this->relationLoaded('coverReel') 
+            ? $this->getRelation('coverReel') 
+            : $this->coverReel;
 
-        return $reel ? $reel->path : null;
+        return $reel?->path;
     }
 }
