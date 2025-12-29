@@ -12,11 +12,14 @@ class ReelQuery
         $first = $args['first'] ?? 10;
         $page = $args['page'] ?? 1;
         $twentyFourHoursAgo = Carbon::now()->subHours(24);
-        $paginator = ReelGroup::with(['reels' => function ($query) use ($twentyFourHoursAgo) {
-            $query->where('is_active', true)
-                ->where('created_at', '>=', $twentyFourHoursAgo)
-                ->orderBy('sort_order', 'asc');
-        }])
+        $paginator = ReelGroup::with([
+            'reels' => function ($query) use ($twentyFourHoursAgo) {
+                $query->where('is_active', true)
+                    ->where('created_at', '>=', $twentyFourHoursAgo)
+                    ->orderBy('sort_order', 'asc');
+            },
+            'coverReel'
+        ])
             ->where('is_active', true)
             ->whereHas('reels', function ($query) use ($twentyFourHoursAgo) {
                 $query->where('is_active', true)
@@ -45,9 +48,12 @@ class ReelQuery
         $first = $args['first'] ?? 10;
         $page = $args['page'] ?? 1;
 
-        $paginator = ReelGroup::with(['reels' => function ($query) {
-            $query->orderBy('sort_order', 'asc');
-        }])
+        $paginator = ReelGroup::with([
+            'reels' => function ($query) {
+                $query->orderBy('sort_order', 'asc');
+            },
+            'coverReel'
+        ])
             ->orderBy('sort_order', 'asc')
             ->paginate($first, ['*'], 'page', $page);
 

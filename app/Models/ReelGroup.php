@@ -31,7 +31,6 @@ class ReelGroup extends Model
 
     public function coverReel()
     {
-        // pick latest reel by sort_order that has a path
         return $this->hasOne(Reel::class)
             ->whereNotNull('path')
             ->latestOfMany('sort_order');
