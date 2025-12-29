@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('videos', function (Blueprint $table) {
             $table->id();
             $table->json('description')->nullable();
-            $table->string('video_path');
+            $table->text('video_path');
             $table->enum('type', ['short', 'long'])->default('short');
             $table->boolean('is_active')->default(true);
             $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();

@@ -16,7 +16,7 @@ class VideoRequest extends FormRequest
         return [
             'description' => 'required|array',
             'description.*' => 'nullable|string',
-            'video_path' => 'nullable|string|max:400',
+            'video_path' => 'nullable|string',
             'video' => 'nullable|file|mimes:mp4,mov,avi|max:204800',
             'type' => 'required|string|in:short,long',
             'is_active' => 'nullable|boolean',
@@ -31,7 +31,6 @@ class VideoRequest extends FormRequest
             'description.array' => 'يجب إرسال الاسم كمجموعة من الترجمات (مثلاً ar, en).',
             'description.*.string' => 'كل ترجمة يجب أن تكون نص.',
             'video_path.string' => 'مسار الفيديو يجب ان يكون نصا.',
-            'video_path.max' => 'مسار الفيديو طويل جدا .',
         ];
     }
 }
