@@ -23,6 +23,7 @@ class CategoryRequest extends FormRequest
             'show_in_navbar' => 'nullable|boolean',
             'show_in_homepage' => 'nullable|boolean',
             'show_in_grid' => 'nullable|boolean',
+            'show_title' => 'nullable|boolean',
 
             'grid_order' => 'nullable|integer',
 
@@ -42,6 +43,7 @@ class CategoryRequest extends FormRequest
             'show_in_navbar' => 'nullable|boolean',
             'show_in_homepage' => 'nullable|boolean',
             'show_in_grid' => 'nullable|boolean',
+            'show_title' => 'nullable|boolean',
 
             'grid_order' => 'nullable|integer',
 

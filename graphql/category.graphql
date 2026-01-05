@@ -5,6 +5,7 @@ type Category @model(class: "App\\Models\\Category") {
   show_in_navbar: Boolean
   show_in_homepage: Boolean
   show_in_grid: Boolean
+  show_title: Boolean
   grid_order: Int
   template : Template
   ad : Ad
@@ -18,6 +19,7 @@ input CategoryInput {
   show_in_navbar : Boolean
   show_in_homepage: Boolean
   show_in_grid: Boolean
+  show_title: Boolean
   grid_order:Int
   template_id:ID!
    sub_category_ids: [ID!]
@@ -29,6 +31,7 @@ input UpdateInput {
   show_in_navbar : Boolean
   show_in_homepage: Boolean
   show_in_grid: Boolean
+  show_title: Boolean
   grid_order:Int
   template_id:ID
   sub_category_ids: [ID!]
