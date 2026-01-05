@@ -22,6 +22,7 @@ class CategoryRepository
                 'show_in_navbar' => $data['show_in_navbar'] ?? false,
                 'show_in_homepage' => $data['show_in_homepage'] ?? false,
                 'show_in_grid' => $data['show_in_grid'] ?? false,
+                'show_title' => $data['show_title'] ?? true,
                 'grid_order' => $gridOrder,
                 'template_id' => $data['template_id'],
             ]);
@@ -48,6 +49,7 @@ class CategoryRepository
                 'show_in_navbar' => $data['show_in_navbar'] ?? $category->show_in_navbar,
                 'show_in_homepage' => $data['show_in_homepage'] ?? $category->show_in_homepage,
                 'show_in_grid' => $data['show_in_grid'] ?? $category->show_in_grid,
+                'show_title' => $data['show_title'] ?? $category->show_title,
                 'grid_order' => $newOrder,
                 'template_id' => $data['template_id'] ?? $category->template_id,
             ]);
