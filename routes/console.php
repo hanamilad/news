@@ -12,9 +12,10 @@ Artisan::command('inspire', function () {
 
 Schedule::call(function () {
     Log::info('UrgentNewsAutoSwitch: JOB STARTED');
-    $affected =News::where('is_urgent', true)
-    ->where('publish_date', '<=', now()->subHours(2))
-    ->update(['is_urgent' => false]);
+    $affected = News::withoutTenancy()
+        ->where('is_urgent', true)
+        ->where('publish_date', '<=', now()->subHours(2))
+        ->update(['is_urgent' => false]);
     Log::info(['affected' => $affected]);
     Log::info('UrgentNewsAutoSwitch: JOB ENDED');
 })->everyMinute();
