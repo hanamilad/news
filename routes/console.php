@@ -1,9 +1,8 @@
 <?php
 
-use App\Models\News;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schedule;
 
 Artisan::command('inspire', function () {
@@ -11,11 +10,9 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote');
 
 Schedule::call(function () {
-    Log::info('UrgentNewsAutoSwitch: JOB STARTED');
-    $affected = News::withoutTenancy()
-        ->where('is_urgent', true)
+    DB::table('news')
+        ->where('is_urgent', 1)
+        ->whereNull('deleted_at')
         ->where('publish_date', '<=', now()->subHours(2))
-        ->update(['is_urgent' => false]);
-    Log::info(['affected' => $affected]);
-    Log::info('UrgentNewsAutoSwitch: JOB ENDED');
+        ->update(['is_urgent' => 0]);
 })->everyMinute();
