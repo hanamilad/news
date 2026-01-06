@@ -19,6 +19,7 @@ class Category extends Model
         'show_in_navbar',
         'show_in_homepage',
         'show_in_grid',
+        'show_title',
         'grid_order',
         'template_id',
     ];
@@ -27,6 +28,7 @@ class Category extends Model
         'show_in_navbar' => 'boolean',
         'show_in_homepage' => 'boolean',
         'show_in_grid' => 'boolean',
+        'show_title' => 'boolean',
     ];
 
     public $translatable = ['name', 'description'];
